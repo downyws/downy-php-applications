@@ -1,0 +1,37 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_list">
+	<h2>短网址列表</h2>
+	<div class="search">
+		<form action="/index.php?a=suri&m=list" method="post">
+			<span>任务名称：</span><input type="text" class="txt" name="task_title" value="{$params['task_title']}" />
+			<span class="mgl20">原网址：</span><input type="text" class="txt" name="uri" value="{$params['uri']}" />
+			<input type="submit" class="mgl20 btn" value="查询" />
+		</form>
+	</div>
+	<table class="table_list">
+		<tbody align="left" valign="top">
+			<tr><th>编号</th><th>任务名称</th><th>短网址</th><th>原网址</th><th>访问量</th><th>操作</th></tr>
+			{foreach from=$list.data item=v}
+			<tr><td>{$v.id}</td><td>{$v.task_title}</td><td>{$v.suri}</td><td>{$v.uri}</td><td>{$v.count}</td><td><a href="/index.php?a=suri&m=detail&id={$v.id}">详细</a></td></tr>
+			{/foreach}
+		</tbody>
+	</table>
+	{if $list.pager.last > $list.pager.first}
+		<div class="pager">
+			<a href="/index.php?a=suri&m=list&p={$list.pager.first}&{$list.pager.params}">首页</a>
+			<a href="/index.php?a=suri&m=list&p={$list.pager.prev}&{$list.pager.params}">上一页</a>
+			{for $i = $list.pager.start; $i <= $list.pager.end; $i++}
+				{if $i == $list.pager.current}
+					<a href="javascript:void(0);" class="current">{$i}</a>
+				{else}
+					<a href="/index.php?a=suri&m=list&p={$i}&{$list.pager.params}">{$i}</a>
+				{/if}
+			{/for}
+			<a href="/index.php?a=suri&m=list&p={$list.pager.next}&{$list.pager.params}">下一页</a>
+			<a href="/index.php?a=suri&m=list&p={$list.pager.last}&{$list.pager.params}">尾页</a>
+		</div>
+	{/if}
+</div>
+{include file="common_bottom.html"}

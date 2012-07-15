@@ -1,0 +1,15 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_list">
+	<h2>通道列表</h2>
+	<table class="table_list">
+		<tbody align="left" valign="top">
+			<tr><th>编号</th><th>名称</th><th>类型</th><th>操作</th></tr>
+			{foreach from=$list.data item=v}
+			<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type}</td><td><a href="/index.php?a=channel&m=detail&id={$v.id}">详情</a></td></tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>
+{include file="common_bottom.html"}

@@ -1,0 +1,15 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+<script type="text/javascript">$.fn.frameCheck();</script>
+</head>
+<frameset rows="39,*" frameborder="no" border="0" framespacing="0">
+	<frame id="headFrame" name="headFrame" src="/index.php?a=index&m=head" scrolling="No" noresize="noresize" />
+	<frameset cols="164,*" frameborder="no" border="0" framespacing="0">
+		<frame id="leftFrame" name="leftFrame" src="/index.php?a=index&m=menu" scrolling="No" noresize="noresize" />
+		<frame id="contFrame" name="contFrame" src="/index.php?a=index&m=index" scrolling="Yes" />
+	</frameset>
+</frameset>
+<noframes>
+	<body>您的浏览器不支持框架网页。建议您更换浏览器。</body>
+</noframes>
+</html>
