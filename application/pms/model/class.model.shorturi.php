@@ -28,6 +28,7 @@ class ModelShortUri extends ModelCommon
 		foreach($list as $k => $v)
 		{
 			$list[$k]['suri'] = $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN'] . $list[$k]['key'];
+			$list[$k]['is_disable_format'] = $list[$k]['is_disable'] ? '禁用' : '正常';
 		}
 		return $list;
 	}
