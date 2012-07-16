@@ -22,6 +22,7 @@ define('PROMPT_WARNING', 3);
 
 define('SHORT_URI_ERROR_UNKNOW', 0);
 define('SHORT_URI_ERROR_UNDEFINE', 1);
+define('SHORT_URI_ERROR_DISABLE', 2);
 
 define('CHANNEL_TYPE_EMAIL', 1);
 define('CHANNEL_TYPE_SMS', 2);

@@ -48,10 +48,21 @@ class ActionSuri extends ActionCommon
 
 		// 获取跳转地址
 		$shortUriObj = Factory::getModel('shorturi');
-		$uri = $shortUriObj->getUri($params['key'], true);
+		$uri = $shortUriObj->getUri($params['key']);
+		if(!$uri)
+		{
+			$this->redirect($GLOBALS['CONFIG']['SHORT_URI']['ERROR_PAGE']);
+		}
+		else if($uri['is_disable'])
+		{
+			$this->redirect($GLOBALS['CONFIG']['SHORT_URI']['DISABLE_PAGE']);
+		}
+
+		// 更新
+		$shortUriObj->updateCount($params['key'], 1);
 
 		// 跳转
-		$this->redirect($uri);
+		$this->redirect($uri['uri']);
 	}
 
 	public function methodError()
@@ -67,6 +78,9 @@ class ActionSuri extends ActionCommon
 		{
 			case SHORT_URI_ERROR_UNDEFINE:
 				$message = '该短网址 不存在 或者 已被删除。';
+				break;
+			case SHORT_URI_ERROR_DISABLE:
+				$message = '该短网址已被禁用。';
 				break;
 			case SHORT_URI_ERROR_UNKNOW:
 			default:
