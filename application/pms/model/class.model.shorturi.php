@@ -32,7 +32,7 @@ class ModelShortUri extends ModelCommon
 		return $list;
 	}
 
-	public function getUri($key, $is_redirect)
+	public function getUri($key)
 	{
 		// 判断合法性
 		if(!preg_match('/^[0-9A-za-z]+$/', $key))
@@ -42,21 +42,14 @@ class ModelShortUri extends ModelCommon
 		
 		// 获取URI
 		$condition = array(array('`key`' => array('eq', $key)));
-		$uri = $this->getOne($condition, 'uri');
-
-		// 是否存在
-		if(!$uri)
-		{
-			return $GLOBALS['CONFIG']['SHORT_URI']['ERROR_PAGE'];
-		}
-
-		// 是否需要计数
-		if($is_redirect)
-		{
-			$sql = 'UPDATE ' . $this->table() . ' SET `count` = (`count` + 1) WHERE `key` = \'' . $key . '\'';
-			$this->query($sql);
-		}
+		$uri = $this->getObject($condition);
 
 		return $uri;
+	}
+
+	public function updateCount($key, $add_count)
+	{
+		$sql = 'UPDATE ' . $this->table() . ' SET `count` = (`count` + ' . $add_count . ') WHERE `key` = \'' . $key . '\'';
+		$this->query($sql);
 	}
 }

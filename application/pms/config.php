@@ -19,6 +19,7 @@ $GLOBALS['CONFIG']['DB'] = array
 // ¶ÌÍøÖ·ÅäÖÃ
 $GLOBALS['CONFIG']['SHORT_URI'] = array
 (
-	'DOMAIN' => 'http://pms.oa.org/',
-	'ERROR_PAGE' => 'http://pms.oa.org/index.php?a=suri&m=error&code=1'
+	'DOMAIN' => 'http://suri.org/',
+	'ERROR_PAGE' => 'http://suri.org/index.php?a=suri&m=error&code=1',
+	'DISABLE_PAGE' => 'http://suri.org/index.php?a=suri&m=error&code=2'
 );
