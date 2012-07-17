@@ -50,10 +50,25 @@ $.fn.extend({
 				}
 			}
 		});
+	},
+
+	/* 时钟 */
+	timeClock: function(){
+		var that = this;
+		setInterval(function(){
+			var timestamp = $(that).data("timestamp");
+			$(that).data("timestamp", timestamp + 1000);
+			var now = new Date(timestamp);
+			$(that).html(now.toDateString() + now.toTimeString());
+		}, 1000);
 	}
 });
 
 $(function(){
+	$(".timeclock").each(function(){
+		$(this).timeClock();
+	});
+
 	$(".realtime_edit").each(function(){
 		$(this).realtimeEdit();
 	});
