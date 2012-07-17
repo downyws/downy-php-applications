@@ -131,6 +131,18 @@ class Db
 		return $data;
 	}
 
+	public function fetchMySqlVersion()
+	{
+		$sql = 'SELECT VERSION()';
+		return $this->fetchOne($sql);
+	}
+
+	public function fetchDbSize()
+	{
+		$sql = 'SELECT SUM(DATA_LENGTH) + SUM(INDEX_LENGTH) FROM information_schema.`TABLES` WHERE TABLE_SCHEMA = \'' . $this->_config['DBNAME'] . '\'';
+		return $this->fetchOne($sql);
+	}
+
 	public function affectedRows()
 	{
 		$n = mysql_affected_rows($this->db);

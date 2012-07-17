@@ -1,0 +1,36 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_detail">
+	<h2>系统信息</h2>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">操作系统</th><td>{$info.os_version}</td></tr>
+			<tr><th>服务器时间</th><td class="timeclock" data-timestamp="{$info.os_time * 1000}">Loding...</td></tr>
+		</tbody>
+	</table>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">APACHE 版本</th><td>{$info.apache_version}</td></tr>
+		</tbody>
+	</table>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">MYSQL 版本</th><td>{$info.mysql_version}</td></tr>
+		</tbody>
+	</table>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">PHP 版本</th><td>{$info.php_version}</td></tr>
+		</tbody>
+	</table>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">应用名称</th><td>{$info.app_name}</td></tr>
+			<tr><th>应用路径</th><td>{$info.app_path}</td></tr>
+			<tr><th>文件大小</th><td>{($info.app_file_size / 1048576)|string_format:"%.2f"} MB</td></tr>
+			<tr><th>数据库大小</th><td>{($info.app_db_size / 1048576)|string_format:"%.2f"} MB</td></tr>
+		</tbody>
+	</table>
+</div>
+{include file="common_bottom.html"}
