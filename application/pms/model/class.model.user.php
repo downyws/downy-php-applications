@@ -26,7 +26,7 @@ class ModelUser extends ModelCommon
 	{
 		foreach($list as $k => $v)
 		{
-			$list[$k]['is_disable_format'] = $list[$k]['is_disable'] ? '禁用' : '正常';
+			$list[$k]['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$list[$k]['is_disable']];
 		}
 		return $list;
 	}
@@ -100,7 +100,16 @@ class ModelUser extends ModelCommon
 
 	public function hasPower($a, $m)
 	{
-		return in_array($GLOBALS['CONFIG']['POWER']['ACTIONMETHOD'][$a . ':' . $m], $this->getUserPower());
+		$am = $a . ':' . $m;
+		foreach($GLOBALS['CONFIG']['POWER'] as $k => $v)
+		{
+			if(in_array($am, $v['ACTIONMETHOD']))
+			{
+				$am = $k;
+				break;
+			}
+		}
+		return in_array($am, $this->getUserPower());
 	}
 
 	public function getUserChannel()
