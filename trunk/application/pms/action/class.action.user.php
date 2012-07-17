@@ -46,7 +46,7 @@ class ActionUser extends ActionCommon
 		$user['power'] = $userObj->getUserPower();
 		foreach($user['power'] as $k => $v)
 		{
-			$user['power'][$k] = $GLOBALS['CONFIG']['POWER']['TRANSLATE'][$v];
+			$user['power'][$k] = $GLOBALS['CONFIG']['POWER'][$v]['NAME'];
 		}
 
 		$channelObj = Factory::getModel('channel');

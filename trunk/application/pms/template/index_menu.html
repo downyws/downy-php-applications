@@ -9,7 +9,7 @@
 	{if 'TASKMULTI:READ'|in_array:$power}<li><a target="contFrame" href="/index.php?a=taskmulti&m=list">多任务管理</a></li>{/if}
 	{if 'TASKSINGLE:READ'|in_array:$power}<li><a target="contFrame" href="/index.php?a=tasksingle&m=list">单任务管理</a></li>{/if}
 	{if 'LOG:READ'|in_array:$power}<li><a target="contFrame" href="/index.php?a=log&m=list">日志管理</a></li>{/if}
-	{if 'SYSTEM:READ'|in_array:$power}<li><a target="contFrame" href="/index.php?a=system&m=detail">系统设置</a></li>{/if}
+	{if 'SYSTEM:MANAGER'|in_array:$power}<li><a target="contFrame" href="/index.php?a=system&m=detail">系统信息</a></li>{/if}
 	<li><a target="contFrame" href="/index.php?a=user&m=profile">个人设置</a></li>
 	<li><a target="contFrame" href="/index.php?a=index&m=logout">退出登录</a></li>
 </ul>

@@ -34,6 +34,11 @@ define('APP_TIMEZONE', 'Asia/Shanghai');
 
 session_start();
 
+$GLOBALS['CONFIG']['IS_DISABLE'] = array(
+	'0' => '正常',
+	'1' => '禁用',
+);
+
 $GLOBALS['CONFIG']['TASKSINGLE'] = array(
 	'STATE' => array(
 		'1' => '未发送',
@@ -83,35 +88,22 @@ $GLOBALS['CONFIG']['LOG'] = array(
 );
 
 $GLOBALS['CONFIG']['POWER'] = array(
-	'TRANSLATE' => array(
-		'SYSTEM:READ' => '系统查看',
-		'SYSTEM:EDIT' => '系统设置',
-		'CHANNEL:READ' => '通道查看',
-		'CHANNEL:EDIT' => '通道编辑',
-		'USER:READ' => '用户查看',
-		'USER:EDIT' => '用户编辑',
-		'SURI:READ' => '短网址查看',
-		'SURI:EDIT' => '短网址编辑',
-		'TASKMULTI:READ' => '多任务查看',
-		'TASKMULTI:CHECK' => '多任务审核',
-		'TASKMULTI:READ' => '多任务取消',
-		'TASKMULTI:READ' => '多任务编辑（所有用户）',
-		'TASKMULTI:READ' => '多任务编辑（个人）',
-		'TASKSINGLE:READ' => '单任务查看',
-		'TASKSINGLE:CANCEL' => '单任务取消',
-		'TASKSINGLE:SEND' => '单任务发送',
-		'TASKSINGLE:EDIT' => '单任务编辑',
-		'SEND:RUN' => '定时脚本',
-		'LOG:READ' => '日志查看'
-	),
-	'ACTIONMETHOD' => array(
-		'system:detail' => 'SYSTEM:READ',
-		'channel:list' => 'CHANNEL:READ',
-		'channel:detail' => 'CHANNEL:READ',
-		'user:list' => 'USER:READ',
-		'suri:list' => 'SURI:READ',
-		'taskmulti:list' => 'TASKMULTI:READ',
-		'tasksingle:list' => 'TASKSINGLE:READ',
-		'log:list' => 'LOG:READ'
-	)
+	'SYSTEM:MANAGER' => array('NAME' => '系统查看', 'ACTIONMETHOD' => array('system:detail')),
+	'CHANNEL:READ' => array('NAME' => '通道查看', 'ACTIONMETHOD' => array('channel:list', 'channel:detail')),
+	'CHANNEL:EDIT' => array('NAME' => '通道编辑', 'ACTIONMETHOD' => array()),
+	'USER:READ' => array('NAME' => '用户查看', 'ACTIONMETHOD' => array('user:list')),
+	'USER:EDIT' => array('NAME' => '用户编辑', 'ACTIONMETHOD' => array()),
+	'SURI:READ' => array('NAME' => '短网址查看', 'ACTIONMETHOD' => array('suri:list')),
+	'SURI:EDIT' => array('NAME' => '短网址编辑', 'ACTIONMETHOD' => array()),
+	'TASKMULTI:READ' => array('NAME' => '多任务查看', 'ACTIONMETHOD' => array('taskmulti:list')),
+	'TASKMULTI:CHECK' => array('NAME' => '多任务审核', 'ACTIONMETHOD' => array()),
+	'TASKMULTI:CANCEL' => array('NAME' => '多任务取消', 'ACTIONMETHOD' => array()),
+	'TASKMULTI:EDITSELF' => array('NAME' => '多任务编辑（所有用户）', 'ACTIONMETHOD' => array()),
+	'TASKMULTI:EDITALL' => array('NAME' => '多任务编辑（个人）', 'ACTIONMETHOD' => array()),
+	'TASKSINGLE:READ' => array('NAME' => '单任务查看', 'ACTIONMETHOD' => array('tasksingle:list')),
+	'TASKSINGLE:CANCEL' => array('NAME' => '单任务取消', 'ACTIONMETHOD' => array()),
+	'TASKSINGLE:SEND' => array('NAME' => '单任务发送', 'ACTIONMETHOD' => array()),
+	'TASKSINGLE:EDIT' => array('NAME' => '单任务编辑', 'ACTIONMETHOD' => array()),
+	'SEND:RUN' => array('NAME' => '定时脚本', 'ACTIONMETHOD' => array()),
+	'LOG:READ' => array('NAME' => '日志查看', 'ACTIONMETHOD' => array('log:list'))
 );
