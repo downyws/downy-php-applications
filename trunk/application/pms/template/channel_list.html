@@ -3,11 +3,15 @@
 {include file="common_center.html"}
 <div class="table_list">
 	<h2>通道列表</h2>
+	<div class="search">
+		<div class="fr"><input type="button" class="btn" value="添加" /></div>
+		<div class="cb"></div>
+	</div>
 	<table class="table_list">
 		<tbody align="left" valign="top">
 			<tr><th>编号</th><th>名称</th><th>类型</th><th>状态</th><th>操作</th></tr>
 			{foreach from=$list.data item=v}
-			<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type}</td><td>{$v.is_disable_format}</td><td><a href="/index.php?a=channel&m=detail&id={$v.id}">详情</a></td></tr>
+			<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type}</td><td>{$v.is_disable_format}</td><td><a href="/index.php?a=channel&m=edit&id={$v.id}">编辑</a></td></tr>
 			{/foreach}
 		</tbody>
 	</table>

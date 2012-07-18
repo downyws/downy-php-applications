@@ -29,11 +29,12 @@ $.fn.extend({
 								$.ajax({type: "POST", dataType: "JSON", url: url, data: {val: new_val}, async: false, success: function(result){
 									if(result.state){
 										parent.data("value", new_val);
+										$.fn.msgbox('success', '保存成功。');
 									}else{
-										alert(result.message);
+										$.fn.msgbox('failed', result.message);
 									}
 								}, error: function(){
-									alert('AJAX请求出错。');
+									$.fn.msgbox('failed', 'AJAX请求出错。');
 								}});
 							}
 							parent.removeClass("realtime_edit_current");
@@ -55,11 +56,12 @@ $.fn.extend({
 								$.ajax({type: "POST", dataType: "JSON", url: url, data: {val: new_val}, async: false, success: function(result){
 									if(result.state){
 										parent.data("value", new_val);
+										$.fn.msgbox('success', '保存成功。');
 									}else{
-										alert(result.message);
+										$.fn.msgbox('failed', result.message);
 									}
 								}, error: function(){
-									alert('AJAX请求出错。');
+									$.fn.msgbox('failed', 'AJAX请求出错。');
 								}});
 							}
 							parent.removeClass("realtime_edit_current");
@@ -85,6 +87,15 @@ $.fn.extend({
 			var now = new Date(timestamp);
 			$(that).html(now.toDateString() + " " + now.toTimeString());
 		}, 1000);
+	},
+
+	/* 提示信息框 */
+	msgbox: function(state, message){
+		$(".msgbox").remove();
+		$("body").append("<div class='msgbox'><span class='" + state + "'>" + message + "</span></div>");
+		$(".msgbox").fadeIn(1500, function(){
+			$(".msgbox").fadeOut(3000);
+		});
 	}
 });
 

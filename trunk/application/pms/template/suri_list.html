@@ -4,17 +4,21 @@
 <div class="table_list">
 	<h2>短网址列表</h2>
 	<div class="search">
-		<form action="/index.php?a=suri&m=list" method="post">
-			<span>任务名称：</span><input type="text" class="txt" name="task_title" value="{$params['task_title']}" />
-			<span class="mgl20">原网址：</span><input type="text" class="txt" name="uri" value="{$params['uri']}" />
-			<input type="submit" class="mgl20 btn" value="查询" />
-		</form>
+		<div class="fl">
+			<form action="/index.php?a=suri&m=list" method="post">
+				<span>任务名称：</span><input type="text" class="txt" name="task_title" value="{$params['task_title']}" />
+				<span class="mgl20">原网址：</span><input type="text" class="txt" name="uri" value="{$params['uri']}" />
+				<input type="submit" class="mgl20 btn" value="查询" />
+			</form>
+		</div>
+		<div class="fr"><input type="button" class="btn" value="添加" /></div>
+		<div class="cb"></div>
 	</div>
 	<table class="table_list">
 		<tbody align="left" valign="top">
 			<tr><th>编号</th><th>任务名称</th><th>短网址</th><th>原网址</th><th>访问量</th><th>状态</th><th>操作</th></tr>
 			{foreach from=$list.data item=v}
-			<tr><td>{$v.id}</td><td>{$v.task_title}</td><td>{$v.key_format}</td><td>{$v.uri}</td><td>{$v.count}</td><td>{$v.is_disable_format}</td><td><a href="/index.php?a=suri&m=detail&id={$v.id}">详细</a></td></tr>
+			<tr><td>{$v.id}</td><td>{$v.task_title}</td><td>{$v.key_format}</td><td>{$v.uri}</td><td>{$v.count}</td><td>{$v.is_disable_format}</td><td><a href="/index.php?a=suri&m=edit&id={$v.id}">编辑</a></td></tr>
 			{/foreach}
 		</tbody>
 	</table>

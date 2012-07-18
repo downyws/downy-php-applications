@@ -4,15 +4,19 @@
 <div class="table_list">
 	<h2>用户列表</h2>
 	<div class="search">
-		<form action="/index.php?a=user&m=list" method="post">
-			<span>账号：</span><input type="text" class="txt" name="account" value="{$params['account']}" />
-			<span class="mgl20">状态：</span><select class="sel" name="is_disable">
-				<option value="-1" {if $params['is_disable'] != "0" && $params['is_disable'] != "1"}selected="selected"{/if}>全部</option>
-				<option value="0" {if $params['is_disable'] == "0"}selected="selected"{/if}>正常</option>
-				<option value="1" {if $params['is_disable'] == "1"}selected="selected"{/if}>禁用</option>
-			</select>
-			<input type="submit" class="mgl20 btn" value="查询" />
-		</form>
+		<div class="fl">
+			<form action="/index.php?a=user&m=list" method="post">
+				<span>账号：</span><input type="text" class="txt" name="account" value="{$params['account']}" />
+				<span class="mgl20">状态：</span><select class="sel" name="is_disable">
+					<option value="-1" {if $params['is_disable'] != "0" && $params['is_disable'] != "1"}selected="selected"{/if}>全部</option>
+					<option value="0" {if $params['is_disable'] == "0"}selected="selected"{/if}>正常</option>
+					<option value="1" {if $params['is_disable'] == "1"}selected="selected"{/if}>禁用</option>
+				</select>
+				<input type="submit" class="mgl20 btn" value="查询" />
+			</form>
+		</div>
+		<div class="fr"><input type="button" class="btn" value="添加" /></div>
+		<div class="cb"></div>
 	</div>
 	<table class="table_list">
 		<tbody align="left" valign="top">

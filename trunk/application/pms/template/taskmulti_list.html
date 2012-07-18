@@ -4,24 +4,28 @@
 <div class="table_list">
 	<h2>多任务列表</h2>
 	<div class="search">
-		<form action="/index.php?a=taskmulti&m=list" method="post">
-			<span>发送时间：</span><input type="text" class="w75 txt datepicker_from" name="start_time" value="{$params['start_time']}" /> - <input type="text" class="w75 txt datepicker_to" name="end_time" value="{$params['end_time']}" />
-			<span class="mgl20">名称：</span><input type="text" class="txt" name="title" value="{$params['title']}" />
-			<span class="mgl20">账号：</span><input type="text" class="txt" name="account" value="{$params['account']}" />
-			<span class="mgl20">通道：</span><select class="sel" name="channel">
-				<option value="0">全部</option>
-				{foreach from=$channel_list item=v key=k}
-				<option value="{$k}" {if $k == $params['channel']}selected="selected"{/if}>{$v}</option>
-				{/foreach}
-			</select>
-			<span class="mgl20">状态：</span><select class="sel" name="send_state">
-				<option value="0">全部</option>
-				{foreach from=$send_state_list item=v key=k}
-				<option value="{$k}" {if $k == $params['send_state']}selected="selected"{/if}>{$v}</option>
-				{/foreach}
-			</select>
-			<input type="submit" class="mgl20 btn" value="查询" />
-		</form>
+		<div class="fl">
+			<form action="/index.php?a=taskmulti&m=list" method="post">
+				<span>发送时间：</span><input type="text" class="w75 txt datepicker_from" name="start_time" value="{$params['start_time']}" /> - <input type="text" class="w75 txt datepicker_to" name="end_time" value="{$params['end_time']}" />
+				<span class="mgl20">名称：</span><input type="text" class="txt" name="title" value="{$params['title']}" />
+				<span class="mgl20">账号：</span><input type="text" class="txt" name="account" value="{$params['account']}" />
+				<span class="mgl20">通道：</span><select class="sel" name="channel">
+					<option value="0">全部</option>
+					{foreach from=$channel_list item=v key=k}
+					<option value="{$k}" {if $k == $params['channel']}selected="selected"{/if}>{$v}</option>
+					{/foreach}
+				</select>
+				<span class="mgl20">状态：</span><select class="sel" name="send_state">
+					<option value="0">全部</option>
+					{foreach from=$send_state_list item=v key=k}
+					<option value="{$k}" {if $k == $params['send_state']}selected="selected"{/if}>{$v}</option>
+					{/foreach}
+				</select>
+				<input type="submit" class="mgl20 btn" value="查询" />
+			</form>
+		</div>
+		<div class="fr"><input type="button" class="btn" value="添加" /></div>
+		<div class="cb"></div>
 	</div>
 	<table class="table_list">
 		<tbody align="left" valign="top">
