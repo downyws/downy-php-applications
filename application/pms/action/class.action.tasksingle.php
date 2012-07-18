@@ -28,7 +28,7 @@ class ActionTaskSingle extends ActionCommon
 
 		$channel_list = $channelObj->getAllPairs();
 		$list = $tasksinglelObj->getList($p, $params);
-		$list['data'] = $tasksinglelObj->formatData($list['data']);
+		$list['data'] = $tasksinglelObj->formatList($list['data']);
 
 		$list['pager']['params'] = 'contact=' . urlencode($params['contact']) . '&account=' . urlencode($params['account']) . '&channel=' . $params['channel'] . '&send_state=' . $params['send_state'];
 		if($params['start_time'] !== false)

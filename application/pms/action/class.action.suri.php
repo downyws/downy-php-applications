@@ -21,7 +21,7 @@ class ActionSuri extends ActionCommon
 		$p = $params['p'];
 		unset($params['p']);
 		$list = $shorturiObj->getList($p, $params);
-		$list['data'] = $shorturiObj->formatData($list['data']);
+		$list['data'] = $shorturiObj->formatList($list['data']);
 
 		$list['pager']['params'] = 'task_title=' . urlencode($params['task_title']) . '&uri=' . urlencode($params['uri']);
 

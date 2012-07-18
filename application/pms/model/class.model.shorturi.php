@@ -23,11 +23,11 @@ class ModelShortUri extends ModelCommon
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);
 	}
 
-	public function formatData($list)
+	public function formatList($list)
 	{
 		foreach($list as $k => $v)
 		{
-			$list[$k]['suri'] = $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN'] . $list[$k]['key'];
+			$list[$k]['key_format'] = $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN'] . $list[$k]['key'];
 			$list[$k]['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$list[$k]['is_disable']];
 		}
 		return $list;

@@ -28,7 +28,7 @@ class ActionTaskMulti extends ActionCommon
 
 		$channel_list = $channelObj->getAllPairs();
 		$list = $taskmultiObj->getList($p, $params);
-		$list['data'] = $taskmultiObj->formatData($list['data']);
+		$list['data'] = $taskmultiObj->formatList($list['data']);
 
 		$list['pager']['params'] = 'title=' . urlencode($params['title']) . '&account=' . urlencode($params['account']) . '&channel=' . $params['channel'] . '&send_state=' . $params['send_state'];
 		if($params['start_time'] !== false)

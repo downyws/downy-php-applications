@@ -21,7 +21,7 @@ class ActionUser extends ActionCommon
 		$p = $params['p'];
 		unset($params['p']);
 		$list = $userObj->getList($p, $params);
-		$list['data'] = $userObj->formatData($list['data']);
+		$list['data'] = $userObj->formatList($list['data']);
 		
 		$list['pager']['params'] = 'account=' . urlencode($params['account']) . '&is_disable=' . $params['is_disable'];
 

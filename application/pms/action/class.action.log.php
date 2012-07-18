@@ -24,7 +24,7 @@ class ActionLog extends ActionCommon
 		$p = $params['p'];
 		unset($params['p']);
 		$list = $logObj->getList($p, $params);
-		$list['data'] = $logObj->formatData($list['data']);
+		$list['data'] = $logObj->formatList($list['data']);
 		
 		$list['pager']['params'] = 'account=' . urlencode($params['account']) . '&data_table=' . $params['data_table'] . '&operation_type=' . $params['operation_type'];
 		if($params['start_time'] !== false)
