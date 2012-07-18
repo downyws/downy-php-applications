@@ -26,12 +26,12 @@ class ModelLog extends ModelCommon
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);
 	}
 
-	public function formatData($list)
+	public function formatList($list)
 	{
 		foreach($list as $k => $v)
 		{
-			$list[$k]['data_table'] = $GLOBALS['CONFIG']['LOG']['DATA_TABLE'][$list[$k]['data_table']];
-			$list[$k]['operation_type'] = $GLOBALS['CONFIG']['LOG']['OPERATION_TYPE'][$list[$k]['operation_type']];
+			$list[$k]['data_table_format'] = $GLOBALS['CONFIG']['LOG']['DATA_TABLE'][$list[$k]['data_table']];
+			$list[$k]['operation_type_format'] = $GLOBALS['CONFIG']['LOG']['OPERATION_TYPE'][$list[$k]['operation_type']];
 		}
 		return $list;
 	}

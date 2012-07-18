@@ -22,7 +22,7 @@ class ModelUser extends ModelCommon
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);
 	}
 
-	public function formatData($list)
+	public function formatList($list)
 	{
 		foreach($list as $k => $v)
 		{

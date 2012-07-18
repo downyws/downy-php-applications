@@ -17,7 +17,31 @@ $.fn.extend({
 				$(this).addClass("realtime_edit_current");
 				$(this).data("is_open", true);
 				switch(type){
-					case "text": break;
+					case "text":
+						$(this).html("<input type='text' value='" + $(this).data("value") + "' />");
+						$(this).find("input").focus();
+						$(this).find("input").blur(function(){
+							var parent = $(this).parent();
+							var new_val = $(this).val();
+							var old_val = parent.data("value");
+							if(new_val != old_val){
+								var url = parent.data("url");
+								$.ajax({type: "POST", dataType: "JSON", url: url, data: {val: new_val}, async: false, success: function(result){
+									if(result.state){
+										parent.data("value", new_val);
+									}else{
+										alert(result.message);
+									}
+								}, error: function(){
+									alert('AJAX请求出错。');
+								}});
+							}
+							parent.removeClass("realtime_edit_current");
+							parent.addClass("realtime_edit");
+							parent.html(parent.data("value"));
+							parent.data("is_open", false);
+						});
+						break;
 					case "textarea": break;
 					case "password":
 						$(this).html("<input type='password' value='" + $(this).data("value") + "' />");
@@ -59,7 +83,7 @@ $.fn.extend({
 			var timestamp = $(that).data("timestamp");
 			$(that).data("timestamp", timestamp + 1000);
 			var now = new Date(timestamp);
-			$(that).html(now.toDateString() + now.toTimeString());
+			$(that).html(now.toDateString() + " " + now.toTimeString());
 		}, 1000);
 	}
 });

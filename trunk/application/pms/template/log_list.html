@@ -26,7 +26,7 @@
 		<tbody align="left" valign="top">
 			<tr><th>编号</th><th>账号</th><th>数据表</th><th>主键编号</th><th>操作类型</th><th>时间</th></tr>
 			{foreach from=$list.data item=v}
-			<tr><td>{$v.id}</td><td>{$v.account}</td><td>{$v.data_table}</td><td>{$v.data_id}</td><td>{$v.operation_type}</td><td>{$v.create_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			<tr><td>{$v.id}</td><td>{$v.account}</td><td>{$v.data_table_format}</td><td>{$v.data_id}</td><td>{$v.operation_type_format}</td><td>{$v.create_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
 			{/foreach}
 		</tbody>
 	</table>
