@@ -81,12 +81,14 @@ $.fn.extend({
 	/* 时钟 */
 	timeClock: function(){
 		var that = this;
-		setInterval(function(){
+		var run = function(){
 			var timestamp = $(that).data("timestamp");
 			$(that).data("timestamp", timestamp + 1000);
 			var now = new Date(timestamp);
-			$(that).html(now.toDateString() + " " + now.toTimeString());
-		}, 1000);
+			$(that).html(now.toDateString() + " " + now.toTimeString());			
+		}
+		run();
+		setInterval(run, 1000);
 	},
 
 	/* 提示信息框 */
