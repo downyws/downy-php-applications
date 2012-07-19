@@ -26,6 +26,9 @@ define('SHORT_URI_ERROR_UNKNOW', 0);
 define('SHORT_URI_ERROR_UNDEFINE', 1);
 define('SHORT_URI_ERROR_DISABLE', 2);
 
+define('SHORT_URI_TYPE_LINK', 1);
+define('SHORT_URI_TYPE_FILE', 2);
+
 define('CHANNEL_TYPE_EMAIL', 1);
 define('CHANNEL_TYPE_SMS', 2);
 
@@ -69,6 +72,11 @@ $GLOBALS['CONFIG']['CHANNEL'] = array(
 	)
 );
 
+$GLOBALS['CONFIG']['SHORT_URI']['TYPE'] = array(
+	'1' => '链接',
+	'2' => '文件'
+);
+
 $GLOBALS['CONFIG']['LOG'] = array(
 	'DATA_TABLE' => array(
 		'1' => 'channel',
@@ -90,22 +98,27 @@ $GLOBALS['CONFIG']['LOG'] = array(
 );
 
 $GLOBALS['CONFIG']['POWER'] = array(
-	'SYSTEM:MANAGER' => array('NAME' => '系统查看', 'ACTIONMETHOD' => array('system:detail')),
-	'CHANNEL:READ' => array('NAME' => '通道查看', 'ACTIONMETHOD' => array('channel:list', 'channel:detail')),
-	'CHANNEL:EDIT' => array('NAME' => '通道编辑', 'ACTIONMETHOD' => array()),
-	'USER:READ' => array('NAME' => '用户查看', 'ACTIONMETHOD' => array('user:list')),
-	'USER:EDIT' => array('NAME' => '用户编辑', 'ACTIONMETHOD' => array()),
+	'SYSTEM:READ' => array('NAME' => '系统查看', 'ACTIONMETHOD' => array('system:detail')),
+	
+	'LOG:READ' => array('NAME' => '日志查看', 'ACTIONMETHOD' => array('log:list')),
+	
+	'CHANNEL:READ' => array('NAME' => '通道查看', 'ACTIONMETHOD' => array('channel:list')),
+	'CHANNEL:EDIT' => array('NAME' => '通道编辑', 'ACTIONMETHOD' => array('channel:edit', 'channel:add')),
+	
 	'SURI:READ' => array('NAME' => '短网址查看', 'ACTIONMETHOD' => array('suri:list')),
-	'SURI:EDIT' => array('NAME' => '短网址编辑', 'ACTIONMETHOD' => array()),
+	'SURI:EDIT' => array('NAME' => '短网址编辑', 'ACTIONMETHOD' => array('suri:edit', 'suri:add')),
+
+	'USER:READ' => array('NAME' => '用户查看', 'ACTIONMETHOD' => array('user:list', 'user:detail')),
+	'USER:EDIT' => array('NAME' => '用户编辑', 'ACTIONMETHOD' => array('user:edit', 'user:add')),
+
 	'TASKMULTI:READ' => array('NAME' => '多任务查看', 'ACTIONMETHOD' => array('taskmulti:list')),
 	'TASKMULTI:CHECK' => array('NAME' => '多任务审核', 'ACTIONMETHOD' => array()),
 	'TASKMULTI:CANCEL' => array('NAME' => '多任务取消', 'ACTIONMETHOD' => array()),
 	'TASKMULTI:EDITSELF' => array('NAME' => '多任务编辑（所有用户）', 'ACTIONMETHOD' => array()),
 	'TASKMULTI:EDITALL' => array('NAME' => '多任务编辑（个人）', 'ACTIONMETHOD' => array()),
+	
 	'TASKSINGLE:READ' => array('NAME' => '单任务查看', 'ACTIONMETHOD' => array('tasksingle:list')),
 	'TASKSINGLE:CANCEL' => array('NAME' => '单任务取消', 'ACTIONMETHOD' => array()),
 	'TASKSINGLE:SEND' => array('NAME' => '单任务发送', 'ACTIONMETHOD' => array()),
-	'TASKSINGLE:EDIT' => array('NAME' => '单任务编辑', 'ACTIONMETHOD' => array()),
-	'SEND:RUN' => array('NAME' => '定时脚本', 'ACTIONMETHOD' => array()),
-	'LOG:READ' => array('NAME' => '日志查看', 'ACTIONMETHOD' => array('log:list'))
+	'TASKSINGLE:EDIT' => array('NAME' => '单任务编辑', 'ACTIONMETHOD' => array())
 );

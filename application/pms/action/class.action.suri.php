@@ -18,13 +18,16 @@ class ActionSuri extends ActionCommon
 		));
 
 		$shorturiObj = Factory::getModel('shorturi');
+		$userObj = Factory::getModel('user');
+
 		$p = $params['p'];
 		unset($params['p']);
+		
 		$list = $shorturiObj->getList($p, $params);
 		$list['data'] = $shorturiObj->formatList($list['data']);
-
 		$list['pager']['params'] = 'task_title=' . urlencode($params['task_title']) . '&uri=' . urlencode($params['uri']);
 
+		$this->assign('userpower', $userObj->getUserPower());
 		$this->assign('list', $list);
 		$this->assign('params', $params);
 	}

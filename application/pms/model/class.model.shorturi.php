@@ -29,6 +29,7 @@ class ModelShortUri extends ModelCommon
 		{
 			$list[$k]['key_format'] = $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN'] . $list[$k]['key'];
 			$list[$k]['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$list[$k]['is_disable']];
+			$list[$k]['type_format'] = $GLOBALS['CONFIG']['SHORT_URI']['TYPE'][$list[$k]['type']];
 		}
 		return $list;
 	}
