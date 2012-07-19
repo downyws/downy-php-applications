@@ -96,6 +96,35 @@ $.fn.extend({
 		$(".msgbox").fadeIn(1500, function(){
 			$(".msgbox").fadeOut(3000);
 		});
+	},
+
+	/* AJAX表单提交 */
+	ajaxForm: function(form){
+		var data = {};
+		var list = $(form).serializeArray();
+		var method = $(form).attr('method');
+		var action = $(form).attr('action');
+		$.each(list, function(){
+			if(typeof(data[this.name]) !== "undefined"){
+				if(!data[this.name].push){
+					data[this.name] = [data[this.name]];
+				}
+				data[this.name].push(this.value || "");
+			}else{
+				data[this.name] = this.value || "";
+			}
+		});
+		$.ajax({type: method, dataType: "JSON", url: action, data: data, async: true, success: function(result){
+			if(result.state){
+				$.fn.msgbox('success', result.message);
+				result.script && eval(result.script);
+			}else{
+				$.fn.msgbox('failed', result.message);
+			}
+		}, error: function(){
+			$.fn.msgbox('failed', 'AJAX请求出错。');
+		}});
+		return false;
 	}
 });
 

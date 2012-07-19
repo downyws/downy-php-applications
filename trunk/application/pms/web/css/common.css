@@ -14,8 +14,10 @@ h2{font-size:14px;}
 .table_detail{padding:10px 10px 10px 10px;}
 .table_detail h2{font-size:14px;border-bottom:1px solid #DDDDDD;color:#336699;padding-bottom:5px;margin-bottom:5px;}
 .table_detail table{border-collapse:collapse;width:100%;}
-.table_detail table th,.table_detail table td{padding:2px 5px 2px 5px;border:1px solid #CCCCCC;line-height:22px;}
+.table_detail table th,.table_detail table td{padding:5px 5px 5px 5px;border:1px solid #CCCCCC;line-height:22px;}
 .table_detail table th{text-align:center;}
+.table_detail .btn{padding:0px 10px 0px 10px;}
+.table_detail .radiolist span{padding:0px 10px 0px 10px;}
 
 /* table list */
 .table_list{padding:10px 10px 10px 10px;}
