@@ -16,7 +16,7 @@
  */
 function smarty_make_timestamp($string)
 {
-    if (empty($string)) {
+    if ($string != '0' && empty($string)) {
         // use "now":
         return time();
     } elseif ($string instanceof DateTime) {
