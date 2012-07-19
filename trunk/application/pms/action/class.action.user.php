@@ -18,13 +18,15 @@ class ActionUser extends ActionCommon
 		));
 
 		$userObj = Factory::getModel('user');
+
 		$p = $params['p'];
 		unset($params['p']);
+		
 		$list = $userObj->getList($p, $params);
 		$list['data'] = $userObj->formatList($list['data']);
-		
 		$list['pager']['params'] = 'account=' . urlencode($params['account']) . '&is_disable=' . $params['is_disable'];
 
+		$this->assign('userpower', $userObj->getUserPower());
 		$this->assign('list', $list);
 		$this->assign('params', $params);
 	}

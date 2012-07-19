@@ -6,9 +6,9 @@
 	<table class="table_detail">
 		<tbody align="left" valign="top">
 			<tr><th width="120px">编号</th><td>{$channel.id}</td></tr>
-			<tr><th>名称</th><td><span class="ajax_edit_txt" data-url="/index.php?a=channel&m=detail&t=ajax" data-key="text">{$channel.name}</span></td></tr>
-			<tr><th>类型</th><td>{$channel.type}</td></tr>
-			<tr><th>配置</th><td>{$channel.config}</td></tr>
+			<tr><th>名称</th><td>{$channel.name}</td></tr>
+			<tr><th>类型</th><td>{$channel.type_format}</td></tr>
+			<tr><th>状态</th><td>{$channel.is_disable_format}</td></tr>
 		</tbody>
 	</table>
 </div>

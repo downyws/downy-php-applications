@@ -21,13 +21,48 @@ class ModelChannel extends ModelCommon
 		return array('count' => $count, 'data' => $data, 'pager' => array());
 	}
 
-	public function formatData($list)
+	public function formatList($list)
 	{
 		foreach($list as $k => $v)
 		{
-			$list[$k]['type'] = $GLOBALS['CONFIG']['CHANNEL']['TYPE'][$list[$k]['type']];
+			$list[$k]['type_format'] = $GLOBALS['CONFIG']['CHANNEL']['TYPE'][$list[$k]['type']];
 			$list[$k]['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$list[$k]['is_disable']];
 		}
 		return $list;
+	}
+
+	public function formatObject($data)
+	{
+		$data['type_format'] = $GLOBALS['CONFIG']['CHANNEL']['TYPE'][$data['type']];
+		$data['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$data['is_disable']];
+		return $data;
+	}
+
+	public function update($id, $data)
+	{
+		foreach($data as $k => $v)
+		{
+			switch($k)
+			{
+				case 'name':
+					$data[$k] = trim($v);
+					if(empty($data[$k]))
+					{
+						return array('state' => false, 'message' => '通道名称不能为空。');
+					}
+					break;
+				case 'is_disable':
+					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
+					break;
+				default:
+					return array('state' => false, 'message' => '非法字段。');
+			}
+		}
+
+		$condition = array();
+		$condition[] = array('id' => array('eq', $id));
+		parent::update($condition, $data);
+
+		return array('state' => true);
 	}
 }

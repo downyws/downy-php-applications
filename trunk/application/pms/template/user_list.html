@@ -15,15 +15,26 @@
 				<input type="submit" class="mgl20 btn" value="查询" />
 			</form>
 		</div>
-		<div class="fr"><input type="button" class="btn" value="添加" /></div>
+		{if 'USER:EDIT'|in_array:$userpower}<div class="fr"><input type="button" class="btn" value="添加" onclick="window.location.href='/index.php?a=user&m=edit&id=0';" /></div>{/if}
 		<div class="cb"></div>
 	</div>
 	<table class="table_list">
 		<tbody align="left" valign="top">
 			<tr><th>编号</th><th>账号</th><th>最后登录时间</th><th>状态</th><th>操作</th></tr>
-			{foreach from=$list.data item=v}
-			<tr><td>{$v.id}</td><td>{$v.account}</td><td>{$v.last_login|date_format:"%Y-%m-%d %H:%M:%S"}</td><td>{$v.is_disable_format}</td><td><a href="/index.php?a=user&m=detail&id={$v.id}">详细</a></td></tr>
-			{/foreach}
+			{if 'USER:EDIT'|in_array:$userpower}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.account}</td><td>{$v.last_login|date_format:"%Y-%m-%d %H:%M:%S"}</td><td>{$v.is_disable_format}</td>
+						<td>
+							<a href="/index.php?a=user&m=detail&id={$v.id}">详细</a>
+							<a href="/index.php?a=user&m=edit&id={$v.id}">编辑</a>
+						</td>
+					</tr>
+				{/foreach}
+			{else}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.account}</td><td>{$v.last_login|date_format:"%Y-%m-%d %H:%M:%S"}</td><td>{$v.is_disable_format}</td><td><a href="/index.php?a=user&m=detail&id={$v.id}">详细</a></td></tr>
+				{/foreach}
+			{/if}
 		</tbody>
 	</table>
 	{if $list.pager.last > $list.pager.first}

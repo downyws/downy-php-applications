@@ -22,15 +22,13 @@ class ActionIndex extends ActionCommon
 	public function methodIndex()
 	{
 		$userObj = Factory::getModel('user');
-		$user = $userObj->getUser();
-		$this->assign('account', $user['account']);
+		$this->assign('user', $userObj->getUser());
 	}
 
 	public function methodMenu()
 	{
 		$userObj = Factory::getModel('user');
-		$power = $userObj->getUserPower();
-		$this->assign('power', $power);
+		$this->assign('userpower', $userObj->getUserPower());
 	}
 
 	public function methodLogin()
