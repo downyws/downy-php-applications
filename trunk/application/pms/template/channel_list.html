@@ -14,11 +14,11 @@
 			<tr><th>编号</th><th>名称</th><th>类型</th><th>最后运行时间</th><th>状态</th>{if 'CHANNEL:EDIT'|in_array:$userpower}<th>操作</th>{/if}</tr>
 			{if 'CHANNEL:EDIT'|in_array:$userpower}
 				{foreach from=$list.data item=v}
-					<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type}</td><td>{$v.last_run|date_format:"%Y-%m-%d %H:%M:%S"}</td><td>{$v.is_disable_format}</td><td><a href="/index.php?a=channel&m=edit&id={$v.id}">编辑</a></td></tr>
+					<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type_format}</td><td>{$v.last_run|date_format:"%Y-%m-%d %H:%M:%S"}</td><td style="{if $v.is_disable}color:#FF0000{/if}">{$v.is_disable_format}</td><td><a href="/index.php?a=channel&m=edit&id={$v.id}">编辑</a></td></tr>
 				{/foreach}
 			{else}
 				{foreach from=$list.data item=v}
-					<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type}</td><td>{$v.last_run|date_format:"%Y-%m-%d %H:%M:%S"}</td><td>{$v.is_disable_format}</td></tr>
+					<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type_format}</td><td>{$v.last_run|date_format:"%Y-%m-%d %H:%M:%S"}</td><td style="{if $v.is_disable}color:#FF0000{/if}">{$v.is_disable_format}</td></tr>
 				{/foreach}
 			{/if}
 		</tbody>

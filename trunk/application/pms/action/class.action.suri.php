@@ -11,10 +11,12 @@ class ActionSuri extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->filter(array(
-			'p' => array('complete' => array(array('gt', 0), array('int'))),
-			'task_title' => array('complete' => array(array('trim'))),
-			'uri' => array('complete' => array(array('trim')))
+		$params = $this->_submit->obtain(array(
+			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
+			'task_title' => array(array('format', 'trim')),
+			'uri' => array(array('format', 'trim')),
+			'type' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0)),
+			'is_disable' => array(array('valid', 'empty', null, -1, null), array('format', 'int'), array('valid', 'in', null, 0, array(-1, 0, 1)))
 		));
 
 		$shorturiObj = Factory::getModel('shorturi');
@@ -25,9 +27,10 @@ class ActionSuri extends ActionCommon
 		
 		$list = $shorturiObj->getList($p, $params);
 		$list['data'] = $shorturiObj->formatList($list['data']);
-		$list['pager']['params'] = 'task_title=' . urlencode($params['task_title']) . '&uri=' . urlencode($params['uri']);
+		$list['pager']['params'] = 'task_title=' . urlencode($params['task_title']) . '&uri=' . urlencode($params['uri']) . '&type=' . $params['type'] . '&is_disable=' . $params['is_disable'];
 
 		$this->assign('userpower', $userObj->getUserPower());
+		$this->assign('type_list', $GLOBALS['CONFIG']['SHORT_URI']['TYPE']);
 		$this->assign('list', $list);
 		$this->assign('params', $params);
 	}
@@ -45,8 +48,8 @@ class ActionSuri extends ActionCommon
 	public function methodRedirect()
 	{
 		// 获取参数
-		$params = $this->_submit->filter(array(
-			'key' => array('complete' => array(array('trim')))
+		$params = $this->_submit->obtain(array(
+			'key' => array(array('format', 'trim'))
 		));
 
 		// 获取跳转地址
@@ -71,8 +74,8 @@ class ActionSuri extends ActionCommon
 	public function methodError()
 	{
 		// 获取参数
-		$params = $this->_submit->filter(array(
-			'code' => array('complete' => array(array('trim')))
+		$params = $this->_submit->obtain(array(
+			'code' => array(array('format', 'trim'))
 		));
 
 		// 选择错误信息

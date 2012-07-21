@@ -30,9 +30,34 @@
 	<table class="table_list">
 		<tbody align="left" valign="top">
 			<tr><th>编号</th><th>目标</th><th>通道</th><th>账号</th><th>状态</th><th>发送时间</th><th>操作</th></tr>
-			{foreach from=$list.data item=v}
-			<tr><td>{$v.id}</td><td>{$v.contact}</td><td>{$v.channel_name}</td><td>{$v.account}</td><td>{$v.send_state_format}</td><td>{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td><td><a href="/index.php?a=tasksingle&m=detail&id={$v.id}">详情</a></td></tr>
-			{/foreach}
+			{if 'TASKSINGLE:EDITALL'|in_array:$userpower}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.contact}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td style="{if $v.send_state == 1}color:#DDDD00{/if}{if $v.send_state == 2}color:#00DD00{/if}{if $v.send_state == 4 || $v.send_state == 5}color:#FF0000{/if}">{$v.send_state_format}</td><td>{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+						<td>
+							<a href="/index.php?a=tasksingle&m=detail&id={$v.id}">详情</a>
+							<a href="/index.php?a=tasksingle&m=edit&id={$v.id}">编辑</a>
+						</td>
+					</tr>
+				{/foreach}
+			{else}{if 'TASKSINGLE:EDITSELF'|in_array:$userpower}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.contact}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td style="{if $v.send_state == 1}color:#DDDD00{/if}{if $v.send_state == 2}color:#00DD00{/if}{if $v.send_state == 4 || $v.send_state == 5}color:#FF0000{/if}">{$v.send_state_format}</td><td>{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+						<td>
+							<a href="/index.php?a=tasksingle&m=detail&id={$v.id}">详情</a>
+							{if $v.user_id == $user.id}<a href="/index.php?a=tasksingle&m=edit&id={$v.id}">编辑</a>{/if}
+						</td>
+					</tr>
+				{/foreach}
+			{else}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.contact}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td style="{if $v.send_state == 1}color:#DDDD00{/if}{if $v.send_state == 2}color:#00DD00{/if}{if $v.send_state == 4 || $v.send_state == 5}color:#FF0000{/if}">{$v.send_state_format}</td><td>{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+						<td><a href="/index.php?a=tasksingle&m=detail&id={$v.id}">详情</a></td>
+					</tr>
+				{/foreach}
+			{/if}{/if}
 		</tbody>
 	</table>
 	{if $list.pager.last > $list.pager.first}

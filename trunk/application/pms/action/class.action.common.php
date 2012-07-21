@@ -5,10 +5,10 @@ class ActionCommon extends Action
 	{
 		parent::__construct();
 		
-		$params = $this->_submit->filter(array(
-			'a' => array('complete' => array(array('trim'))),
-			'm' => array('complete' => array(array('trim'))),
-			't' => array('complete' => array(array('trim'))),
+		$params = $this->_submit->obtain(array(
+			'a' => array(array('format', 'trim')),
+			'm' => array(array('format', 'trim')),
+			't' => array(array('format', 'trim'))
 		));
 
 		if(!in_array($params['m'], $this->NOT_LOGIN))

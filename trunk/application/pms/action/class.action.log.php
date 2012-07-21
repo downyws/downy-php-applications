@@ -11,13 +11,13 @@ class ActionLog extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->filter(array(
-			'p' => array('complete' => array(array('gt', 0), array('int'))),
-			'account' => array('complete' => array(array('trim'))),
-			'data_table' => array('complete' => array(array('gt', -1))),
-			'operation_type' => array('complete' => array(array('gt', -1))),
-			'start_time' => array('complete' => array(array('timestamp', false))),
-			'end_time' => array('complete' => array(array('timestamp', false)))
+		$params = $this->_submit->obtain(array(
+			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
+			'account' => array(array('format', 'trim')),
+			'data_table' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
+			'operation_type' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
+			'start_time' => array(array('format', 'timestamp')),
+			'end_time' => array(array('format', 'timestamp'))
 		));
 
 		$logObj = Factory::getModel('log');
