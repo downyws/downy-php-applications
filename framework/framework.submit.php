@@ -4,254 +4,168 @@ class Submit
 {
 	protected $errors = array();
 
-	public function getError($is_all = false)
+	public function error($is_all = true)
 	{
 		return $is_all ? $this->errors : end($this->errors);
 	}
 
-	public function filter($rules)
+	/*$params = array(
+		'user_name' => array(
+			array('format', 'trim'), 
+			array('vaild', 'set', 'message', 'default value', data),
+			......
+		)
+	);*/
+	public function obtain($params)
 	{
 		$this->errors = array();
-		$res = array();
+		$result = array();
 
-		foreach($rules as $field => $rule)
+		foreach($params as $field => $rules)
 		{
 			if(!isset($_REQUEST[$field]) || (is_string($_REQUEST[$field]) && strlen(trim($_REQUEST[$field])) == 0))
 			{
-				$val = '';
+				$result[$field] = '';
 			}
 			else
 			{
-				$val = $_REQUEST[$field];
+				$result[$field] = $_REQUEST[$field];
 			}
 
-			if(!empty($rule['valid']) && ($val != '' && is_array($rule['valid'])))
+			foreach($rules as $type => $rule)
 			{
-				if($error = $this->valid($val, $rule['valid'], $_REQUEST))
+				$function = $rule[0] . $rule[1];
+				$funres = $this->$function($rule, $result[$field]);
+				if($rule[0] == 'format')
 				{
-					$this->errors[$field] = $error;
-					continue;
+					$result[$field] = $funres;
+				}
+				else if(!$funres)
+				{
+					if($rule[3] === null)
+					{
+						$this->errors[] = $rule[2];
+						unset($result[$field]);
+						break;
+					}
+					else
+					{
+						$result[$field] = $rule[3];
+					}
 				}
 			}
-
-			if(!empty($rule['complete']) && is_array($rule['complete']))
-			{
-				$val = $this->complete($val, $rule['complete'], $_REQUEST);
-			}
-
-			$res[$field] = $val;
 		}
 
-		return count($this->errors) > 0 ? false : $res;
+		return $result;
 	}
 
-	public function valid($val, &$rules, &$vals)
+	public function formatTrim($rule, $value)
 	{
-		if(!is_array($rules[0]))
-		{
-			$rules = array($rules);
-		}
-
-		foreach($rules as $rule)
-		{
-			switch($rule[0])
-			{
-				case 'confirm':
-					$res = $val == $vals[$rule[2]];
-					break;
-				default:
-					$method = 'valid' . ucfirst(strtolower($rule[0]));
-					$res = empty($rule[2]) ? $this->$method($val) : $this->$method($val, $rule[2]);
-			}
-
-			if(!$res)
-			{
-				return $rule[1];
-			}
-		}
-
-		return false;
+		return trim($value);
 	}
 
-	public function complete($val, &$rules, &$vals)
+	public function formatInt($rule, $value)
 	{
-		if(!is_array($rules[0]))
-		{
-			$rules = array($rules);
-		}
-
-		foreach($rules as $rule)
-		{
-			switch($rule[0])
-			{
-				case 'value':
-					empty($val) && $val = $rule[1];
-					break;
-				case 'field':
-					$val = $vals[$rule[0]];
-					break;
-				case 'function':
-					$val = $rule[0]($val, $vals);
-					break;
-				default:
-					$method = 'complete' . ucfirst(strtolower($rule[0]));
-					$val = !isset($rule[1]) ? $this->$method($val) : $this->$method($val, $rule[1]);
-			}
-		}
-
-		return $val;
+		return intval($value);
+	}
+	
+	public function formatFloat($rule, $value)
+	{
+		return floatval($value);
 	}
 
-	public function validInt($val)
+	public function formatTimestamp($rule, $value)
 	{
-		return preg_match('/^\d+$/', $val);
+		return strtotime($value);
 	}
 
-	public function validIn($val, $arr)
+	public function formatHtmlConv($rule, $value)
 	{
-		return in_array($val, $arr);
+		return htmlentities($value);
 	}
 
-	public function validEq($val, $org)
+	public function formatTagSrp($rule, $value)
 	{
-		return $val == $org;
+		return strip_tags($value);
 	}
 
-	public function validGt($val, $org)
+	public function validEmpty($rule, $value)
 	{
-		return $val > $org;
+		return !($value == '');
 	}
 
-	public function validLt($val, $org)
+	public function validEq($rule, $value)
 	{
-		return $val < $org;
+		return $value == $rule[4];
 	}
 
-	public function validBetween($val, $range)
+	public function validGt($rule, $value)
 	{
-		return $val >= $range[0] && $val >= $range[1];
+		return $value > $rule[4];
 	}
 
-	public function validUrl($val)
+	public function validEgt($rule, $value)
 	{
-		return preg_match('/^https?:\/\/([0-9a-z-]+\.)+[a-z]{2,4}\//', $val);
+		return $value >= $rule[4];
 	}
 
-	public function validNum($val)
+	public function validLt($rule, $value)
 	{
-		return preg_match('/^\d+(?:\.\d+)?(?:[Ee]\d+(?:\.\d+)?)?$/', $val);
+		return $value < $rule[4];
 	}
 
-	public function validRegex($val, $regex)
+	public function validElt($rule, $value)
 	{
-		return preg_match($regex, $val);
+		return $value <= $rule[4];
 	}
 
-	public function validFunc($val, $callback)
+	public function validBetween($rule, $value)
 	{
-		return call_user_func($callback, $val);
+		return $value >= $rule[4][0] && $value <= $rule[4][1];
+	}
+	
+	public function validIn($rule, $value)
+	{
+		return in_array($value, $rule[4]);
 	}
 
-	public function validEmail($val)
+	public function validRegex($rule, $value)
 	{
-		return preg_match('/^[\w\._]+@(?:[\w-]+\.)+\w{2,4}$/', $val);
+		return preg_match($rule[4], $value);
 	}
 
-	public function validZipcode($val)
+	public function validInt($rule, $value)
 	{
-		return preg_match('/^\d{6}$/', $val);
+		return preg_match('/^\d+$/', $value);
 	}
 
-	public function validMobile($val)
+	public function validUrl($rule, $value)
 	{
-		return preg_match('/^1[358]\d{9}$/', $val);
+		return preg_match('/^https?:\/\/([0-9a-z-]+\.)+[a-z]{2,4}\//', $value);
 	}
 
-	public function validSet($val)
+	public function validNum($rule, $value)
 	{
-		return !empty($val);
+		return preg_match('/^\d+(?:\.\d+)?(?:[Ee]\d+(?:\.\d+)?)?$/', $value);
 	}
 
-	public function validTel($val)
+	public function validEmail($rule, $value)
 	{
-		return preg_match('/^\+?\d+(?:-\d+)$/', $val);
+		return preg_match('/^[\w\._]+@(?:[\w-]+\.)+\w{2,4}$/', $value);
 	}
 
-	public function completeSet($val, $default)
+	public function validZipcode($rule, $value)
 	{
-		return $default;
+		return preg_match('/^\d{6}$/', $value);
 	}
 
-	public function completeInt($val, $default = 0)
+	public function validMobile($rule, $value)
 	{
-		$val = intval($val);
-
-		return $val ? $val : $default;
+		return preg_match('/^1[358]\d{9}$/', $value);
 	}
 
-	public function completeFloat($val, $default = 0.0)
+	public function validTelephone($rule, $value)
 	{
-		$val = floatval($val);
-
-		return $val ? $val : $default;
-	}
-
-	public function completeGt($val, $params)
-	{
-		if(!is_array($params))
-		{
-			$params = array($params, $params + 1);
-		}
-
-		$val = floatval($val);
-
-		return $val > $params[0] ? $val : $params[1];
-	}
-
-	public function completeLt($val, $params)
-	{
-		if(!is_array($params))
-		{
-			$params = array($params, $params - 1);
-		}
-
-		$val = floatval($val);
-
-		return $val < $params[0] ? $val : $params[1];
-	}
-
-	public function completeIn($val, $arr)
-	{
-		if(empty($arr) or !is_array($arr))
-		{
-			throw new Exception('Array invalid.');
-		}
-
-		return in_array($val, $arr) ? $val : $arr[0];
-	}
-
-	public function completeBetween($val, $params)
-	{
-		if(empty($params) or !is_array($params) or count($params) < 3)
-		{
-			throw new Exception('Array invalid.');
-		}
-
-		return ($val >= $params[0] and $val <= $params[1]) ? $val : $params[2];
-	}
-
-	public function completeTrim($val, $chars = null)
-	{
-		if($chars)
-		{
-			return trim($val, $chars);
-		}
-		return trim($val);
-	}
-
-	public function completeTimestamp($val, $default = 0)
-	{
-		$val = strtotime($val);
-		return ($val === false) ? $default : $val;
+		return preg_match('/^\+?\d+(?:-\d+)$/', $value);
 	}
 }
