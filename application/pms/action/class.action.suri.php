@@ -37,12 +37,64 @@ class ActionSuri extends ActionCommon
 
 	public function methodEdit()
 	{
-		echo 'ActionSuri';
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
+		));
+
+		if($params['id'])
+		{
+			$shorturiObj = Factory::getModel('shorturi');
+			$object = $shorturiObj->getObject(array(array('id' => array('eq', $params['id']))));
+			$object = $shorturiObj->formatObject($object);
+
+			$this->assign('object', $object);
+		}
+
+		$this->assign('shorturi_domain', $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN']);
+		$this->assign('id', $params['id']);
+		$this->assign('shorturi_type_list', $GLOBALS['CONFIG']['SHORT_URI']['TYPE']);
+		$this->assign('is_disable_list', $GLOBALS['CONFIG']['IS_DISABLE']);
 	}
 
-	public function methodDelete()
+	public function methodEditAjax()
 	{
-		echo 'ActionSuri';
+		// 获取参数
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+			'key' => array(array('format', 'trim')),
+			'uri' => array(array('format', 'trim'), array('valid', 'url', '重定向网址错误', null, null)),
+			'is_disable' => array(array('format', 'int'), array('valid', 'in', '状态错误', null, array_keys($GLOBALS['CONFIG']['IS_DISABLE']))),
+			'type' => array(array('format', 'int'), array('valid', 'in', '类型错误', null, array_keys($GLOBALS['CONFIG']['SHORT_URI']['TYPE'])))
+		));
+
+		// 保存
+		if(count($this->_submit->errors) > 0)
+		{
+			$message = implode('，', $this->_submit->errors) . '。';
+			$result = array('state' => false, 'message' => $message);
+		}
+		else
+		{
+			$shorturiObj = Factory::getModel('shorturi');
+			if($params['id'] == 0)
+			{
+				$result = $shorturiObj->add($params);
+				if($result['state'])
+				{
+					$result['script'] = 'alert("保存成功。");window.location="/index.php?a=suri&m=edit&id=' . $result['message'] . '";';
+					$result['message'] = '保存成功。';
+				}
+			}
+			else
+			{
+				$result = $shorturiObj->edit($params['id'], $params);
+				$object = $shorturiObj->getObject(array(array('id' => array('eq', $params['id']))));
+				$result['script'] = '$("input[name=\'key\']").val("' . $object['key'] . '")';
+			}
+		}
+
+		// 返回
+		echo json_encode($result);
 	}
 
 	public function methodRedirect()

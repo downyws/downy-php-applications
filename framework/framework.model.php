@@ -36,7 +36,7 @@ class Model extends Db
 			}
 		}
 
-		$sql = 'INSERT INTO ' . $this->table($table) . ' (' . join(', ', array_keys($data)) . ') VALUES (' . join(', ', $data) . ')';
+		$sql = 'INSERT INTO ' . $this->table($table) . ' (`' . join('`, `', array_keys($data)) . '`) VALUES (' . join(', ', $data) . ')';
 		$res = $this->query($sql);
 
 		if($res !== false)
@@ -116,9 +116,10 @@ class Model extends Db
 
 	public function getNextId($table = '')
 	{
-		$sql = 'SHOW TABLE STATUS LIKE \'' . $this->table($table) . '\'';
-		$object = $this->fetchArray($sql);
-		return $object['auto_increment'];
+		$table = ($table == '') ? $this->_table : $table;
+		$sql = 'SHOW TABLE STATUS LIKE \'' . $this->_prefix . $table . '\'';
+		$result = $this->fetchArray($sql);
+		return $result['Auto_increment'];
 	}
 
 	public function getOne($condition, $field, $table = '')

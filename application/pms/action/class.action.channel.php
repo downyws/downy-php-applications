@@ -30,9 +30,9 @@ class ActionChannel extends ActionCommon
 		if($params['id'])
 		{
 			$channelObj = Factory::getModel('channel');
-			$channel = $channelObj->getObject(array(array('id' => array('eq', $params['id']))));
+			$object = $channelObj->getObject(array(array('id' => array('eq', $params['id']))));
 
-			$this->assign('channel', $channel);
+			$this->assign('object', $object);
 		}
 
 		$this->assign('id', $params['id']);
