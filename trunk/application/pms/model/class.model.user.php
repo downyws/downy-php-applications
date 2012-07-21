@@ -73,6 +73,9 @@ class ModelUser extends ModelCommon
 			$data = array('password' => md5($password));
 			$this->update($condition, $data);
 			$result['state'] = true;
+
+			$user = $this->getUser();
+			$this->record($user['id'], $user_id, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_UPDATE);
 		}
 		return $result;
 	}

@@ -38,7 +38,7 @@ class ModelChannel extends ModelCommon
 		return $data;
 	}
 
-	public function update($id, $data)
+	public function add($data)
 	{
 		foreach($data as $k => $v)
 		{
@@ -48,21 +48,71 @@ class ModelChannel extends ModelCommon
 					$data[$k] = trim($v);
 					if(empty($data[$k]))
 					{
-						return array('state' => false, 'message' => 'ͨ�����Ʋ���Ϊ�ա�');
+						return array('state' => false, 'message' => '通道名称不能为空。');
 					}
 					break;
 				case 'is_disable':
 					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
 					break;
+				case 'type':
+					if(!in_array($data[$k], array_keys($GLOBALS['CONFIG']['CHANNEL']['TYPE'])))
+					{
+						return array('state' => false, 'message' => '类型错误。');
+					}
+					break;
 				default:
-					return array('state' => false, 'message' => '�Ƿ��ֶΡ�');
+					unset($data[$k]);
+			}
+		}
+
+		$state = parent::insert($data);
+		if($state)
+		{
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+			$this->record($user['id'], $state, LOG_DATA_TABLE_CHANNEL, LOG_OPERATION_TYPE_INSERT);
+		}
+		$message = $state ? $state : '保存失败。';
+		return array('state' => $state, 'message' => $message);
+	}
+
+	public function edit($id, $data)
+	{
+		foreach($data as $k => $v)
+		{
+			switch($k)
+			{
+				case 'name':
+					$data[$k] = trim($v);
+					if(empty($data[$k]))
+					{
+						return array('state' => false, 'message' => '通道名称不能为空。');
+					}
+					break;
+				case 'is_disable':
+					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
+					break;
+				case 'type':
+					if(!in_array($data[$k], array_keys($GLOBALS['CONFIG']['CHANNEL']['TYPE'])))
+					{
+						return array('state' => false, 'message' => '类型错误。');
+					}
+					break;
+				default:
+					unset($data[$k]);
 			}
 		}
 
 		$condition = array();
 		$condition[] = array('id' => array('eq', $id));
-		parent::update($condition, $data);
-
-		return array('state' => true);
+		$state = parent::update($condition, $data);
+		if($state)
+		{
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+			$this->record($user['id'], $id, LOG_DATA_TABLE_CHANNEL, LOG_OPERATION_TYPE_UPDATE);
+		}
+		$message = $state ? '保存成功。' : '保存失败。';
+		return array('state' => $state, 'message' => $message);
 	}
 }
