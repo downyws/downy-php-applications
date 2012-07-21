@@ -88,7 +88,7 @@ class Model extends Db
 			}
 			else
 			{
-				$data[$k] = $k . ' = "' . $this->escape($v) . '"';
+				$data[$k] = '`' . $k . '` = "' . $this->escape($v) . '"';
 			}
 		}
 
@@ -112,6 +112,13 @@ class Model extends Db
 			return $this->affectedRows();
 		}
 		return false;
+	}
+
+	public function getNextId($table = '')
+	{
+		$sql = 'SHOW TABLE STATUS LIKE \'' . $this->table($table) . '\'';
+		$object = $this->fetchArray($sql);
+		return $object['auto_increment'];
 	}
 
 	public function getOne($condition, $field, $table = '')
