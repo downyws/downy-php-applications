@@ -34,10 +34,10 @@ class ActionIndex extends ActionCommon
 	public function methodLogin()
 	{
 		// 获取参数
-		$params = $this->_submit->filter(array(
-			'submit' => array('complete' => array(array('int'))),
-			'account' => array('complete' => array(array('trim'))),
-			'password' => array('complete' => array(array('trim'))),
+		$params = $this->_submit->obtain(array(
+			'submit' => array(array('format', 'int')),
+			'account' => array(array('format', 'trim')),
+			'password' => array(array('format', 'trim'))
 		));
 
 		// 是否已经登录

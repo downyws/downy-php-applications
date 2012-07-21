@@ -21,39 +21,57 @@ class ActionChannel extends ActionCommon
 		$this->assign('list', $list);
 	}
 
-	public function methodDetail()
+	public function methodEdit()
 	{
 		$params = $this->_submit->filter(array(
-			'id' => array('complete' => array(array('gt', 0), array('int')))
+			'id' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0))
 		));
 
-		$channelObj = Factory::getModel('channel');
-		$channel = $channelObj->getObject(array(array('id' => array('eq', $params['id']))));
-		$channel = $channelObj->formatObject($channel);
+		if($params['id'])
+		{
+			$channelObj = Factory::getModel('channel');
+			$channel = $channelObj->getObject(array(array('id' => array('eq', $params['id']))));
 
-		$this->assign('channel', $channel);
+			$this->assign('channel', $channel);
+		}
+
+		$this->assign('id', $params['id']);
+		$this->assign('channel_type_list', $GLOBALS['CONFIG']['CHANNEL']['TYPE']);
+		$this->assign('is_disable_list', $GLOBALS['CONFIG']['IS_DISABLE']);
 	}
 
-	public function methodDetailAjax()
+	public function methodEditAjax()
 	{
-		// ��ȡ����
+	/*	// 获取参数
 		$params = $this->_submit->filter(array(
-			'id' => array('complete' => array(array('int'))),
-			'key' => array('complete' => array(array('trim'))),
-			'val' => array('complete' => array(array('trim')))
-		));
+			'id' => array('complete' => array(array('int')), 'valid' => array(array('gt', '编号错误。', -1))),
+			'name' => array('complete' => array(array('trim')), 'valid' => array(array('set', '名称不能为空。'))),
+			'is_disable' => array('valid' => array(array('in', '状态错误。', $GLOBALS['CONFIG']['IS_DISABLE']))),
+			'type' => array('valid' => array(array('in', '类型错误。', $GLOBALS['CONFIG']['CHANNEL'])))
+		));*/
 
+$result = array('state' => true, 'message' => 'test');
+		die(json_encode($result));
+
+		if(!$params)
+		{
+			$message = implode(' ', $this->_submit->error());
+			$result = array('state' => false, 'message' => $message);
+			die(json_encode($result));
+		}
+
+/*
 		$user = $_SESSION['user'];
-		$result = array('state' => true, 'message' => 'δ֪����');
+		$result = array('state' => true, 'message' => '未知错误');
 
-		// ����
+		// 保存
 		$channelObj = Factory::getModel('channel');
 		$result = $channelObj->update($params['id'], array($params['key'] => $params['val']));
 		if($result['state'])
 		{
 			$channelObj->record(array('user_id' => $user['id'], 'data_id' => $params['id'], 'data_table' => LOG_DATA_TABLE_CHANNEL, 'operation_type' => LOG_OPERATION_TYPE_UPDATE));
 		}
-		// ����
-		echo json_encode($result);
+		// 返回
+		echo json_encode($result);*/
 	}
 }

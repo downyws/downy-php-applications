@@ -13,6 +13,8 @@ class ModelShortUri extends ModelCommon
 		$condition = array();
 		!empty($params['task_title']) && $condition[] = array('tm.`title`' => array('like', $params['task_title']));
 		!empty($params['uri']) && $condition[] = array('su.`uri`' => array('like', $params['uri']));
+		!empty($params['type']) && $condition[] = array('su.`type`' => array('eq', $params['type']));
+		in_array($params['is_disable'], array(0, 1)) && $condition[] = array('su.`is_disable`' => array('eq', $params['is_disable']));
 
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . 'AS su LEFT JOIN ' . $this->table('task_multi') . ' AS tm ON (tm.`id` = su.`task_id`) ' . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);

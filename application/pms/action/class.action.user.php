@@ -11,10 +11,10 @@ class ActionUser extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->filter(array(
-			'p' => array('complete' => array(array('gt', 0), array('int'))),
-			'account' => array('complete' => array(array('trim'))),
-			'is_disable' => array('complete' => array(array('in', array("-1", "0", "1"))))
+		$params = $this->_submit->obtain(array(
+			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
+			'account' => array(array('format', 'trim')),
+			'is_disable' => array(array('valid', 'empty', null, -1, null), array('format', 'int'), array('valid', 'in', null, -1, array(-1, 0, 1)))
 		));
 
 		$userObj = Factory::getModel('user');
@@ -65,9 +65,9 @@ class ActionUser extends ActionCommon
 	public function methodProfileAjax()
 	{
 		// 获取参数
-		$params = $this->_submit->filter(array(
-			'key' => array('complete' => array(array('trim'))),
-			'val' => array('complete' => array(array('trim')))
+		$params = $this->_submit->obtain(array(
+			'key' => array(array('format', 'trim')),
+			'val' => array(array('format', 'trim'))
 		));
 
 		$user = $_SESSION['user'];

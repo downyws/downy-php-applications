@@ -11,18 +11,19 @@ class ActionTaskSingle extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->filter(array(
-			'p' => array('complete' => array(array('gt', 0), array('int'))),
-			'contact' => array('complete' => array(array('trim'))),
-			'account' => array('complete' => array(array('trim'))),
-			'channel' => array('complete' => array(array('gt', -1))),
-			'send_state' => array('complete' => array(array('gt', -1))),
-			'start_time' => array('complete' => array(array('timestamp', false))),
-			'end_time' => array('complete' => array(array('timestamp', false)))
+		$params = $this->_submit->obtain(array(
+			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
+			'contact' => array(array('format', 'trim')),
+			'account' => array(array('format', 'trim')),
+			'channel' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
+			'send_state' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
+			'start_time' => array(array('format', 'timestamp')),
+			'end_time' => array(array('format', 'timestamp'))
 		));
 
 		$channelObj = Factory::getModel('channel');
 		$tasksinglelObj = Factory::getModel('tasksingle');
+		$userObj = Factory::getModel('user');
 		$p = $params['p'];
 		unset($params['p']);
 
@@ -42,6 +43,8 @@ class ActionTaskSingle extends ActionCommon
 			$list['pager']['params'] .= '&end_time=' . $params['end_time'];
 		}
 
+		$this->assign('userpower', $userObj->getUserPower());
+		$this->assign('user', $userObj->getUser());
 		$this->assign('channel_list', $channel_list);
 		$this->assign('send_state_list', $GLOBALS['CONFIG']['TASKSINGLE']['STATE']);
 		$this->assign('list', $list);

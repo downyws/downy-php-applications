@@ -1,3 +1,42 @@
+$(function(){
+	$(".timeclock").each(function(){
+		$(this).timeClock();
+	});
+
+	$(".realtime_edit").each(function(){
+		$(this).realtimeEdit();
+	});
+
+	$(".index_menu ul li a").click(function(){
+		$(".index_menu ul li a").removeClass("current");
+		$(this).addClass("current");
+	});
+
+	$(".btn").button();
+	$(".radiolist").buttonset();
+
+	$(".datepicker_from").each(function(){
+		$(this).datepicker({
+			dateFormat: "yy-mm-dd",
+			numberOfMonths: 2,
+			onSelect: function(selectedDate){
+				$(".datepicker_to").datepicker("option", "minDate", selectedDate);
+			}
+		});
+	});
+	$(".datepicker_to").each(function(){
+		$(this).datepicker({
+			dateFormat: "yy-mm-dd",
+			numberOfMonths: 2,
+			onSelect: function(selectedDate){
+				$(".datepicker_from").datepicker("option", "maxDate", selectedDate);
+			}
+		});
+	});
+});
+
+
+
 $.fn.extend({
 	/* 框架网页检查 */
 	frameCheck:function(){
@@ -128,41 +167,4 @@ $.fn.extend({
 		}});
 		return false;
 	}
-});
-
-$(function(){
-	$(".timeclock").each(function(){
-		$(this).timeClock();
-	});
-
-	$(".realtime_edit").each(function(){
-		$(this).realtimeEdit();
-	});
-
-	$(".index_menu ul li a").click(function(){
-		$(".index_menu ul li a").removeClass("current");
-		$(this).addClass("current");
-	});
-
-	$(".btn").button();
-	$(".radiolist").buttonset();
-
-	$(".datepicker_from").each(function(){
-		$(this).datepicker({
-			dateFormat: "yy-mm-dd",
-			numberOfMonths: 2,
-			onSelect: function(selectedDate){
-				$(".datepicker_to").datepicker("option", "minDate", selectedDate);
-			}
-		});
-	});
-	$(".datepicker_to").each(function(){
-		$(this).datepicker({
-			dateFormat: "yy-mm-dd",
-			numberOfMonths: 2,
-			onSelect: function(selectedDate){
-				$(".datepicker_from").datepicker("option", "maxDate", selectedDate);
-			}
-		});
-	});
 });
