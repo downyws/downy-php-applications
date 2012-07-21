@@ -2,12 +2,7 @@
 
 class Submit
 {
-	protected $errors = array();
-
-	public function error($is_all = true)
-	{
-		return $is_all ? $this->errors : end($this->errors);
-	}
+	public $errors = array();
 
 	/*$params = array(
 		'user_name' => array(
