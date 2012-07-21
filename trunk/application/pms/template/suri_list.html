@@ -27,14 +27,14 @@
 	</div>
 	<table class="table_list">
 		<tbody align="left" valign="top">
-			<tr><th>编号</th><th>任务名称</th><th>短网址</th><th>原网址</th><th>访问量</th><th>状态</th><th>类型</th>{if 'SURI:EDIT'|in_array:$userpower}<th>操作</th>{/if}</tr>
+			<tr><th>编号</th><th>任务名称</th><th>短网址</th><th>原网址</th><th>访问量</th><th>类型</th><th>状态</th>{if 'SURI:EDIT'|in_array:$userpower}<th>操作</th>{/if}</tr>
 			{if 'SURI:EDIT'|in_array:$userpower}
 				{foreach from=$list.data item=v}
-					<tr><td>{$v.id}</td><td>{$v.task_title}</td><td>{$v.key_format}</td><td>{$v.uri}</td><td>{$v.count}</td><td style="{if $v.is_disable}color:#FF0000{/if}">{$v.is_disable_format}</td><td>{$v.type_format}</td><td><a href="/index.php?a=suri&m=edit&id={$v.id}">编辑</a></td></tr>
+					<tr><td>{$v.id}</td><td>{$v.task_title}</td><td>{$v.key_format}</td><td>{$v.uri}</td><td>{$v.count}</td><td>{$v.type_format}</td><td style="{if $v.is_disable}color:#FF0000{/if}">{$v.is_disable_format}</td><td><a href="/index.php?a=suri&m=edit&id={$v.id}">编辑</a></td></tr>
 				{/foreach}
 			{else}
 				{foreach from=$list.data item=v}
-					<tr><td>{$v.id}</td><td>{$v.task_title}</td><td>{$v.key_format}</td><td>{$v.uri}</td><td>{$v.count}</td><td style="{if $v.is_disable}color:#FF0000{/if}">{$v.is_disable_format}</td><td>{$v.type_format}</td></tr>
+					<tr><td>{$v.id}</td><td>{$v.task_title}</td><td>{$v.key_format}</td><td>{$v.uri}</td><td>{$v.count}</td><td>{$v.type_format}</td><td style="{if $v.is_disable}color:#FF0000{/if}">{$v.is_disable_format}</td></tr>
 				{/foreach}
 			{/if}
 		</tbody>

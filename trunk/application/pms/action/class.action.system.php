@@ -14,8 +14,8 @@ class ActionSystem extends ActionCommon
 		Factory::loadLibrary('filehelper');
 		Factory::loadLibrary('imagehelper');
 		$commonObj = Factory::getModel('common');
-		$filehelper = new Filehelper();
-		$imagehelper = new Imagehelper();
+		$filehelper = new FileHelper();
+		$imagehelper = new ImageHelper();
 
 		$info = array();
 		
