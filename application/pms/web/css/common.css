@@ -80,3 +80,16 @@ h2{font-size:14px;}
 .msgbox{position:absolute;top:0px;right:0px;display:none;padding:3px 10px 3px 10px;background:#336699;}
 .msgbox .failed{color:#FF0000;}
 .msgbox .success{color:#FFFFFF;}
+
+/* state color */
+.ts_state1{color:#DDDD00;}
+.ts_state2{color:#00DD00;}
+.ts_state3{color:#000000;}
+.ts_state4{color:#FF0000;}
+.ts_state5{color:#FF0000;}
+.tm_state1{color:#DDDD00;}
+.tm_state2{color:#00DD00;}
+.tm_state3{color:#000000;}
+.tm_state4{color:#FF0000;}
+.tm_state5{color:#000000;}
+.tm_state6{color:#0000FF;}
