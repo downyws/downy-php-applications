@@ -40,7 +40,7 @@ class ModelShortUri extends ModelCommon
 	{
 		$taskmultiObj = Factory::getModel('taskmulti');
 
-		$data['taskmulti'] = $taskmultiObj->getObject(array(array('id' => array('eq', $data['id']))));
+		$data['taskmulti'] = $taskmultiObj->getObject(array(array('id' => array('eq', $data['task_id']))));
 		$data['key_format'] = $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN'] . $data['key'];
 		$data['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$data['is_disable']];
 		$data['type_format'] = $GLOBALS['CONFIG']['SHORT_URI']['TYPE'][$data['type']];
