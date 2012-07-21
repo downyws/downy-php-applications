@@ -1,5 +1,5 @@
 <?php
-class Filehelper
+class FileHelper
 {
 	public function getDirSize($path)
 	{
