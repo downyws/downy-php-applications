@@ -23,8 +23,8 @@ class ActionChannel extends ActionCommon
 
 	public function methodEdit()
 	{
-		$params = $this->_submit->filter(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0))
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
 		));
 
 		if($params['id'])
@@ -42,36 +42,39 @@ class ActionChannel extends ActionCommon
 
 	public function methodEditAjax()
 	{
-	/*	// 获取参数
-		$params = $this->_submit->filter(array(
-			'id' => array('complete' => array(array('int')), 'valid' => array(array('gt', '编号错误。', -1))),
-			'name' => array('complete' => array(array('trim')), 'valid' => array(array('set', '名称不能为空。'))),
-			'is_disable' => array('valid' => array(array('in', '状态错误。', $GLOBALS['CONFIG']['IS_DISABLE']))),
-			'type' => array('valid' => array(array('in', '类型错误。', $GLOBALS['CONFIG']['CHANNEL'])))
-		));*/
-
-$result = array('state' => true, 'message' => 'test');
-		die(json_encode($result));
-
-		if(!$params)
-		{
-			$message = implode(' ', $this->_submit->error());
-			$result = array('state' => false, 'message' => $message);
-			die(json_encode($result));
-		}
-
-/*
-		$user = $_SESSION['user'];
-		$result = array('state' => true, 'message' => '未知错误');
+		// 获取参数
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+			'name' => array(array('format', 'trim'), array('valid', 'empty', '通道名称不能为空。', null, null)),
+			'is_disable' => array(array('format', 'int'), array('valid', 'in', '状态错误', null, array_keys($GLOBALS['CONFIG']['IS_DISABLE']))),
+			'type' => array(array('format', 'int'), array('valid', 'in', '类型错误', null, array_keys($GLOBALS['CONFIG']['CHANNEL']['TYPE'])))
+		));
 
 		// 保存
-		$channelObj = Factory::getModel('channel');
-		$result = $channelObj->update($params['id'], array($params['key'] => $params['val']));
-		if($result['state'])
+		if(count($this->_submit->errors) > 0)
 		{
-			$channelObj->record(array('user_id' => $user['id'], 'data_id' => $params['id'], 'data_table' => LOG_DATA_TABLE_CHANNEL, 'operation_type' => LOG_OPERATION_TYPE_UPDATE));
+			$message = implode('， ', $this->_submit->errors) . '。';
+			$result = array('state' => false, 'message' => $message);
 		}
+		else
+		{
+			$channelObj = Factory::getModel('channel');
+			if($params['id'] == 0)
+			{
+				$result = $channelObj->add($params);
+				if($result['state'])
+				{
+					$result['script'] = 'alert("保存成功。");window.location="/index.php?a=channel&m=edit&id=' . $result['message'] . '";';
+					$result['message'] = '保存成功。';
+				}
+			}
+			else
+			{
+				$result = $channelObj->edit($params['id'], $params);
+			}
+		}
+
 		// 返回
-		echo json_encode($result);*/
+		echo json_encode($result);
 	}
 }

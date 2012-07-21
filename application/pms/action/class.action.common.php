@@ -18,20 +18,20 @@ class ActionCommon extends Action
 			{
 				if($params['t'] == 'ajax')
 				{
-					die(json_encode(array('state' => false, 'message' => '请先登陆。')));
+					echo json_encode(array('state' => false, 'message' => '请先登陆。'));
 				}
 				else
 				{
 					$this->redirect('/index.php?a=index&m=login');
 				} 
 			}
-			if(!in_array($params['m'], $this->NOT_POWER))
+			else if(!in_array($params['m'], $this->NOT_POWER))
 			{
 				if(!$userObj->hasPower($params['a'], $params['m']))
 				{
 					if($params['t'] == 'ajax')
 					{
-						die(json_encode(array('state' => false, 'message' => '您没有权限。')));
+						echo json_encode(array('state' => false, 'message' => '您没有权限。'));
 					}
 					else
 					{
@@ -40,13 +40,6 @@ class ActionCommon extends Action
 				}
 			}
 		}
-	}
-
-	public function record($user_id, $data_id, $data_table, $operation_type)
-	{
-		$param = array('user_id' => $user_id, 'data_id' => $data_id, 'data_table' => $data_table, 'operation_type' => $operation_type, 'create_time' => time());
-		$logObj = Factory::getModel('log');
-		$logObj->record($param);
 	}
 
 	public function message($message, $links = array(), $prompt_type = PROMPT_INFORMATION)

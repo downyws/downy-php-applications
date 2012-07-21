@@ -6,16 +6,17 @@ class ModelCommon extends Model
 		parent::__construct($GLOBALS['CONFIG']['DB']);
 	}
 
-	public function record($param)
+	public function record($user_id, $data_id, $data_table, $operation_type)
 	{
 		// 参数处理
-		$param['user_id'] = intval($param['user_id']) > 0 ? intval($param['user_id']) : 0;
-		$param['data_id'] = intval($param['data_id']) > 0 ? intval($param['data_id']) : 0;
-		$param['data_table'] = intval($param['data_table']) > 0 ? intval($param['data_table']) : 0;
-		$param['operation_type'] = intval($param['operation_type']) > 0 ? intval($param['operation_type']) : 0;
-		$param['create_time'] = !empty($param['create_time']) && intval($param['create_time']) > 0 ? intval($param['create_time']) : time();
+		$params = array();
+		$params['user_id'] = intval($user_id) > 0 ? intval($user_id) : 0;
+		$params['data_id'] = intval($data_id) > 0 ? intval($data_id) : 0;
+		$params['data_table'] = intval($data_table) > 0 ? intval($data_table) : 0;
+		$params['operation_type'] = intval($operation_type) > 0 ? intval($operation_type) : 0;
+		$params['create_time'] = time();
 
 		// 保存
-		$this->insert($param, 'log');
+		$this->insert($params, 'log');
 	}
 }

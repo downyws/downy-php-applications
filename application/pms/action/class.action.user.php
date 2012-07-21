@@ -70,19 +70,15 @@ class ActionUser extends ActionCommon
 			'val' => array(array('format', 'trim'))
 		));
 
-		$user = $_SESSION['user'];
 		$result = array('state' => true, 'message' => 'Î´Öª´íÎó');
 
 		// ±£´æ
 		$userObj = Factory::getModel('user');
+		$user = $userObj->getUser();
 		switch($params['key'])
 		{
 			case 'password':
 				$result = $userObj->editPassword($user['id'], $params['val']);
-				if($result['state'])
-				{
-					$userObj->record(array('user_id' => $user['id'], 'data_id' => $user['id'], 'data_table' => LOG_DATA_TABLE_USER, 'operation_type' => LOG_OPERATION_TYPE_UPDATE));
-				}
 				break;
 		}
 
