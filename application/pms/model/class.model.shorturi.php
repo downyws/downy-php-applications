@@ -176,7 +176,7 @@ class ModelShortUri extends ModelCommon
 		$try = 100;
 		while(--$try)
 		{
-			$key_suffix = $mathhelper->from10toN(62, mt_rand(0, pow(62, 2)));
+			$key_suffix = $mathhelper->from10toN(62, mt_rand(0, pow(62, 2) - 1));
 			$key_suffix = str_pad($key_suffix, 2, '0', STR_PAD_LEFT);
 			if(!$this->existsKey($key_prefix . $key_suffix, array($seed)))
 			{
