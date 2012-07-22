@@ -101,26 +101,33 @@ class ActionSuri extends ActionCommon
 	{
 		// 获取参数
 		$params = $this->_submit->obtain(array(
-			'key' => array(array('format', 'trim'))
+			'key' => array(array('format', 'trim'), array('valid', 'regex', '', null, '/^[0-9A-za-z]+$/'))
 		));
 
-		// 获取跳转地址
-		$shortUriObj = Factory::getModel('shorturi');
-		$uri = $shortUriObj->getUri($params['key']);
-		if(!$uri)
-		{
-			$this->redirect($GLOBALS['CONFIG']['SHORT_URI']['ERROR_PAGE']);
-		}
-		else if($uri['is_disable'])
+		if(count($this->_submit->errors) > 0)
 		{
 			$this->redirect($GLOBALS['CONFIG']['SHORT_URI']['DISABLE_PAGE']);
 		}
+		else
+		{
+			// 获取对象
+			$shorturiObj = Factory::getModel('shorturi');
+			$uri = $shorturiObj->getObject(array(array('`key`' => array('eq', $params['key']))));
+			if(!$uri)
+			{
+				$this->redirect($GLOBALS['CONFIG']['SHORT_URI']['ERROR_PAGE']);
+			}
+			else if($uri['is_disable'])
+			{
+				$this->redirect($GLOBALS['CONFIG']['SHORT_URI']['DISABLE_PAGE']);
+			}
 
-		// 更新
-		$shortUriObj->updateCount($params['key'], 1);
+			// 更新
+			$shorturiObj->edit($uri['id'], array('count' => $uri['count'] + 1));
 
-		// 跳转
-		$this->redirect($uri['uri']);
+			// 跳转
+			$this->redirect($uri['uri']);
+		}
 	}
 
 	public function methodError()
