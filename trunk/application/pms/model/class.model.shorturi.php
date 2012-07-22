@@ -151,6 +151,7 @@ class ModelShortUri extends ModelCommon
 		$condition = array();
 		$condition[] = array('id' => array('eq', $id));
 		$state = parent::update($condition, $data);
+		$state = ($state !== false);
 		if($state)
 		{
 			$userObj = Factory::getModel('user');
