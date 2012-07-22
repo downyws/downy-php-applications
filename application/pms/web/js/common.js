@@ -14,6 +14,7 @@ $(function(){
 
 	$(".btn").button();
 	$(".radiolist").buttonset();
+	$(".checkboxlist").buttonset();
 
 	$(".datepicker_from").each(function(){
 		$(this).datepicker({
@@ -82,7 +83,6 @@ $.fn.extend({
 							parent.data("is_open", false);
 						});
 						break;
-					case "textarea": break;
 					case "password":
 						$(this).html("<input type='password' value='" + $(this).data("value") + "' />");
 						$(this).find("input").focus();
@@ -109,6 +109,7 @@ $.fn.extend({
 							parent.data("is_open", false);
 						});
 						break;
+					case "textarea": break;
 					case "select": break;
 					case "checkbox": break;
 					case "radio": break;
@@ -134,9 +135,7 @@ $.fn.extend({
 	msgbox: function(state, message){
 		$(".msgbox").remove();
 		$("body").append("<div class='msgbox'><span class='" + state + "'>" + message + "</span></div>");
-		$(".msgbox").fadeIn(1500, function(){
-			$(".msgbox").fadeOut(3000);
-		});
+		$(".msgbox").fadeIn(800).delay(2000).fadeOut(800);
 	},
 
 	/* AJAX表单提交 */
