@@ -20,7 +20,7 @@ class ModelTaskSingle extends ModelCommon
 
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . ' AS ts JOIN ' . $this->table('user') . ' AS u ON (u.`id` = ts.`user_id`) JOIN ' . $this->table('target') . ' AS t ON (t.`id` = ts.`target_id`) ' . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);
-		$sql = 'SELECT ts.*, u.account, t.contact, c.name AS channel_name FROM ' . $this->table() . ' AS ts JOIN ' . $this->table('user') . ' AS u ON (u.`id` = ts.`user_id`) JOIN ' . $this->table('target') . ' AS t ON (t.`id` = ts.`target_id`) JOIN ' . $this->table('channel') . ' AS c ON (c.`id` = ts.`channel_id`) ' . $this->getWhere($condition) . ' ORDER BY ts.`id` DESC ' . $this->getLimit($p, $ps);
+		$sql = 'SELECT ts.*, u.account, t.contact, c.name AS channel_name, c.type AS channel_type FROM ' . $this->table() . ' AS ts JOIN ' . $this->table('user') . ' AS u ON (u.`id` = ts.`user_id`) JOIN ' . $this->table('target') . ' AS t ON (t.`id` = ts.`target_id`) JOIN ' . $this->table('channel') . ' AS c ON (c.`id` = ts.`channel_id`) ' . $this->getWhere($condition) . ' ORDER BY ts.`id` DESC ' . $this->getLimit($p, $ps);
 		$data = $this->fetchAll($sql);
 		$pager = $this->getPager($p, $count, $ps);
 
@@ -31,6 +31,7 @@ class ModelTaskSingle extends ModelCommon
 	{
 		foreach($list as $k => $v)
 		{
+			$list[$k]['channel_type_format'] = $GLOBALS['CONFIG']['CHANNEL']['TYPE'][$list[$k]['channel_type']];
 			$list[$k]['send_state_format'] = $GLOBALS['CONFIG']['TASKSINGLE']['STATE'][$list[$k]['send_state']];
 		}
 		return $list;
