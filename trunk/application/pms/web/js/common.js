@@ -12,6 +12,8 @@ $(function(){
 		$(this).addClass("current");
 	});
 
+	$(".ajaxlink").ajaxLink();
+
 	$(".btn").button();
 	$(".radiolist").buttonset();
 	$(".checkboxlist").buttonset();
@@ -165,5 +167,21 @@ $.fn.extend({
 			$.fn.msgbox('failed', 'AJAX请求出错。');
 		}});
 		return false;
+	},
+
+	/* AJAX链接 */
+	ajaxLink: function(){
+		$(this).click(function(){
+			$.ajax({type: "GET", dataType: "JSON", url: $(this).data("url"), async: true, success: function(result){
+				if(result.state){
+					$.fn.msgbox('success', result.message);
+					result.script && eval(result.script);
+				}else{
+					$.fn.msgbox('failed', result.message);
+				}
+			}, error: function(){
+				$.fn.msgbox('failed', 'AJAX请求出错。');
+			}});
+		});
 	}
 });

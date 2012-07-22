@@ -50,4 +50,19 @@ class ModelTaskSingle extends ModelCommon
 		$data['send_state_format'] = $GLOBALS['CONFIG']['TASKSINGLE']['STATE'][$data['send_state']];
 		return $data;
 	}
+
+	public function cancel($id)
+	{
+		$condition = array();
+		$condition[] = array('id' => array('eq', $id));
+		$condition[] = array('send_state' => array('eq', 1));
+		$state = $this->update($condition, array('send_state' => 4));
+		if($state)
+		{
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+			$this->record($user['id'], $id, LOG_DATA_TABLE_TASKSINGLE, LOG_OPERATION_TYPE_UPDATE);
+		}
+		return array('state' => $state, 'message' => ($state ? '取消成功。' : '取消失败。'));
+	}
 }

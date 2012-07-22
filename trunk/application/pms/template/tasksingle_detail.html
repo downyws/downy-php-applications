@@ -32,7 +32,7 @@
 			{if $object.send_state == 1}
 				<tr><td>&nbsp;</td><td>
 					<input type="button" class="btn" value="编辑" onclick="window.location.href='/index.php?a=tasksingle&m=edit&id={$object.id}';" />
-					<input type="button" class="mgl20 btn" value="取消发送" />
+					<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />
 				</td></tr>
 			{/if}
 		</tbody>
