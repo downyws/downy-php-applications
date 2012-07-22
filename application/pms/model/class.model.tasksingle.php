@@ -35,4 +35,18 @@ class ModelTaskSingle extends ModelCommon
 		}
 		return $list;
 	}
+
+	public function formatObject($data)
+	{
+		$userObj = Factory::getModel('user');
+		$targetObj = Factory::getModel('target');
+		$channelObj = Factory::getModel('channel');
+
+		$data['user'] = $userObj->getObject(array(array('id' => array('eq', $data['user_id']))));
+		$data['target'] = $targetObj->getObject(array(array('id' => array('eq', $data['target_id']))));
+		$data['channel'] = $channelObj->getObject(array(array('id' => array('eq', $data['channel_id']))));
+		$data['channel']['type_format'] = $GLOBALS['CONFIG']['CHANNEL']['TYPE'][$data['channel']['type']];
+		$data['send_state_format'] = $GLOBALS['CONFIG']['TASKSINGLE']['STATE'][$data['send_state']];
+		return $data;
+	}
 }
