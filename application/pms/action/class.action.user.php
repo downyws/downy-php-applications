@@ -36,6 +36,26 @@ class ActionUser extends ActionCommon
 
 	}
 
+	public function methodDetail()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', 'ç”¨æˆ·ä¸å­˜åœ¨', null, 0))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->message(implode('ï¼Œ', $this->_submit->errors) . 'ã€‚');
+		}
+		else
+		{
+			$userObj = Factory::getModel('user');
+			$object = $userObj->getObject(array(array('id' => array('eq', $params['id']))));
+			$object = $userObj->formatObject($object);
+
+			$this->assign('object', $object);
+		}
+	}
+
 	public function methodDelete()
 	{
 
@@ -44,35 +64,22 @@ class ActionUser extends ActionCommon
 	public function methodProfile()
 	{
 		$userObj = Factory::getModel('user');
-		$user = $userObj->getUser();
-		$user['power'] = $userObj->getUserPower();
-		foreach($user['power'] as $k => $v)
-		{
-			$user['power'][$k] = $GLOBALS['CONFIG']['POWER'][$v]['NAME'];
-		}
-
-		$channelObj = Factory::getModel('channel');
-		$channels = $channelObj->getAllPairs();
-
-		$user['channel'] = $userObj->getUserChannel();
-		foreach($user['channel'] as $k => $v)
-		{
-			$user['channel'][$k] = $channels[$v];
-		}
-		$this->assign('user', $user);
+		$object = $userObj->getUser();
+		$object = $userObj->formatObject($object);
+		$this->assign('object', $object);
 	}
 
 	public function methodProfileAjax()
 	{
-		// »ñÈ¡²ÎÊý
+		// èŽ·å–å‚æ•°
 		$params = $this->_submit->obtain(array(
 			'key' => array(array('format', 'trim')),
 			'val' => array(array('format', 'trim'))
 		));
 
-		$result = array('state' => true, 'message' => 'Î´Öª´íÎó');
+		$result = array('state' => true, 'message' => 'æœªçŸ¥é”™è¯¯');
 
-		// ±£´æ
+		// ä¿å­˜
 		$userObj = Factory::getModel('user');
 		$user = $userObj->getUser();
 		switch($params['key'])
@@ -82,7 +89,7 @@ class ActionUser extends ActionCommon
 				break;
 		}
 
-		// ·µ»Ø
+		// è¿”å›ž
 		echo json_encode($result);
 	}
 }
