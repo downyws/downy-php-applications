@@ -31,6 +31,43 @@ class ModelUser extends ModelCommon
 		return $list;
 	}
 
+	public function formatObject($data)
+	{
+		$data['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$data['is_disable']];
+
+		$data['power'] = explode(';', $data['power']);
+		$data['power_format'] = array();
+		foreach($data['power'] as $k => $v)
+		{
+			if(empty($v))
+			{
+				unset($data[$k]);
+			}
+			else
+			{
+				$data['power_format'][] = $GLOBALS['CONFIG']['POWER'][$v]['NAME'];
+			}
+		}
+
+		$channelObj = Factory::getModel('channel');
+		$channels = $channelObj->getAllPairs();
+		$data['channel'] = explode(';', $data['channel']);
+		$data['channel_format'] = array();
+		foreach($data['channel'] as $k => $v)
+		{
+			if(empty($v))
+			{
+				unset($data[$k]);
+			}
+			else
+			{
+				$data['channel_format'][] = $channels[$v];
+			}
+		}
+
+		return $data;
+	}
+
 	public function isLogin()
 	{
 		return !empty($_SESSION['user']);
