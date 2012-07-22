@@ -56,6 +56,26 @@ class ActionTaskSingle extends ActionCommon
 		echo 'ActionSuri';
 	}
 
+	public function methodDetail()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->message(implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$tasksingleObj = Factory::getModel('tasksingle');
+			$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
+			$object = $tasksingleObj->formatObject($object);
+
+			$this->assign('object', $object);
+		}
+	}
+
 	public function methodRead()
 	{
 		echo 'ActionSuri';
