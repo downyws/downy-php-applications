@@ -56,6 +56,29 @@ class ActionTaskSingle extends ActionCommon
 		echo 'ActionSuri';
 	}
 
+	public function methodCancelAjax()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$result = array('state' => false, 'message' => implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$tasksinglelObj = Factory::getModel('tasksingle');
+			$result = $tasksinglelObj->cancel($params['id']);
+			if($result['state'])
+			{
+				$result['script'] = 'alert("取消成功。");window.location.href="/index.php?a=tasksingle&m=detail&id=' . $params['id'] . '";';
+			}
+		}
+
+		echo json_encode($result);
+	}
+
 	public function methodDetail()
 	{
 		$params = $this->_submit->obtain(array(
