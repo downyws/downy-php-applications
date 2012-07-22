@@ -37,7 +37,7 @@
 						<td>{if $v.send_state == 3}{if $v.channel_type == 1}{if $v.page_view > 0}是{else}否{/if}{else}无法确定{/if}{else}否{/if}</td>
 						<td>
 							<a href="/index.php?a=tasksingle&m=detail&id={$v.id}">详情</a>
-							<a href="/index.php?a=tasksingle&m=edit&id={$v.id}">编辑</a>
+							{if $v.send_state == 1}<a href="/index.php?a=tasksingle&m=edit&id={$v.id}">编辑</a>{/if}
 						</td>
 					</tr>
 				{/foreach}
@@ -48,7 +48,7 @@
 						<td>{if $v.send_state == 3}{if $v.channel_type == 1}{if $v.page_view > 0}是{else}否{/if}{else}无法确定{/if}{else}否{/if}</td>
 						<td>
 							<a href="/index.php?a=tasksingle&m=detail&id={$v.id}">详情</a>
-							{if $v.user_id == $user.id}<a href="/index.php?a=tasksingle&m=edit&id={$v.id}">编辑</a>{/if}
+							{if $v.send_state == 1 && $v.user_id == $user.id}<a href="/index.php?a=tasksingle&m=edit&id={$v.id}">编辑</a>{/if}
 						</td>
 					</tr>
 				{/foreach}
