@@ -91,10 +91,13 @@ class ActionTaskSingle extends ActionCommon
 		}
 		else
 		{
+			$userObj = Factory::getModel('user');
 			$tasksingleObj = Factory::getModel('tasksingle');
 			$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
 			$object = $tasksingleObj->formatObject($object);
 
+			$this->assign('user', $userObj->getUser());
+			$this->assign('userpower', $userObj->getUserPower());
 			$this->assign('object', $object);
 		}
 	}

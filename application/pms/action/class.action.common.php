@@ -18,7 +18,7 @@ class ActionCommon extends Action
 			{
 				if($params['t'] == 'ajax')
 				{
-					echo json_encode(array('state' => false, 'message' => '请先登陆。'));
+					die(json_encode(array('state' => false, 'message' => '请先登陆。')));
 				}
 				else
 				{
@@ -31,7 +31,7 @@ class ActionCommon extends Action
 				{
 					if($params['t'] == 'ajax')
 					{
-						echo json_encode(array('state' => false, 'message' => '您没有权限。'));
+						die(json_encode(array('state' => false, 'message' => '您没有权限。')));
 					}
 					else
 					{
