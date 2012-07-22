@@ -14,10 +14,19 @@ $(function(){
 
 	$(".ajaxlink").ajaxLink();
 
+	$(".wordstata").each(function(){
+		$(this).wordStata();
+	});
+
 	$(".btn").button();
 	$(".radiolist").buttonset();
 	$(".checkboxlist").buttonset();
 
+	$(".rowtabs").rowTabs();
+
+	$(".datepicker").each(function(){
+		$(this).datepicker({dateFormat: "yy-mm-dd"});
+	});
 	$(".datepicker_from").each(function(){
 		$(this).datepicker({
 			dateFormat: "yy-mm-dd",
@@ -35,6 +44,9 @@ $(function(){
 				$(".datepicker_from").datepicker("option", "maxDate", selectedDate);
 			}
 		});
+	});
+	$(".datetimepicker").each(function(){
+		$(this).datetimepicker({dateFormat: "yy-mm-dd", timeFormat: "hh:mm:ss", showSecond: true});
 	});
 });
 
@@ -120,6 +132,23 @@ $.fn.extend({
 		});
 	},
 
+	/* 选项表单 */
+	rowTabs: function(){
+		var list = new Array();
+		$(this).find("input").each(function(){
+			list.push($(this).data("tab"));
+			if($(this).attr("checked") != "checked"){
+				$($(this).data("tab")).css("display", "none");
+			}
+			$(this).change(function(){
+				for(var i = 0; i < list.length; i++){
+					$(list[i]).css("display", "none");
+				}
+				$($(this).data("tab")).css("display", "");
+			});
+		});
+	},
+
 	/* 时钟 */
 	timeClock: function(){
 		var that = this;
@@ -131,6 +160,20 @@ $.fn.extend({
 		}
 		run();
 		setInterval(run, 1000);
+	},
+
+	/* 文本框字数统计 */
+	wordStata: function(){
+		var that = this;
+		var type = $(this).data("type");
+		var output = $(this).data("output");
+		var stata = function(){
+			if(type == "iso"){
+				$(output).html($(that).val().length);
+			}
+		};
+		$(this).keyup(stata);
+		stata();
 	},
 
 	/* 提示信息框 */
