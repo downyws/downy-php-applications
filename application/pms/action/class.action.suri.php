@@ -122,10 +122,8 @@ class ActionSuri extends ActionCommon
 				$this->redirect($GLOBALS['CONFIG']['SHORT_URI']['DISABLE_PAGE']);
 			}
 
-			// 更新
-			$shorturiObj->edit($uri['id'], array('count' => $uri['count'] + 1));
-
 			// 跳转
+			$shorturiObj->addPv($uri['id']);
 			$this->redirect($uri['uri']);
 		}
 	}

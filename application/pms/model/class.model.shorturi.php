@@ -103,6 +103,12 @@ class ModelShortUri extends ModelCommon
 		return array('state' => $state, 'message' => $message);
 	}
 
+	public function addPv($id)
+	{
+		$sql = 'UPDATE ' . $this->table('') . ' SET `count` = `count` + 1 WHERE `id` = ' . $id;
+		$this->query($sql);
+	}
+
 	public function edit($id, $data)
 	{
 		foreach($data as $k => $v)
