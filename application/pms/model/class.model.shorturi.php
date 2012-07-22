@@ -143,6 +143,9 @@ class ModelShortUri extends ModelCommon
 						return array('state' => false, 'message' => '类型错误。');
 					}
 					break;
+				case 'count':
+					$data[$k] = intval($data[$k]);
+					break;
 				default:
 					unset($data[$k]);
 			}
@@ -195,26 +198,5 @@ class ModelShortUri extends ModelCommon
 		$condition[] = array('id' => array('not in', $not_in_id));
 		$exists = $this->getOne($condition, 'COUNT(*)');
 		return $exists > 0;
-	}
-
-	public function getUri($key)
-	{
-		// 判断合法性
-		if(!preg_match('/^[0-9A-za-z]+$/', $key))
-		{
-			return $GLOBALS['CONFIG']['SHORT_URI']['ERROR_PAGE'];
-		}
-		
-		// 获取URI
-		$condition = array(array('`key`' => array('eq', $key)));
-		$uri = $this->getObject($condition);
-
-		return $uri;
-	}
-
-	public function updateCount($key, $add_count)
-	{
-		$sql = 'UPDATE ' . $this->table() . ' SET `count` = (`count` + ' . $add_count . ') WHERE `key` = \'' . $key . '\'';
-		$this->query($sql);
 	}
 }
