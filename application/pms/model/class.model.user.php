@@ -126,7 +126,7 @@ class ModelUser extends ModelCommon
 					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
 					break;
 				case 'tasksingle_limit_day':
-					$data[$k] = intval($data[$k]) > 0 ? $data[$k] : 1;
+					$data[$k] = intval($data[$k]) >= 0 ? $data[$k] : 1;
 					break;
 				default:
 					unset($data[$k]);
@@ -205,7 +205,7 @@ class ModelUser extends ModelCommon
 					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
 					break;
 				case 'tasksingle_limit_day':
-					$data[$k] = intval($data[$k]) > 0 ? $data[$k] : 1;
+					$data[$k] = intval($data[$k]) >= 0 ? $data[$k] : 1;
 					break;
 				default:
 					unset($data[$k]);
