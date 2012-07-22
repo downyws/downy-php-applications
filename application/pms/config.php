@@ -1,10 +1,10 @@
 <?php
 
-// µ÷ÊÔÄ£Ê½
+// è°ƒè¯•æ¨¡å¼
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Êý¾Ý¿âÅäÖÃ
+// æ•°æ®åº“é…ç½®
 $GLOBALS['CONFIG']['DB'] = array
 (
 	'HOST' => 'localhost',
@@ -16,7 +16,7 @@ $GLOBALS['CONFIG']['DB'] = array
 	'PREFIX' => 'pms_'
 );
 
-// ¶ÌÍøÖ·ÅäÖÃ
+// çŸ­ç½‘å€é…ç½®
 $GLOBALS['CONFIG']['SHORT_URI'] = array
 (
 	'DOMAIN' => 'http://suri.org/',

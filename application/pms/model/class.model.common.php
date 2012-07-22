@@ -8,7 +8,7 @@ class ModelCommon extends Model
 
 	public function record($user_id, $data_id, $data_table, $operation_type)
 	{
-		// 参数处理
+		// 鍙傛暟澶勭悊
 		$params = array();
 		$params['user_id'] = intval($user_id) > 0 ? intval($user_id) : 0;
 		$params['data_id'] = intval($data_id) > 0 ? intval($data_id) : 0;
@@ -16,7 +16,7 @@ class ModelCommon extends Model
 		$params['operation_type'] = intval($operation_type) > 0 ? intval($operation_type) : 0;
 		$params['create_time'] = time();
 
-		// 保存
+		// 淇濆瓨
 		$this->insert($params, 'log');
 	}
 }
