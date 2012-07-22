@@ -53,7 +53,45 @@ class ActionTaskSingle extends ActionCommon
 
 	public function methodEdit()
 	{
-		echo 'ActionSuri';
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
+		));
+
+		if($params['id'])
+		{
+			$userObj = Factory::getModel('user');
+			$tasksingleObj = Factory::getModel('tasksingle');
+
+			$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
+			$user = $userObj->getUser();
+
+			// 非法过滤
+			if($object['send_state'] != 1)
+			{
+				$this->message('该单任务已处于无法编辑状态。');
+			}
+			else if(!in_array('TASKSINGLE:EDITALL', $userObj->getUserPower()) && $object['user_id'] != $user['id'])
+			{
+				$this->message('您不能编辑他人的单任务。');
+			}
+			
+			$object = $tasksingleObj->formatObject($object);
+			$this->assign('object', $object);
+		}
+
+		$channelObj = Factory::getModel('channel');
+
+		$channels = $channelObj->getAll();
+		$this->assign('user_channel_list', $userObj->getUserChannel());
+		$this->assign('channel_list', $channels['data']);
+		$this->assign('id', $params['id']);
+	}
+
+	public function methodEditAjax()
+	{
+		// 非法过滤
+		// 通道过滤
+		var_dump($_POST);
 	}
 
 	public function methodCancelAjax()
