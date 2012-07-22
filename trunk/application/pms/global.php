@@ -113,6 +113,6 @@ $GLOBALS['CONFIG']['POWER'] = array(
 	'TASKMULTI:CHECK' => array('NAME' => '多任务审核', 'ACTIONMETHOD' => array()),
 	'TASKSINGLE:READ' => array('NAME' => '单任务查看', 'ACTIONMETHOD' => array('tasksingle:list', 'tasksingle:detail')),
 	'TASKSINGLE:CANCEL' => array('NAME' => '单任务取消', 'ACTIONMETHOD' => array()),
-	'TASKSINGLE:EDITSELF' => array('NAME' => '单任务编辑（自己）', 'ACTIONMETHOD' => array()),
-	'TASKSINGLE:EDITALL' => array('NAME' => '单任务编辑（所有用户）', 'ACTIONMETHOD' => array())
+	'TASKSINGLE:EDITSELF' => array('NAME' => '单任务编辑（自己）', 'ACTIONMETHOD' => array('tasksingle:edit')),
+	'TASKSINGLE:EDITALL' => array('NAME' => '单任务编辑（所有用户）', 'ACTIONMETHOD' => array('tasksingle:edit'))
 );

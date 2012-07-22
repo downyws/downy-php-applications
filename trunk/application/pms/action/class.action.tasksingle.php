@@ -76,11 +76,6 @@ class ActionTaskSingle extends ActionCommon
 		}
 	}
 
-	public function methodRead()
-	{
-		echo 'ActionSuri';
-	}
-
 	public function methodSendApi()
 	{
 		echo 'ActionSuri';
