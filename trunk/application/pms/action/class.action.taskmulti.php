@@ -56,11 +56,6 @@ class ActionTaskMulti extends ActionCommon
 		echo 'ActionSuri';
 	}
 
-	public function methodDelete()
-	{
-		echo 'ActionSuri';
-	}
-
 	public function methodRead()
 	{
 		echo 'ActionSuri';

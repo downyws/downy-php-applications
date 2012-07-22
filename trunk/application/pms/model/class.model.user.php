@@ -68,6 +68,164 @@ class ModelUser extends ModelCommon
 		return $data;
 	}
 
+	public function add($data)
+	{
+		foreach($data as $k => $v)
+		{
+			switch($k)
+			{
+				case 'account':
+					$data[$k] = trim($v);
+					if(empty($data[$k]))
+					{
+						return array('state' => false, 'message' => '账号不能为空。');
+					}
+					else if($this->getOne(array(array('account' => array('eq', $data[$k]))), 'COUNT(*)') === false)
+					{
+						return array('state' => false, 'message' => '账号已经存在。');
+					}
+					break;
+				case 'password':
+					$data[$k] = trim($v);
+					if(empty($data[$k]))
+					{
+						return array('state' => false, 'message' => '密码不能为空。');
+					}
+					$data[$k] = md5($data[$k]);
+					break;
+				case 'power':
+					$power_list = array_keys($GLOBALS['CONFIG']['POWER']);
+					if(is_array($data[$k]) && !empty($data[$k]))
+					{
+						foreach($data[$k] as $_k => $_v)
+						{
+							if(!in_array($_v, $power_list))
+							{
+								unset($data[$k][$_k]);
+							}
+						}
+					}
+					$data[$k] = (is_array($data[$k]) && count($data[$k]) > 0) ? implode(';', $data[$k]) : '';
+					break;
+				case 'channel':
+					if(is_array($data[$k]) && !empty($data[$k]))
+					{
+						$channelObj = Factory::getModel('channel');
+						$channels = array_keys($channelObj->getAllPairs());
+						foreach($data[$k] as $_k => $_v)
+						{
+							if(!in_array($_v, $channels))
+							{
+								unset($data[$k][$_k]);
+							}
+						}
+					}
+					$data[$k] = (is_array($data[$k]) && count($data[$k]) > 0) ? implode(';', $data[$k]) : '';
+					break;
+				case 'is_disable':
+					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
+					break;
+				case 'tasksingle_limit_day':
+					$data[$k] = intval($data[$k]) > 0 ? $data[$k] : 1;
+					break;
+				default:
+					unset($data[$k]);
+			}
+		}
+
+		$state = parent::insert($data);
+		if($state)
+		{
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+			$this->record($user['id'], $state, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_INSERT);
+		}
+		$message = $state ? $state : '保存失败。';
+		return array('state' => $state, 'message' => $message);
+	}
+
+	public function edit($id, $data)
+	{
+		foreach($data as $k => $v)
+		{
+			switch($k)
+			{
+				case 'account':
+					$data[$k] = trim($v);
+					if(empty($data[$k]))
+					{
+						return array('state' => false, 'message' => '账号不能为空。');
+					}
+					else if($this->getOne(array(array('account' => array('eq', $data[$k]))), 'COUNT(*)') === false)
+					{
+						return array('state' => false, 'message' => '账号已经存在。');
+					}
+					break;
+				case 'password':
+					$data[$k] = trim($v);
+					if(empty($data[$k]))
+					{
+						unset($data[$k]);
+					}
+					else
+					{
+						$data[$k] = md5($data[$k]);
+					}
+					break;
+				case 'power':
+					$power_list = array_keys($GLOBALS['CONFIG']['POWER']);
+					if(is_array($data[$k]) && !empty($data[$k]))
+					{
+						foreach($data[$k] as $_k => $_v)
+						{
+							if(!in_array($_v, $power_list))
+							{
+								unset($data[$k][$_k]);
+							}
+						}
+					}
+					$data[$k] = (is_array($data[$k]) && count($data[$k]) > 0) ? implode(';', $data[$k]) : '';
+					break;
+				case 'channel':
+					if(is_array($data[$k]) && !empty($data[$k]))
+					{
+						$channelObj = Factory::getModel('channel');
+						$channels = array_keys($channelObj->getAllPairs());
+						foreach($data[$k] as $_k => $_v)
+						{
+							if(!in_array($_v, $channels))
+							{
+								unset($data[$k][$_k]);
+							}
+						}
+					}
+					$data[$k] = (is_array($data[$k]) && count($data[$k]) > 0) ? implode(';', $data[$k]) : '';
+					break;
+				case 'is_disable':
+					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
+					break;
+				case 'tasksingle_limit_day':
+					$data[$k] = intval($data[$k]) > 0 ? $data[$k] : 1;
+					break;
+				default:
+					unset($data[$k]);
+			}
+		}
+
+		$condition = array();
+		$condition[] = array('id' => array('eq', $id));
+		$state = parent::update($condition, $data);
+		$state = ($state !== false);
+		if($state)
+		{
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+			$this->record($user['id'], $id, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_UPDATE);
+		}
+		$message = $state ? '保存成功。' : '保存失败。';
+		return array('state' => $state, 'message' => $message);
+	}
+
 	public function isLogin()
 	{
 		return !empty($_SESSION['user']);
@@ -168,5 +326,13 @@ class ModelUser extends ModelCommon
 	public function hasChannel($channel_id)
 	{
 		return in_array($channel_id, $this->hasChannel());
+	}
+
+	public function existsField($field, $value)
+	{
+		$condition = array();
+		$condition[] = array($field => array('eq', $value));
+		$exists = $this->getOne($condition, 'COUNT(*)');
+		return $exists > 0;
 	}
 }
