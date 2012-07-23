@@ -128,12 +128,6 @@ class Model extends Db
 		return $this->fetchOne($sql);
 	}
 
-	public function exists($condition, $table = '')
-	{
-		$sql = 'SELECT * FROM ' . $this->table($table) . $this->getWhere($condition);
-		return $this->fetchOne($sql);
-	}
-
 	public function getObject($condition, $fields = array(), $table = '')
 	{
 		$sql = 'SELECT ' . (empty($fields) ? '*' : join(', ', $fields)) . ' FROM ' . $this->table($table) . $this->getWhere($condition) . ' LIMIT 1 ';
