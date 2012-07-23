@@ -134,12 +134,8 @@ class ModelUser extends ModelCommon
 		}
 
 		$state = parent::insert($data);
-		if($state)
-		{
-			$userObj = Factory::getModel('user');
-			$user = $userObj->getUser();
-			$this->record($user['id'], $state, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_INSERT);
-		}
+		$state && $this->record($state, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_INSERT);
+
 		$message = $state ? $state : '保存失败。';
 		return array('state' => $state, 'message' => $message);
 	}
@@ -216,12 +212,8 @@ class ModelUser extends ModelCommon
 		$condition[] = array('id' => array('eq', $id));
 		$state = parent::update($condition, $data);
 		$state = ($state !== false);
-		if($state)
-		{
-			$userObj = Factory::getModel('user');
-			$user = $userObj->getUser();
-			$this->record($user['id'], $id, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_UPDATE);
-		}
+		$state && $this->record($id, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_UPDATE);
+
 		$message = $state ? '保存成功。' : '保存失败。';
 		return array('state' => $state, 'message' => $message);
 	}
@@ -269,8 +261,7 @@ class ModelUser extends ModelCommon
 			$this->update($condition, $data);
 			$result['state'] = true;
 
-			$user = $this->getUser();
-			$this->record($user['id'], $user_id, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_UPDATE);
+			$this->record($user_id, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_UPDATE);
 		}
 		return $result;
 	}

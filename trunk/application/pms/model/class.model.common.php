@@ -6,7 +6,7 @@ class ModelCommon extends Model
 		parent::__construct($GLOBALS['CONFIG']['DB']);
 	}
 
-	public function record($user_id, $data_id, $data_table, $operation_type)
+	public function record($data_id, $data_table, $operation_type, $user_id = 0)
 	{
 		// 参数处理
 		$params = array();
@@ -16,7 +16,16 @@ class ModelCommon extends Model
 		$params['operation_type'] = intval($operation_type) > 0 ? intval($operation_type) : 0;
 		$params['create_time'] = time();
 
-		// 保存
-		$this->insert($params, 'log');
+		if($params['user_id'] < 1)
+		{
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+			$params['user_id'] = $user['id'];
+		}
+		if($params['user_id'] > 0)
+		{
+			// 保存
+			$this->insert($params, 'log');
+		}
 	}
 }
