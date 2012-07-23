@@ -70,68 +70,59 @@ class ModelUser extends ModelCommon
 
 	public function add($data)
 	{
-		foreach($data as $k => $v)
+		// 账号检查
+		$data['account'] = trim($data['account']);
+		if(empty($data['account']))
 		{
-			switch($k)
+			return array('state' => false, 'message' => '账号不能为空。');
+		}
+		else if($this->getOne(array(array('account' => array('eq', $data['account']))), 'COUNT(*)') === false)
+		{
+			return array('state' => false, 'message' => '账号已经存在。');
+		}
+
+		// 密码检查
+		$data['password'] = trim('password');
+		if(empty($data['password']))
+		{
+			return array('state' => false, 'message' => '密码不能为空。');
+		}
+		$data['password'] = md5($data['password']);
+
+		// 权限设置
+		$power_list = array_keys($GLOBALS['CONFIG']['POWER']);
+		if(is_array($data['power']) && !empty($data['power']))
+		{
+			foreach($data['power'] as $k => $v)
 			{
-				case 'account':
-					$data[$k] = trim($v);
-					if(empty($data[$k]))
-					{
-						return array('state' => false, 'message' => '账号不能为空。');
-					}
-					else if($this->getOne(array(array('account' => array('eq', $data[$k]))), 'COUNT(*)') === false)
-					{
-						return array('state' => false, 'message' => '账号已经存在。');
-					}
-					break;
-				case 'password':
-					$data[$k] = trim($v);
-					if(empty($data[$k]))
-					{
-						return array('state' => false, 'message' => '密码不能为空。');
-					}
-					$data[$k] = md5($data[$k]);
-					break;
-				case 'power':
-					$power_list = array_keys($GLOBALS['CONFIG']['POWER']);
-					if(is_array($data[$k]) && !empty($data[$k]))
-					{
-						foreach($data[$k] as $_k => $_v)
-						{
-							if(!in_array($_v, $power_list))
-							{
-								unset($data[$k][$_k]);
-							}
-						}
-					}
-					$data[$k] = (is_array($data[$k]) && count($data[$k]) > 0) ? implode(';', $data[$k]) : '';
-					break;
-				case 'channel':
-					if(is_array($data[$k]) && !empty($data[$k]))
-					{
-						$channelObj = Factory::getModel('channel');
-						$channels = array_keys($channelObj->getAllPairs());
-						foreach($data[$k] as $_k => $_v)
-						{
-							if(!in_array($_v, $channels))
-							{
-								unset($data[$k][$_k]);
-							}
-						}
-					}
-					$data[$k] = (is_array($data[$k]) && count($data[$k]) > 0) ? implode(';', $data[$k]) : '';
-					break;
-				case 'is_disable':
-					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
-					break;
-				case 'tasksingle_limit_day':
-					$data[$k] = intval($data[$k]) >= 0 ? $data[$k] : 1;
-					break;
-				default:
-					unset($data[$k]);
+				if(!in_array($v, $power_list))
+				{
+					unset($data['power'][$k]);
+				}
 			}
 		}
+		$data['power'] = (is_array($data['power']) && count($data['power']) > 0) ? implode(';', $data['power']) : '';
+
+		// 通道设置
+		if(is_array($data['channel']) && !empty($data['channel']))
+		{
+			$channelObj = Factory::getModel('channel');
+			$channels = array_keys($channelObj->getAllPairs());
+			foreach($data['channel'] as $k => $v)
+			{
+				if(!in_array($v, $channels))
+				{
+					unset($data['channel'][$k]);
+				}
+			}
+		}
+		$data['channel'] = (is_array($data['channel']) && count($data['channel']) > 0) ? implode(';', $data['channel']) : '';
+
+		// 发送上线
+		$data['tasksingle_limit_day'] = intval($data['tasksingle_limit_day']) >= 0 ? $data['tasksingle_limit_day'] : 1;
+
+		// 是否禁用
+		$data['is_disable'] = intval($data['is_disable']) > 0 ? 1 : 0;
 
 		$state = parent::insert($data);
 		$state && $this->record($state, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_INSERT);
@@ -271,6 +262,10 @@ class ModelUser extends ModelCommon
 		if($id == 0)
 		{
 			return $_SESSION['user'];
+		}
+		else
+		{
+			return $this->getObject(array(array('id' => array('eq', $id))));
 		}
 	}
 

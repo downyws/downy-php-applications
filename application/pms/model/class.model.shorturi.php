@@ -49,47 +49,49 @@ class ModelShortUri extends ModelCommon
 
 	public function add($data)
 	{
-		foreach($data as $k => $v)
+		// 重定向地址
+		$data['uri'] = trim($data['uri']);
+		if(!preg_match('/^https?:\/\/([0-9a-z-]+\.)+[a-z]{2,4}\//', $data['uri']))
 		{
-			switch($k)
+			return array('state' => false, 'message' => '重定向网址错误。');
+		}
+
+		// 资源类型
+		if(!in_array($data['type'], array_keys($GLOBALS['CONFIG']['SHORT_URI']['TYPE'])))
+		{
+			return array('state' => false, 'message' => '类型错误。');
+		}
+
+		// 任务类型
+		if(empty($data['task_id']))
+		{
+			$data['task_id'] = 0;
+		}
+		else
+		{
+			$data['task_id'] = intval($data['task_id']);
+			if($data['task_id'] < 1)
 			{
-				case 'task_id':
-					$data[$k] = empty($data[$k]) ? 0 : intval($data[$k]);
-					break;
-				case 'key':
-					$data[$k] = trim($v);
-					if(empty($data[$k]))
-					{
-						$data[$k] = $this->createKey();
-						if(!$data[$k])
-						{
-							return array('state' => false, 'message' => '生成短网址失败。');
-						}
-					}
-					else if($this->existsKey($data[$k], array($id)))
-					{
-						return array('state' => false, 'message' => '短网址已存在。');
-					}
-					break;
-				case 'uri':
-					$data[$k] = trim($v);
-					if(!preg_match('/^https?:\/\/([0-9a-z-]+\.)+[a-z]{2,4}\//', $data[$k]))
-					{
-						return array('state' => false, 'message' => '重定向网址错误。');
-					}
-					break;
-				case 'is_disable':
-					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
-					break;
-				case 'type':
-					if(!in_array($data[$k], array_keys($GLOBALS['CONFIG']['SHORT_URI']['TYPE'])))
-					{
-						return array('state' => false, 'message' => '类型错误。');
-					}
-					break;
-				default:
-					unset($data[$k]);
+				$data['task_id'] = 0;
 			}
+		}
+
+		// 状态
+		$data['is_disable'] = intval($data['is_disable']) > 0 ? 1 : 0;
+
+		// 短网址
+		$data['key'] = trim($data['key']);
+		if(empty($data['key']))
+		{
+			$data['key'] = $this->createKey();
+			if(!$data['key'])
+			{
+				return array('state' => false, 'message' => '生成短网址失败。');
+			}
+		}
+		else if($this->existsKey($data['key'], array($id)))
+		{
+			return array('state' => false, 'message' => '短网址已存在。');
 		}
 
 		$state = parent::insert($data);
