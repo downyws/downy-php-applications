@@ -40,30 +40,21 @@ class ModelChannel extends ModelCommon
 
 	public function add($data)
 	{
-		foreach($data as $k => $v)
+		// 通道名称
+		$data['name'] = trim($data['name']);
+		if(empty($data['name']))
 		{
-			switch($k)
-			{
-				case 'name':
-					$data[$k] = trim($v);
-					if(empty($data[$k]))
-					{
-						return array('state' => false, 'message' => '通道名称不能为空。');
-					}
-					break;
-				case 'is_disable':
-					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
-					break;
-				case 'type':
-					if(!in_array($data[$k], array_keys($GLOBALS['CONFIG']['CHANNEL']['TYPE'])))
-					{
-						return array('state' => false, 'message' => '类型错误。');
-					}
-					break;
-				default:
-					unset($data[$k]);
-			}
+			return array('state' => false, 'message' => '通道名称不能为空。');
 		}
+
+		// 通道类型
+		if(!in_array($data['type'], array_keys($GLOBALS['CONFIG']['CHANNEL']['TYPE'])))
+		{
+			return array('state' => false, 'message' => '类型错误。');
+		}
+
+		// 是否禁用
+		$data['is_disable'] = intval($data['is_disable']) > 0 ? 1 : 0;
 
 		$state = parent::insert($data);
 		$state && $this->record($state, LOG_DATA_TABLE_CHANNEL, LOG_OPERATION_TYPE_INSERT);

@@ -86,7 +86,9 @@ class ModelTaskSingle extends ModelCommon
 		}
 
 		// 创建人检查
-		if(!$this->getOne(array(array('id' => array('eq', $data['user_id']))), 'COUNT(*)', 'user'))
+		$userObj = Factory::getModel('user');
+		$user = $userObj->getUser($data['user_id']);
+		if(!$user)
 		{
 			return array('state' => false, 'message' => '创建人不存在。');
 		}
@@ -96,6 +98,18 @@ class ModelTaskSingle extends ModelCommon
 		if($data['plan_send_time'] < time())
 		{
 			$data['plan_send_time'] = time();
+		}
+
+		// 发送上线检查
+		$today = strtotime(date('Y-m-d', time()));
+		$condition = array();
+		$condition[] = array('user_id' => array('eq', $data['user_id']));
+		$condition[] = array('create_time' => array('between', array($today, $today + 86399)));
+		$condition[] = array('send_state' => array('not in', array(4, 5)));
+		$had_send = $this->getOne($condition, 'COUNT(*)');
+		if($user['tasksingle_limit_day'] != 0 && $user['tasksingle_limit_day'] <= $had_send)
+		{
+			return array('state' => false, 'message' => '已达到当日单任务发送上线。');
 		}
 
 		// 默认参数
