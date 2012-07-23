@@ -70,7 +70,7 @@ class ActionUser extends ActionCommon
 		// 保存
 		if(count($this->_submit->errors) > 0)
 		{
-			$message = implode('， ', $this->_submit->errors) . '。';
+			$message = implode('，', $this->_submit->errors) . '。';
 			$result = array('state' => false, 'message' => $message);
 		}
 		else

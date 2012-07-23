@@ -57,9 +57,9 @@ class ActionTaskSingle extends ActionCommon
 			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
 		));
 
+		$userObj = Factory::getModel('user');
 		if($params['id'])
 		{
-			$userObj = Factory::getModel('user');
 			$tasksingleObj = Factory::getModel('tasksingle');
 
 			$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
@@ -89,9 +89,64 @@ class ActionTaskSingle extends ActionCommon
 
 	public function methodEditAjax()
 	{
-		// 非法过滤
-		// 通道过滤
-		var_dump($_POST);
+		// 获取参数
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+			'target_contact' => array(array('format', 'trim'), array('valid', 'empty', '目标地址不能为空', null, null)),
+			'type' => array(array('format', 'int'), array('valid', 'in', '类型错误', null, array_keys($GLOBALS['CONFIG']['CHANNEL']['TYPE']))),
+			'channel_id' => array(array('format', 'int'), array('valid', 'gt', '通道错误', null, 0)),
+			'title' => array(array('format', 'trim')),
+			'content1' => array(array('format', 'trim')),
+			'content2' => array(array('format', 'trim')),
+			'plan_send_time' => array(array('format', 'trim'))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$message = implode('，', $this->_submit->errors) . '。';
+			$result = array('state' => false, 'message' => $message);
+		}
+		else
+		{
+			$tasksingleObj = Factory::getModel('tasksingle');
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+
+			$params['content'] = $params['content' . $params['type']];
+			unset($params['type']);
+			unset($params['content1']);
+			unset($params['content2']);
+
+			if($params['id'] == 0)
+			{
+				$params['user_id'] = $user['id'];
+				$result = $tasksingleObj->add($params);
+				if($result['state'])
+				{
+					$result['script'] = 'alert("保存成功。");window.location="/index.php?a=tasksingle&m=edit&id=' . $result['message'] . '";';
+					$result['message'] = '保存成功。';
+				}
+			}
+			else
+			{
+				$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
+				// 非法过滤
+				if($object['send_state'] != 1)
+				{
+					$result = array('state' => false, 'message' => '该单任务已处于无法编辑状态。');
+				}
+				else if(!in_array('TASKSINGLE:EDITALL', $userObj->getUserPower()) && $object['user_id'] != $user['id'])
+				{
+					$result = array('state' => false, 'message' => '您不能编辑他人的单任务。');
+				}
+				else
+				{
+					$result = $tasksingleObj->edit($params['id'], $params);
+				}
+			}
+		}
+		// 返回
+		echo json_encode($result);
 	}
 
 	public function methodCancelAjax()
