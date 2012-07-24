@@ -84,6 +84,7 @@ class ActionTaskSingle extends ActionCommon
 		$channels = $channelObj->getAll();
 		$this->assign('user_channel_list', $userObj->getUserChannel());
 		$this->assign('channel_list', $channels['data']);
+		$this->assign('userpower', $userObj->getUserPower());
 		$this->assign('id', $params['id']);
 	}
 

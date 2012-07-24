@@ -32,12 +32,12 @@
 			{if $object.send_state == 1}
 				{if 'TASKSINGLE:EDITALL'|in_array:$userpower}
 					<tr><td>&nbsp;</td><td>
-						<input type="button" class="btn" value="编辑" onclick="window.location.href='/index.php?a=tasksingle&m=edit&id={$object.id}';" />
+						<input type="button" class="btn link" value="编辑" data-href="/index.php?a=tasksingle&m=edit&id={$object.id}" />
 						{if 'TASKSINGLE:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
 					</td></tr>
 				{else}{if 'TASKSINGLE:EDITSELF'|in_array:$userpower && $object.user_id == $user.id}
 					<tr><td>&nbsp;</td><td>
-						<input type="button" class="btn" value="编辑" onclick="window.location.href='/index.php?a=tasksingle&m=edit&id={$object.id}';" />
+						<input type="button" class="btn link" value="编辑" data-href="/index.php?a=tasksingle&m=edit&id={$object.id}" />
 						{if 'TASKSINGLE:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
 					</td></tr>
 				{else}{if 'TASKSINGLE:CANCEL'|in_array:$userpower}

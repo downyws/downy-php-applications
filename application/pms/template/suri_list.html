@@ -22,7 +22,7 @@
 				<input type="submit" class="mgl20 btn" value="查询" />
 			</form>
 		</div>
-		{if 'SURI:EDIT'|in_array:$userpower}<div class="fr"><input type="button" class="btn" value="添加" onclick="window.location.href='/index.php?a=suri&m=edit&id=0';" /></div>{/if}
+		{if 'SURI:EDIT'|in_array:$userpower}<div class="fr"><input type="button" class="btn link" value="添加" data-href="/index.php?a=suri&m=edit&id=0" /></div>{/if}
 		<div class="cb"></div>
 	</div>
 	<table class="table_list">

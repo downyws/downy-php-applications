@@ -72,6 +72,13 @@ $GLOBALS['CONFIG']['CHANNEL'] = array(
 	)
 );
 
+$GLOBALS['CONFIG']['TARGET'] = array(
+	'TYPE' => array(
+		'1' => '邮件',
+		'2' => '短信'
+	)
+);
+
 $GLOBALS['CONFIG']['SHORT_URI']['TYPE'] = array(
 	'1' => '链接',
 	'2' => '文件'
@@ -102,6 +109,8 @@ $GLOBALS['CONFIG']['POWER'] = array(
 	'LOG:READ' => array('NAME' => '日志查看', 'ACTIONMETHOD' => array('log:list')),
 	'CHANNEL:READ' => array('NAME' => '通道查看', 'ACTIONMETHOD' => array('channel:list')),
 	'CHANNEL:EDIT' => array('NAME' => '通道编辑', 'ACTIONMETHOD' => array('channel:edit')),
+	'TARGET:READ' => array('NAME' => '目标查看', 'ACTIONMETHOD' => array('target:list')),
+	'TARGET:EDIT' => array('NAME' => '目标编辑', 'ACTIONMETHOD' => array('target:edit')),
 	'SURI:READ' => array('NAME' => '短网址查看', 'ACTIONMETHOD' => array('suri:list')),
 	'SURI:EDIT' => array('NAME' => '短网址编辑', 'ACTIONMETHOD' => array('suri:edit')),
 	'USER:READ' => array('NAME' => '用户查看', 'ACTIONMETHOD' => array('user:list', 'user:detail')),

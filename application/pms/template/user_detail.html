@@ -12,7 +12,7 @@
 			<tr><th>最后登录时间</th><td>{$object.last_login|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
 			<tr><th>状态</th><td>{$object.is_disable_format}</td></tr>
 			<tr><th>单任务上线</th><td>{if $object.tasksingle_limit_day > 0}{$object.tasksingle_limit_day} 条/天{else}不限{/if}</td></tr>
-			{if 'USER:EDIT'|in_array:$userpower}<tr><td>&nbsp;</td><td><input type="button" class="btn" value="编辑" onclick="window.location.href='/index.php?a=user&m=edit&id={$object.id}';" /></td></tr>{/if}
+			{if 'USER:EDIT'|in_array:$userpower}<tr><td>&nbsp;</td><td><input type="button" class="btn link" value="编辑" data-href="/index.php?a=user&m=edit&id={$object.id}" /></td></tr>{/if}
 		</tbody>
 	</table>
 </div>
