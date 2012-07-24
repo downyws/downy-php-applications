@@ -60,13 +60,21 @@ class ModelTaskSingle extends ModelCommon
 		{
 			return array('state' => false, 'message' => '目标地址错误。');
 		}
+		else if($targetObj->disableById($data['target_id']))
+		{
+			return array('state' => false, 'message' => '不允许向目标地址发送信息。');
+		}
 		$target_type = $targetObj->contactType($data['target_contact']);
 		unset($data['target_contact']);
 
 		// 通道检查
 		$channelObj = Factory::getModel('channel');
 		$channel = $channelObj->getObject(array(array('id' => array('eq', $data['channel_id']))));
-		if($channel['type'] != $target_type)
+		if(!$channel)
+		{
+			return array('state' => false, 'message' => '请选择通道。');
+		}
+		else if($channel['type'] != $target_type)
 		{
 			return array('state' => false, 'message' => '通道类型与目标地址类型不符。');
 		}
@@ -128,81 +136,76 @@ class ModelTaskSingle extends ModelCommon
 	}
 
 	public function edit($id, $data)
-	{// 通道过滤
-	/*	foreach($data as $k => $v)
+	{
+		$targetObj = Factory::getModel('target');
+		$tasksingle = $this->getObject(array(array('id' => array('eq', $id))));
+		foreach($data as $k => $v)
 		{
 			switch($k)
 			{
-				case 'account':
+				case 'target_contact':
+					$data['target_id'] = $targetObj->contactToId($v);
+					if($data['target_id'] < 1)
+					{
+						return array('state' => false, 'message' => '目标地址错误。');
+					}
+					else if($targetObj->disableById($data['target_id']))
+					{
+						return array('state' => false, 'message' => '不允许向目标地址发送信息。');
+					}
+					unset($data['target_contact']);
+					break;
+				case 'channel_id':
+					$data[$k] = intval($v);
+					$exists = $this->getOne(array(array('id' => array('eq', $data[$k]))), 'COUNT(*)', 'channel');
+					if($exists < 1)
+					{
+						return array('state' => false, 'message' => '通道不存在。');
+					}
+					break;
+				case 'title':
+					$data[$k] = trim($v);
+					break;
+				case 'content':
 					$data[$k] = trim($v);
 					if(empty($data[$k]))
 					{
-						return array('state' => false, 'message' => '账号不能为空。');
-					}
-					else if($this->getOne(array(array('account' => array('eq', $data[$k]))), 'COUNT(*)') === false)
-					{
-						return array('state' => false, 'message' => '账号已经存在。');
+						return array('state' => false, 'message' => '发送内容不能为空。');
 					}
 					break;
-				case 'password':
-					$data[$k] = trim($v);
-					if(empty($data[$k]))
+				case 'plan_send_time':
+					$data[$k] = strtotime($v);
+					if($data[$k] < time())
 					{
-						unset($data[$k]);
+						$data[$k] = time();
 					}
-					else
-					{
-						$data[$k] = md5($data[$k]);
-					}
-					break;
-				case 'power':
-					$power_list = array_keys($GLOBALS['CONFIG']['POWER']);
-					if(is_array($data[$k]) && !empty($data[$k]))
-					{
-						foreach($data[$k] as $_k => $_v)
-						{
-							if(!in_array($_v, $power_list))
-							{
-								unset($data[$k][$_k]);
-							}
-						}
-					}
-					$data[$k] = (is_array($data[$k]) && count($data[$k]) > 0) ? implode(';', $data[$k]) : '';
-					break;
-				case 'channel':
-					if(is_array($data[$k]) && !empty($data[$k]))
-					{
-						$channelObj = Factory::getModel('channel');
-						$channels = array_keys($channelObj->getAllPairs());
-						foreach($data[$k] as $_k => $_v)
-						{
-							if(!in_array($_v, $channels))
-							{
-								unset($data[$k][$_k]);
-							}
-						}
-					}
-					$data[$k] = (is_array($data[$k]) && count($data[$k]) > 0) ? implode(';', $data[$k]) : '';
-					break;
-				case 'is_disable':
-					$data[$k] = intval($data[$k]) > 0 ? 1 : 0;
-					break;
-				case 'tasksingle_limit_day':
-					$data[$k] = intval($data[$k]) >= 0 ? $data[$k] : 1;
 					break;
 				default:
 					unset($data[$k]);
 			}
 		}
 
+		// 检查通道标题是否正确
+		$tasksingle = array_merge($tasksingle, $data);
+		$target_type = $this->getOne(array(array('id' => array('eq', $tasksingle['target_id']))), 'type', 'target');
+		$channel_type = $this->getOne(array(array('id' => array('eq', $tasksingle['channel_id']))), 'type', 'channel');
+		if($target_type != $channel_type)
+		{
+			return array('state' => false, 'message' => '通道类型与目标地址类型不符。');
+		}
+		else if($channel_type == CHANNEL_TYPE_EMAIL && empty($tasksingle['title']))
+		{
+			return array('state' => false, 'message' => '邮件标题不能为空。');
+		}
+
 		$condition = array();
 		$condition[] = array('id' => array('eq', $id));
 		$state = parent::update($condition, $data);
 		$state = ($state !== false);
-		$state && $this->record($id, LOG_DATA_TABLE_USER, LOG_OPERATION_TYPE_UPDATE);
+		$state && $this->record($id, LOG_DATA_TABLE_TASKSINGLE, LOG_OPERATION_TYPE_UPDATE);
 
 		$message = $state ? '保存成功。' : '保存失败。';
-		return array('state' => $state, 'message' => $message);*/
+		return array('state' => $state, 'message' => $message);
 	}
 
 	public function cancel($id)

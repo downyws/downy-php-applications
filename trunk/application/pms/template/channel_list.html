@@ -5,7 +5,7 @@
 	<h2>通道列表</h2>
 	{if 'SURI:EDIT'|in_array:$userpower}
 		<div class="search">
-			<div class="fr"><input type="button" class="btn" value="添加" onclick="window.location.href='/index.php?a=channel&m=edit&id=0';" /></div>
+			<div class="fr"><input type="button" class="btn link" value="添加" data-href="/index.php?a=channel&m=edit&id=0" /></div>
 			<div class="cb"></div>
 		</div>
 	{/if}

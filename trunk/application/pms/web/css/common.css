@@ -79,7 +79,7 @@ h2{font-size:14px;}
 .realtime_edit_current{display:in-line;padding:0px 10px 0px 0px;height:22px;line-height:22px;cursor:text;}
 
 /* jquery msg box */
-.msgbox{position:absolute;top:0px;right:0px;display:none;padding:3px 10px 3px 10px;background:#336699;}
+.msgbox{position:fixed;top:0px;right:0px;display:none;padding:3px 10px 3px 10px;background:#336699;}
 .msgbox .failed{color:#FF0000;}
 .msgbox .success{color:#FFFFFF;}
 

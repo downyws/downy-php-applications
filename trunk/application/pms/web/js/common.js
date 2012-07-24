@@ -14,6 +14,8 @@ $(function(){
 
 	$(".ajaxlink").ajaxLink();
 
+	$(".link").link();
+
 	$(".wordstata").each(function(){
 		$(this).wordStata();
 	});
@@ -225,6 +227,13 @@ $.fn.extend({
 			}, error: function(){
 				$.fn.msgbox('failed', 'AJAX请求出错。');
 			}});
+		});
+	},
+
+	/* 超链接 */
+	link: function(){
+		$(this).click(function(){
+			window.location.href = $(this).data("href");
 		});
 	}
 });
