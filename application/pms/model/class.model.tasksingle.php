@@ -135,6 +135,12 @@ class ModelTaskSingle extends ModelCommon
 		return array('state' => $state, 'message' => $message);
 	}
 
+	public function addPv($id)
+	{
+		$sql = 'UPDATE ' . $this->table('') . ' SET `page_view` = `page_view` + 1, `last_read_time` = ' . time() . ', `first_read_time` = IF(`first_read_time` > 0, `first_read_time`, ' . time() . ') WHERE `id` = ' . $id;
+		$this->query($sql);
+	}
+
 	public function edit($id, $data)
 	{
 		$targetObj = Factory::getModel('target');
