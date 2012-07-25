@@ -118,6 +118,6 @@ class ModelTarget extends ModelCommon
 	{
 		$condition = array();
 		$condition[] = array('id' => array('eq', $id));
-		return $this->getOne($condition, 'type');
+		return $this->getOne($condition, 'is_disable');
 	}
 }

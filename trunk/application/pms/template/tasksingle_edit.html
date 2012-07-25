@@ -13,7 +13,7 @@
 					<input type="radio" id="type_tabs_1" data-tab=".type_tabs_1" value="1" name="type" {if $id > 0 && $object.channel.type == 1}checked="checked"{/if} /><label for="type_tabs_1">邮件</label>
 					<input type="radio" id="type_tabs_2" data-tab=".type_tabs_2" value="2" name="type" {if $id > 0 && $object.channel.type == 2}checked="checked"{/if} /><label for="type_tabs_2">短信</label>
 				</td></tr>
-				<tr class="type_tabs_1"><th>邮件标题</th><td><input type="text" class="w450" name="title" value="{if $id > 0}{$object.title}{/if}" /><input type="submit" class="mgl20 btn" value="预览" /></td></tr>
+				<tr class="type_tabs_1"><th>邮件标题</th><td><input type="text" class="w450" name="title" value="{if $id > 0}{$object.title}{/if}" /></td></tr>
 				<tr class="type_tabs_1"><th>邮件内容</th><td><textarea class="w450 h100" name="content1">{if $id > 0}{$object.content}{/if}</textarea></td></tr>
 				<tr class="type_tabs_1"><th>邮件通道</th><td>
 					<div class="radiolist">
@@ -39,9 +39,9 @@
 				</td></tr>
 				<tr><th>发送时间</th><td><input type="text" class="datetimepicker" name="plan_send_time" value="{if $id > 0}{$object.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}{/if}" /></td></tr>
 				<tr><td>&nbsp;</td><td>
-					<input type="submit" class="btn link" value="返回" data-href="/index.php?a=tasksingle&m=detail&id={$object.id}" />
+					{if $id > 0}<input type="submit" class="btn link" value="查看" data-href="/index.php?a=tasksingle&m=detail&id={$object.id}" />{/if}
 					<input type="submit" class="mgl20 btn" value="保存" />
-					{if 'TASKSINGLE:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
+					{if $id > 0 && 'TASKSINGLE:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
 				</td></tr>
 			</tbody>
 		</table>

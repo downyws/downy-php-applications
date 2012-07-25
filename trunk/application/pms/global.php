@@ -45,6 +45,7 @@ $GLOBALS['CONFIG']['IS_DISABLE'] = array(
 );
 
 $GLOBALS['CONFIG']['TASKSINGLE'] = array(
+	'PV_IMAGE' => DOMAIN_OUTSIDE . '/images/pv.gif',
 	'STATE' => array(
 		'1' => '未发送',
 		'2' => '发送中',

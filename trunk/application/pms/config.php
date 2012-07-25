@@ -16,10 +16,14 @@ $GLOBALS['CONFIG']['DB'] = array
 	'PREFIX' => 'pms_'
 );
 
+// 域名配置
+define('DOMAIN_INSIDE', 'http://pms.oa.downy.org/');
+define('DOMAIN_OUTSIDE', 'http://www.downy.org/');
+define('DOMAIN_SURI', 'http://suri.org/');
+
 // 短网址配置
 $GLOBALS['CONFIG']['SHORT_URI'] = array
 (
-	'DOMAIN' => 'http://suri.org/',
-	'ERROR_PAGE' => 'http://suri.org/index.php?a=suri&m=error&code=1',
-	'DISABLE_PAGE' => 'http://suri.org/index.php?a=suri&m=error&code=2'
+	'ERROR_PAGE' => DOMAIN_SURI . 'index.php?a=suri&m=error&code=1',
+	'DISABLE_PAGE' => DOMAIN_SURI . 'index.php?a=suri&m=error&code=2'
 );

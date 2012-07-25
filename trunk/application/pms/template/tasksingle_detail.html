@@ -10,7 +10,7 @@
 			<tr><th>目标地址</th><td>{$object.target.contact}</td></tr>
 			{if $object.channel.type == 1}
 				<tr><th>邮件标题</th><td>{$object.title}</td></tr>
-				<tr><th>邮件内容</th><td><a href="">预览</a></td></tr>
+				<tr><th>邮件内容</th><td><a target="_blank" href="/index.php?a=read&m=email&ms=single&id={$object.id}&preview=1">预览</a></td></tr>
 			{else}{if $object.channel.type == 2}
 				<tr><th>短信内容</th><td>{$object.content}</td></tr>
 			{/if}{/if}

@@ -50,7 +50,7 @@ class ActionSuri extends ActionCommon
 			$this->assign('object', $object);
 		}
 
-		$this->assign('shorturi_domain', $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN']);
+		$this->assign('shorturi_domain', DOMAIN_SURI);
 		$this->assign('id', $params['id']);
 		$this->assign('shorturi_type_list', $GLOBALS['CONFIG']['SHORT_URI']['TYPE']);
 		$this->assign('is_disable_list', $GLOBALS['CONFIG']['IS_DISABLE']);

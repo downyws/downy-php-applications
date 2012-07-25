@@ -29,7 +29,7 @@ class ModelShortUri extends ModelCommon
 	{
 		foreach($list as $k => $v)
 		{
-			$list[$k]['key_format'] = $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN'] . $list[$k]['key'];
+			$list[$k]['key_format'] = DOMAIN_SURI . $list[$k]['key'];
 			$list[$k]['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$list[$k]['is_disable']];
 			$list[$k]['type_format'] = $GLOBALS['CONFIG']['SHORT_URI']['TYPE'][$list[$k]['type']];
 		}
@@ -41,7 +41,7 @@ class ModelShortUri extends ModelCommon
 		$taskmultiObj = Factory::getModel('taskmulti');
 
 		$data['taskmulti'] = $taskmultiObj->getObject(array(array('id' => array('eq', $data['task_id']))));
-		$data['key_format'] = $GLOBALS['CONFIG']['SHORT_URI']['DOMAIN'] . $data['key'];
+		$data['key_format'] = DOMAIN_SURI . $data['key'];
 		$data['is_disable_format'] = $GLOBALS['CONFIG']['IS_DISABLE'][$data['is_disable']];
 		$data['type_format'] = $GLOBALS['CONFIG']['SHORT_URI']['TYPE'][$data['type']];
 		return $data;
