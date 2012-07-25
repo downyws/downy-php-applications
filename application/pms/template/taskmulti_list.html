@@ -7,8 +7,8 @@
 		<div class="fl">
 			<form action="/index.php?a=taskmulti&m=list" method="post">
 				<span>发送时间：</span><input type="text" class="w75 txt datepicker_from" name="start_time" value="{$params['start_time']}" /> - <input type="text" class="w75 txt datepicker_to" name="end_time" value="{$params['end_time']}" />
-				<span class="mgl20">名称：</span><input type="text" class="txt" name="title" value="{$params['title']}" />
-				<span class="mgl20">账号：</span><input type="text" class="txt" name="account" value="{$params['account']}" />
+				<span class="mgl20">名称：</span><input type="text" class="txt" name="name" value="{$params['name']}" />
+				<span class="mgl20">创建人：</span><input type="text" class="txt" name="account" value="{$params['account']}" />
 				<span class="mgl20">通道：</span><select class="sel" name="channel">
 					<option value="0">全部</option>
 					{foreach from=$channel_list item=v key=k}
@@ -29,11 +29,13 @@
 	</div>
 	<table class="table_list">
 		<tbody align="left" valign="top">
-			<tr><th>编号</th><th>名称</th><th>通道</th><th>账号</th><th>状态</th><th>计划发送时间</th><th>操作</th></tr>
+			<tr><th>编号</th><th>名称</th><th>通道</th><th>创建人</th><th>发送进度</th><th>状态</th><th>计划发送时间</th><th>操作</th></tr>
 			{if 'TASKMULTI:EDITALL'|in_array:$userpower}
 				{foreach from=$list.data item=v}
-					<tr><td>{$v.id}</td><td>{$v.title}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
-						<td class="tm_state{$v.send_state}">{$v.send_state_format}</td><td>{$v.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+					<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td>{$v.send_rate}({if $v.send_count > 0}{intval($v.send_rate / $v.send_count * 100)}{else}0{/if}%)</td>
+						<td class="tm_state{$v.send_state}">{$v.send_state_format}</td>
+						<td>{$v.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
 						<td>
 							<a href="/index.php?a=taskmulti&m=detail&id={$v.id}">详情</a>
 							<a href="/index.php?a=taskmulti&m=detail&id={$v.id}">编辑</a>

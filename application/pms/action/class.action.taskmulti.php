@@ -13,7 +13,7 @@ class ActionTaskMulti extends ActionCommon
 	{
 		$params = $this->_submit->obtain(array(
 			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
-			'title' => array(array('format', 'trim')),
+			'name' => array(array('format', 'trim')),
 			'account' => array(array('format', 'trim')),
 			'channel' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
 			'send_state' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
@@ -31,7 +31,7 @@ class ActionTaskMulti extends ActionCommon
 		$list = $taskmultiObj->getList($p, $params);
 		$list['data'] = $taskmultiObj->formatList($list['data']);
 
-		$list['pager']['params'] = 'title=' . urlencode($params['title']) . '&account=' . urlencode($params['account']) . '&channel=' . $params['channel'] . '&send_state=' . $params['send_state'];
+		$list['pager']['params'] = 'name=' . urlencode($params['name']) . '&account=' . urlencode($params['account']) . '&channel=' . $params['channel'] . '&send_state=' . $params['send_state'];
 		if($params['start_time'] !== false)
 		{
 			$params['start_time'] = date('Y-m-d', $params['start_time']);
@@ -51,28 +51,73 @@ class ActionTaskMulti extends ActionCommon
 		$this->assign('params', $params);
 	}
 
-	public function methodEdit()
+	public function methodCancelAjax()
 	{
-		echo 'ActionSuri';
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$result = array('state' => false, 'message' => implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$taskmultiObj = Factory::getModel('taskmulti');
+			$result = $taskmultiObj->cancel($params['id']);
+			if($result['state'])
+			{
+				$result['script'] = 'alert("取消成功。");window.location.href="/index.php?a=taskmulti&m=detail&id=' . $params['id'] . '";';
+			}
+		}
+
+		echo json_encode($result);
 	}
 
-	public function methodCheck()
+	public function methodCheckAjax()
 	{
-		echo 'ActionSuri';
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0)),
+			'pass' => array(array('format', 'int'))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$result = array('state' => false, 'message' => implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$taskmultiObj = Factory::getModel('taskmulti');
+			$result = $taskmultiObj->check($params['id'], $params['pass']);
+			if($result['state'])
+			{
+				$result['script'] = 'alert("审核成功。");window.location.href="/index.php?a=taskmulti&m=detail&id=' . $params['id'] . '";';
+			}
+		}
+
+		echo json_encode($result);
 	}
 
-	public function methodShortUri()
+	public function methodDetail()
 	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
+		));
 
-	}
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->message(implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$userObj = Factory::getModel('user');
+			$taskmultiObj = Factory::getModel('taskmulti');
+			$object = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+			$object = $taskmultiObj->formatObject($object);
 
-	public function methodSendList()
-	{
-
-	}
-
-	public function methodSendView()
-	{
-
+			$this->assign('user', $userObj->getUser());
+			$this->assign('userpower', $userObj->getUserPower());
+			$this->assign('object', $object);
+		}
 	}
 }
