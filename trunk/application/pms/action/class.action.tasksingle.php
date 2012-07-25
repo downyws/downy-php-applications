@@ -195,9 +195,4 @@ class ActionTaskSingle extends ActionCommon
 			$this->assign('object', $object);
 		}
 	}
-
-	public function methodSendApi()
-	{
-		echo 'ActionSuri';
-	}
 }

@@ -20,6 +20,7 @@ h2{font-size:14px;}
 .table_detail .btn{padding:0px 10px 0px 10px;}
 .table_detail .radiolist span{padding:0px 10px 0px 10px;}
 .table_detail .checkboxlist span{padding:0px 10px 0px 10px;}
+.table_detail pre{margin:0px 0px 0px 0px;}
 
 /* table list */
 .table_list{padding:10px 10px 10px 10px;}
