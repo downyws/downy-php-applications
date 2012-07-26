@@ -56,6 +56,23 @@ $(function(){
 
 
 $.fn.extend({
+	/* 脚本对话框 */
+	dialogScript:function(title, content, script){
+		var html = '<div id="dialogScript" title="' + title + '">' + content + '</div>';
+		$("body").append(html);
+		$("#dialogScript").dialog({modal: true, 
+			buttons:{Ok: function(){
+				$(this).dialog("close");
+			}},
+			close: function(){
+				if(script != ""){
+					eval(script);
+				}
+				$("#dialogScript").remove();
+			}
+		});
+	},
+
 	/* 框架网页检查 */
 	frameCheck:function(){
 		if(top.location !== self.location){

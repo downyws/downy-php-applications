@@ -77,7 +77,7 @@ class ActionTarget extends ActionCommon
 				$result = $targetObj->add($params);
 				if($result['state'])
 				{
-					$result['script'] = 'alert("保存成功。");window.location="/index.php?a=target&m=edit&id=' . $result['message'] . '";';
+					$result['script'] = '$.fn.dialogScript("提示信息", "保存成功。", "window.location.href=\"/index.php?a=target&m=edit&id=' . $result['message'] . '\"");';
 					$result['message'] = '保存成功。';
 				}
 			}
