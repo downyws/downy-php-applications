@@ -30,12 +30,7 @@
 			{/if}
 			<tr><th>发送状态</th><td class="ts_state{$object.send_state}">{$object.send_state_format}</td></tr>
 			{if $object.send_state == 1}
-				{if 'TASKSINGLE:EDITALL'|in_array:$userpower}
-					<tr><td>&nbsp;</td><td>
-						<input type="button" class="btn link" value="编辑" data-href="/index.php?a=tasksingle&m=edit&id={$object.id}" />
-						{if 'TASKSINGLE:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
-					</td></tr>
-				{else}{if 'TASKSINGLE:EDITSELF'|in_array:$userpower && $object.user_id == $user.id}
+				{if 'TASKSINGLE:EDITALL'|in_array:$userpower || ('TASKSINGLE:EDITSELF'|in_array:$userpower && $object.user_id == $user.id)}
 					<tr><td>&nbsp;</td><td>
 						<input type="button" class="btn link" value="编辑" data-href="/index.php?a=tasksingle&m=edit&id={$object.id}" />
 						{if 'TASKSINGLE:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
@@ -44,7 +39,7 @@
 					<tr><td>&nbsp;</td><td>
 						<input type="button" class="btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />
 					</td></tr>
-				{/if}{/if}{/if}
+				{/if}{/if}
 			{/if}
 		</tbody>
 	</table>
