@@ -6,7 +6,7 @@
 	<div class="search">
 		<div class="fl">
 			<form action="/index.php?a=taskmulti&m=list" method="post">
-				<span>发送时间：</span><input type="text" class="w75 txt datepicker_from" name="start_time" value="{$params['start_time']}" /> - <input type="text" class="w75 txt datepicker_to" name="end_time" value="{$params['end_time']}" />
+				<span>计划发送时间：</span><input type="text" class="w75 txt datepicker_from" name="start_time" value="{$params['start_time']}" /> - <input type="text" class="w75 txt datepicker_to" name="end_time" value="{$params['end_time']}" />
 				<span class="mgl20">名称：</span><input type="text" class="txt" name="name" value="{$params['name']}" />
 				<span class="mgl20">创建人：</span><input type="text" class="txt" name="account" value="{$params['account']}" />
 				<span class="mgl20">通道：</span><select class="sel" name="channel">
@@ -38,23 +38,25 @@
 						<td>{$v.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
 						<td>
 							<a href="/index.php?a=taskmulti&m=detail&id={$v.id}">详情</a>
-							<a href="/index.php?a=taskmulti&m=detail&id={$v.id}">编辑</a>
+							{if $v.send_state == 5}<a href="/index.php?a=taskmulti&m=edit&id={$v.id}">编辑</a>{/if}
 						</td>
 					</tr>
 				{/foreach}
 			{else}{if 'TASKMULTI:EDITSELF'|in_array:$userpower}
 				{foreach from=$list.data item=v}
 					<tr><td>{$v.id}</td><td>{$v.title}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td>{$v.send_rate}({if $v.send_count > 0}{intval($v.send_rate / $v.send_count * 100)}{else}0{/if}%)</td>
 						<td class="tm_state{$v.send_state}">{$v.send_state_format}</td><td>{$v.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
 						<td>
 							<a href="/index.php?a=taskmulti&m=detail&id={$v.id}">详情</a>
-							{if $v.user_id == $user.id}<a href="/index.php?a=taskmulti&m=detail&id={$v.id}">编辑</a>{/if}
+							{if $v.send_state == 5 && $v.user_id == $user.id}<a href="/index.php?a=taskmulti&m=edit&id={$v.id}">编辑</a>{/if}
 						</td>
 					</tr>
 				{/foreach}
 			{else}
 				{foreach from=$list.data item=v}
 					<tr><td>{$v.id}</td><td>{$v.title}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td>{$v.send_rate}({if $v.send_count > 0}{intval($v.send_rate / $v.send_count * 100)}{else}0{/if}%)</td>
 						<td class="tm_state{$v.send_state}">{$v.send_state_format}</td><td>{$v.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
 						<td><a href="/index.php?a=taskmulti&m=detail&id={$v.id}">详情</a></td>
 					</tr>

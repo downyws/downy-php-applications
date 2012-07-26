@@ -2,6 +2,8 @@
 
 define('APP_NAME', '信息推送系统');
 
+define('ADMIN_ID', 100000);
+
 define('LOG_DATA_TABLE_CHANNEL', 1);
 define('LOG_DATA_TABLE_LOG', 2);
 define('LOG_DATA_TABLE_SENDLIST', 3);

@@ -15,8 +15,8 @@ class ModelTaskMulti extends ModelCommon
 		!empty($params['name']) && $condition[] = array('tm.`name`' => array('like', $params['name']));
 		!empty($params['channel']) && $condition[] = array('tm.`channel_id`' => array('eq', $params['channel']));
 		!empty($params['send_state']) && $condition[] = array('tm.`send_state`' => array('eq', $params['send_state']));
-		!empty($params['start_time']) && $condition[] = array('tm.`send_time`' => array('egt', $params['start_time']));
-		!empty($params['end_time']) && $condition[] = array('tm.`send_time`' => array('elt', $params['end_time']));
+		!empty($params['start_time']) && $condition[] = array('tm.`plan_send_time`' => array('egt', $params['start_time']));
+		!empty($params['end_time']) && $condition[] = array('tm.`plan_send_time`' => array('elt', $params['end_time']));
 
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . ' AS tm JOIN ' . $this->table('user') . ' AS u ON (u.`id` = tm.`user_id`) ' . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);

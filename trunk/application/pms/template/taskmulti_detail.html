@@ -16,9 +16,13 @@
 			{/if}
 			<tr><th>通道</th><td>{$object.channel.name}</td></tr>
 			<tr><th>计划发送时间</th><td>{$object.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
-			{if $object.send_state|in_array:array(2, 3, 4)}
-				<tr><th>发送时间</th><td>{$object.send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
-			{/if}
+			{if $object.send_state == 2}
+				<tr><th>开始时间</th><td>{$object.start_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+				<tr><th>预计结束时间</th><td>{intval($object.start_time + (time() - $object.start_time) / ($object.send_rate / $object.send_count))|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			{else}{if $object.send_state|in_array:array(3, 4)}
+				<tr><th>开始时间</th><td>{$object.start_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+				<tr><th>结束时间</th><td>{$object.end_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			{/if}{/if}
 			<tr><th>发送状态</th><td class="tm_state{$object.send_state}">{$object.send_state_format}</td></tr>
 			<tr><th>发送量</th><td>{$object.send_count}</td></tr>
 			{if $object.send_state == 2}
