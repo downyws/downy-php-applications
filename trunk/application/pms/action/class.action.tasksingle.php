@@ -68,11 +68,11 @@ class ActionTaskSingle extends ActionCommon
 			// 非法过滤
 			if($object['send_state'] != 1)
 			{
-				$this->message('该单任务已处于无法编辑状态。');
+				$this->message('该任务已处于无法编辑状态。');
 			}
 			else if(!in_array('TASKSINGLE:EDITALL', $userObj->getUserPower()) && $object['user_id'] != $user['id'])
 			{
-				$this->message('您不能编辑他人的单任务。');
+				$this->message('您不能编辑他人的任务。');
 			}
 			
 			$object = $tasksingleObj->formatObject($object);
@@ -109,40 +109,49 @@ class ActionTaskSingle extends ActionCommon
 		}
 		else
 		{
-			$tasksingleObj = Factory::getModel('tasksingle');
-			$userObj = Factory::getModel('user');
-			$user = $userObj->getUser();
-
-			$params['content'] = $params['content' . $params['type']];
-			unset($params['type']);
-			unset($params['content1']);
-			unset($params['content2']);
-
-			if($params['id'] == 0)
+			$channelObj = Factory::getModel('channel');
+			$channel_type = $channelObj->getOne(array(array('id' => array('eq', $params['channel_id']))), 'type');
+			if($params['type'] != $channel_type)
 			{
-				$params['user_id'] = $user['id'];
-				$result = $tasksingleObj->add($params);
-				if($result['state'])
-				{
-					$result['script'] = 'alert("保存成功。");window.location="/index.php?a=tasksingle&m=edit&id=' . $result['message'] . '";';
-					$result['message'] = '保存成功。';
-				}
+				$result = array('state' => false, 'message' => '通道类型与任务类型不匹配。');
 			}
 			else
 			{
-				$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
-				// 非法过滤
-				if($object['send_state'] != 1)
+				$tasksingleObj = Factory::getModel('tasksingle');
+				$userObj = Factory::getModel('user');
+				$user = $userObj->getUser();
+
+				$params['content'] = $params['content' . $params['type']];
+				unset($params['type']);
+				unset($params['content1']);
+				unset($params['content2']);
+
+				if($params['id'] == 0)
 				{
-					$result = array('state' => false, 'message' => '该单任务已处于无法编辑状态。');
-				}
-				else if(!in_array('TASKSINGLE:EDITALL', $userObj->getUserPower()) && $object['user_id'] != $user['id'])
-				{
-					$result = array('state' => false, 'message' => '您不能编辑他人的单任务。');
+					$params['user_id'] = $user['id'];
+					$result = $tasksingleObj->add($params);
+					if($result['state'])
+					{
+						$result['script'] = 'alert("保存成功。");window.location="/index.php?a=tasksingle&m=edit&id=' . $result['message'] . '";';
+						$result['message'] = '保存成功。';
+					}
 				}
 				else
 				{
-					$result = $tasksingleObj->edit($params['id'], $params);
+					$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
+					// 非法过滤
+					if($object['send_state'] != 1)
+					{
+						$result = array('state' => false, 'message' => '该任务已处于无法编辑状态。');
+					}
+					else if(!in_array('TASKSINGLE:EDITALL', $userObj->getUserPower()) && $object['user_id'] != $user['id'])
+					{
+						$result = array('state' => false, 'message' => '您不能编辑他人的任务。');
+					}
+					else
+					{
+						$result = $tasksingleObj->edit($params['id'], $params);
+					}
 				}
 			}
 		}

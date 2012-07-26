@@ -23,6 +23,7 @@ $(function(){
 	$(".btn").button();
 	$(".radiolist").buttonset();
 	$(".checkboxlist").buttonset();
+	$.fn.syncText("textarea[name=content1]", "textarea[name=content2]");
 
 	$(".rowtabs").rowTabs();
 
@@ -60,6 +61,16 @@ $.fn.extend({
 		if(top.location !== self.location){
 			top.location = self.location;
 		}
+	},
+
+	/* 文本框同步 */
+	syncText:function(text1, text2){
+		$(text1).keyup(function(){
+			$($(text2)).val($(text1).val());
+		});
+		$(text2).keyup(function(){
+			$(text1).val($(text2).val());
+		});
 	},
 
 	/* AJAX即时提交控件 */
