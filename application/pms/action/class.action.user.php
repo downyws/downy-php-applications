@@ -40,6 +40,11 @@ class ActionUser extends ActionCommon
 		if($params['id'])
 		{
 			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+			if($params['id'] == ADMIN_ID && $user['id'] != ADMIN_ID)
+			{
+				$this->message('您没有权限。');
+			}
 			$object = $userObj->getObject(array(array('id' => array('eq', $params['id']))));
 			$object = $userObj->formatObject($object);
 
@@ -87,7 +92,15 @@ class ActionUser extends ActionCommon
 			}
 			else
 			{
-				$result = $userObj->edit($params['id'], $params);
+				$user = $userObj->getUser();
+				if($params['id'] == ADMIN_ID && $user['id'] != ADMIN_ID)
+				{
+					$result = array('state' => false, 'message' => '您没有权限。');
+				}
+				else
+				{
+					$result = $userObj->edit($params['id'], $params);
+				}
 			}
 		}
 

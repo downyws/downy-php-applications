@@ -15,8 +15,8 @@ class ModelTaskSingle extends ModelCommon
 		!empty($params['contact']) && $condition[] = array('t.`contact`' => array('like', $params['contact']));
 		!empty($params['channel']) && $condition[] = array('ts.`channel_id`' => array('eq', $params['channel']));
 		!empty($params['send_state']) && $condition[] = array('ts.`send_state`' => array('eq', $params['send_state']));
-		!empty($params['start_time']) && $condition[] = array('ts.`send_time`' => array('egt', $params['start_time']));
-		!empty($params['end_time']) && $condition[] = array('ts.`send_time`' => array('elt', $params['end_time']));
+		!empty($params['start_time']) && $condition[] = array('ts.`plan_send_time`' => array('egt', $params['start_time']));
+		!empty($params['end_time']) && $condition[] = array('ts.`plan_send_time`' => array('elt', $params['end_time']));
 
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . ' AS ts JOIN ' . $this->table('user') . ' AS u ON (u.`id` = ts.`user_id`) JOIN ' . $this->table('target') . ' AS t ON (t.`id` = ts.`target_id`) ' . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);
