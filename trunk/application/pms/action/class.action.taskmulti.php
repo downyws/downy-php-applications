@@ -132,7 +132,7 @@ class ActionTaskMulti extends ActionCommon
 					$result = $taskmultiObj->add($params);
 					if($result['state'])
 					{
-						$result['script'] = 'alert("保存成功。");window.location="/index.php?a=taskmulti&m=edit&id=' . $result['message'] . '";';
+						$result['script'] = '$.fn.dialogScript("提示信息", "保存成功。", "window.location.href=\"/index.php?a=taskmulti&m=edit&id=' . $result['message'] . '\"");';
 						$result['message'] = '保存成功。';
 					}
 				}
@@ -175,7 +175,7 @@ class ActionTaskMulti extends ActionCommon
 			$result = $taskmultiObj->cancel($params['id']);
 			if($result['state'])
 			{
-				$result['script'] = 'alert("取消成功。");window.location.href="/index.php?a=taskmulti&m=detail&id=' . $params['id'] . '";';
+				$result['script'] = '$.fn.dialogScript("提示信息", "取消成功。", "window.location.href=\"/index.php?a=taskmulti&m=detail&id=' . $params['id'] . '\"");';
 			}
 		}
 
@@ -199,7 +199,7 @@ class ActionTaskMulti extends ActionCommon
 			$result = $taskmultiObj->check($params['id'], $params['pass']);
 			if($result['state'])
 			{
-				$result['script'] = 'alert("审核成功。");window.location.href="/index.php?a=taskmulti&m=detail&id=' . $params['id'] . '";';
+				$result['script'] = '$.fn.dialogScript("提示信息", "审核成功。", "window.location.href=\"/index.php?a=taskmulti&m=detail&id=' . $params['id'] . '\"");';
 			}
 		}
 

@@ -132,7 +132,7 @@ class ActionTaskSingle extends ActionCommon
 					$result = $tasksingleObj->add($params);
 					if($result['state'])
 					{
-						$result['script'] = 'alert("保存成功。");window.location="/index.php?a=tasksingle&m=edit&id=' . $result['message'] . '";';
+						$result['script'] = '$.fn.dialogScript("提示信息", "保存成功。", "window.location.href=\"/index.php?a=tasksingle&m=edit&id=' . $result['message'] . '\"");';
 						$result['message'] = '保存成功。';
 					}
 				}
@@ -175,7 +175,7 @@ class ActionTaskSingle extends ActionCommon
 			$result = $tasksinglelObj->cancel($params['id']);
 			if($result['state'])
 			{
-				$result['script'] = 'alert("取消成功。");window.location.href="/index.php?a=tasksingle&m=detail&id=' . $params['id'] . '";';
+				$result['script'] = '$.fn.dialogScript("提示信息", "取消成功。", "window.location.href=\"/index.php?a=tasksingle&m=detail&id=' . $params['id'] . '\"");';
 			}
 		}
 
