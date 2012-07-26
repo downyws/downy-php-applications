@@ -51,6 +51,15 @@ class ModelTarget extends ModelCommon
 			return array('state' => false, 'message' => '目标地址错误。');
 		}
 
+		// 是否已经存在
+		$condition = array();
+		$condition[] = array('contact' => array('eq', $data['contact']));
+		$count = $this->getOne($condition, 'COUNT(*)');
+		if($count > 0)
+		{
+			return array('state' => false, 'message' => '目标地址已经存在。');
+		}
+
 		// 状态
 		$data['is_disable'] = intval($data['is_disable']) > 0 ? 1 : 0;
 
