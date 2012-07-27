@@ -228,4 +228,132 @@ class ActionTaskMulti extends ActionCommon
 			$this->assign('object', $object);
 		}
 	}
+
+	public function methodSendlist()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0)),
+			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
+			'contact' => array(array('format', 'trim'))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->message(implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$taskmultiObj = Factory::getModel('taskmulti');
+			$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+			
+			$channelObj = Factory::getModel('channel');
+			$channel = $channelObj->getObject(array(array('id' => array('eq', $taskmulti['channel_id']))));
+
+			$userObj = Factory::getModel('user');
+
+			$sendlistObj = Factory::getModel('sendlist');
+			$id = $params['id'];
+			$p = $params['p'];
+			unset($params['id']);
+			unset($params['p']);
+			$list = $sendlistObj->getList($id, $p, $params);
+			$list['data'] = $sendlistObj->formatList($list['data']);
+
+			$list['pager']['params'] = 'contact=' . urlencode($params['contact']);
+
+			$this->assign('id', $id);
+			$this->assign('list', $list);
+			$this->assign('taskmulti', $taskmulti);
+			$this->assign('channel', $channel);
+			$this->assign('user', $userObj->getUser());
+			$this->assign('userpower', $userObj->getUserPower());
+			$this->assign('params', $params);
+		}
+	}
+
+	public function methodRemoveSendAjax()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$result = array('state' => false, 'message' => implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$sendlistObj = Factory::getModel('sendlist');
+			$send = $sendlistObj->getObject(array(array('id' => array('eq', $params['id']))));
+			if(empty($send))
+			{
+				$result = array('state' => false, 'message' => '任务不存在。');
+			}
+			else
+			{
+				$userObj = Factory::getModel('user');
+				$taskmultiObj = Factory::getModel('taskmulti');
+				$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $send['task_id']))));
+				// 非法过滤
+				if($taskmulti['send_state'] != 5)
+				{
+					$result = array('state' => false, 'message' => '该任务已处于无法编辑状态。');
+				}
+				else if(!in_array('TASKMULTI:EDITALL', $userObj->getUserPower()) && $taskmulti['user_id'] != $user['id'])
+				{
+					$result = array('state' => false, 'message' => '您不能编辑他人的任务。');
+				}
+				else
+				{
+					$result = $sendlistObj->remove($params['id']);
+					if($result['state'])
+					{
+						$result['script'] = '$(that).parent().parent().remove()';
+						$result['message'] = '删除成功。';
+					}
+				}
+			}
+		}
+
+		echo json_encode($result);
+	}
+
+	public function methodClearListAjax()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$result = array('state' => false, 'message' => implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$userObj = Factory::getModel('user');
+			$taskmultiObj = Factory::getModel('taskmulti');
+			$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+			// 非法过滤
+			if($taskmulti['send_state'] != 5)
+			{
+				$result = array('state' => false, 'message' => '该任务已处于无法编辑状态。');
+			}
+			else if(!in_array('TASKMULTI:EDITALL', $userObj->getUserPower()) && $taskmulti['user_id'] != $user['id'])
+			{
+				$result = array('state' => false, 'message' => '您不能编辑他人的任务。');
+			}
+			else
+			{
+				$sendlistObj = Factory::getModel('sendlist');
+				$result = $sendlistObj->clear($params['id']);
+				if($result['state'])
+				{
+					$result['script'] = '$.fn.dialogScript("提示信息", "清空列表成功。", "window.location.href=\"/index.php?a=taskmulti&m=sendlist&id=' . $params['id'] . '\"");';
+					$result['message'] = '清空列表成功。';
+				}
+			}
+		}
+
+		echo json_encode($result);
+	}
 }

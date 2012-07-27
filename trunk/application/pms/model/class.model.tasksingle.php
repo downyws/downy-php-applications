@@ -128,7 +128,7 @@ class ModelTaskSingle extends ModelCommon
 		$data['first_read_time'] = 0;
 		$data['last_read_time'] = 0;
 
-		$state = parent::insert($data);
+		$state = $this->insert($data);
 		$state && $this->record($state, LOG_DATA_TABLE_TASKSINGLE, LOG_OPERATION_TYPE_INSERT);
 
 		$message = $state ? $state : '保存失败。';
@@ -206,7 +206,7 @@ class ModelTaskSingle extends ModelCommon
 
 		$condition = array();
 		$condition[] = array('id' => array('eq', $id));
-		$state = parent::update($condition, $data);
+		$state = $this->update($condition, $data);
 		$state = ($state !== false);
 		$state && $this->record($id, LOG_DATA_TABLE_TASKSINGLE, LOG_OPERATION_TYPE_UPDATE);
 
