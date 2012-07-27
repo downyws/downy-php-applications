@@ -33,7 +33,7 @@
 			{/if}
 			<tr><th>备注</th><td><pre>{$object.remarks}</pre></td></tr>
 			<tr><td>&nbsp;</td><td>
-				<input type="button" class="btn" value="发送队列" />
+				<input type="button" class="btn link" value="发送列表" data-href="/index.php?a=taskmulti&m=sendlist&id={$object.id}" />
 				{if $object.send_state|in_array:array(1,2)}
 					{if 'TASKMULTI:CANCEL'|in_array:$userpower}
 						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=cancel&t=ajax&id={$object.id}" value="取消发送" />

@@ -94,7 +94,7 @@ class ModelShortUri extends ModelCommon
 			return array('state' => false, 'message' => '短网址已存在。');
 		}
 
-		$state = parent::insert($data);
+		$state = $this->insert($data);
 		$state && $this->record($state, LOG_DATA_TABLE_SHORTURI, LOG_OPERATION_TYPE_INSERT);
 
 		$message = $state ? $state : '保存失败。';
@@ -157,7 +157,7 @@ class ModelShortUri extends ModelCommon
 
 		$condition = array();
 		$condition[] = array('id' => array('eq', $id));
-		$state = parent::update($condition, $data);
+		$state = $this->update($condition, $data);
 		$state = ($state !== false);
 		$state && $this->record($id, LOG_DATA_TABLE_SHORTURI, LOG_OPERATION_TYPE_UPDATE);
 

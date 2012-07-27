@@ -245,6 +245,7 @@ $.fn.extend({
 	/* AJAX链接 */
 	ajaxLink: function(){
 		$(this).click(function(){
+			var that = this;
 			$.ajax({type: "GET", dataType: "JSON", url: $(this).data("url"), async: true, success: function(result){
 				if(result.state){
 					$.fn.msgbox('success', result.message);
