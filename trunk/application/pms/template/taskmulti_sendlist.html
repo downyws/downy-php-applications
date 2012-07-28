@@ -2,7 +2,7 @@
 {include file="common_head.html"}
 {include file="common_center.html"}
 <div class="table_list">
-	<h2>发送列表</h2>
+	<h2>发送列表[ <span class="red f12 link cp" data-href="/index.php?a=taskmulti&m=detail&id={$taskmulti.id}">{$taskmulti.name}</span> ]</h2>
 	<div class="search">
 		<div class="fl">
 			<form action="/index.php?a=taskmulti&m=sendlist&id={$id}" method="post">
@@ -12,7 +12,7 @@
 		</div>
 		{if $taskmulti['send_state'] == 5 && ('TASKMULTI:EDITALL'|in_array:$userpower || ('TASKMULTI:EDITSELF'|in_array:$userpower && $user['id'] == $taskmulti['user_id']))}
 			<div class="fr">
-				<form action="/index.php?a=taskmulti&m=import&id={$id}" method="post">
+				<form action="/index.php?a=taskmulti&m=importlist&id={$id}" method="post" enctype="multipart/form-data">
 					<input type="file" name="list" />
 					<input type="submit" class="mgl20 btn" value="导入" />
 					<input type="button" class="mgl20 btn ajaxlink" value="清空列表" data-url="/index.php?a=taskmulti&m=clearlist&t=ajax&id={$id}" />

@@ -3,6 +3,7 @@ class ActionUser extends ActionCommon
 {
 	public $NOT_LOGIN = array();
 	public $NOT_POWER = array('profile');
+	public $RUN_LONG_TIME = array();
 
 	public function __construct()
 	{

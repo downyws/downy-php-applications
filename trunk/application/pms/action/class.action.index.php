@@ -3,6 +3,7 @@ class ActionIndex extends ActionCommon
 {
 	public $NOT_LOGIN = array('login');
 	public $NOT_POWER = array('frame', 'head', 'index', 'menu', 'logout');
+	public $RUN_LONG_TIME = array();
 
 	public function __construct()
 	{

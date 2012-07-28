@@ -4,6 +4,8 @@ define('APP_NAME', '信息推送系统');
 
 define('ADMIN_ID', 100000);
 
+define('BATCH_IMPORT', 500);
+
 define('LOG_DATA_TABLE_CHANNEL', 1);
 define('LOG_DATA_TABLE_LOG', 2);
 define('LOG_DATA_TABLE_SENDLIST', 3);
@@ -118,8 +120,8 @@ $GLOBALS['CONFIG']['POWER'] = array(
 	'USER:EDIT' => array('NAME' => '用户编辑', 'ACTIONMETHOD' => array('user:edit')),
 	'TASKMULTI:READ' => array('NAME' => '多任务查看', 'ACTIONMETHOD' => array('taskmulti:list', 'taskmulti:detail', 'taskmulti:sendlist')),
 	'TASKMULTI:CANCEL' => array('NAME' => '多任务取消', 'ACTIONMETHOD' => array('taskmulti:cancel')),
-	'TASKMULTI:EDITSELF' => array('NAME' => '多任务编辑（自己）', 'ACTIONMETHOD' => array('taskmulti:edit', 'taskmulti:clearlist', 'taskmulti:removesend')),
-	'TASKMULTI:EDITALL' => array('NAME' => '多任务编辑（所有用户）', 'ACTIONMETHOD' => array('taskmulti:edit', 'taskmulti:clearlist', 'taskmulti:removesend')),
+	'TASKMULTI:EDITSELF' => array('NAME' => '多任务编辑（自己）', 'ACTIONMETHOD' => array('taskmulti:edit', 'taskmulti:importlist', 'taskmulti:clearlist', 'taskmulti:removesend', 'taskmulti:submitcheck')),
+	'TASKMULTI:EDITALL' => array('NAME' => '多任务编辑（所有用户）', 'ACTIONMETHOD' => array('taskmulti:edit', 'taskmulti:importlist', 'taskmulti:clearlist', 'taskmulti:removesend', 'taskmulti:submitcheck')),
 	'TASKMULTI:CHECK' => array('NAME' => '多任务审核', 'ACTIONMETHOD' => array('taskmulti:check')),
 	'TASKSINGLE:READ' => array('NAME' => '单任务查看', 'ACTIONMETHOD' => array('tasksingle:list', 'tasksingle:detail')),
 	'TASKSINGLE:CANCEL' => array('NAME' => '单任务取消', 'ACTIONMETHOD' => array('tasksingle:cancel')),

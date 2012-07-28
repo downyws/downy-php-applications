@@ -44,7 +44,7 @@
 					{/if}
 					{if 'TASKMULTI:EDITALL'|in_array:$userpower || ('TASKMULTI:EDITSELF'|in_array:$userpower && $object.user_id == $user.id)}
 						<input type="button" class="mgl20 btn link" value="编辑" data-href="/index.php?a=taskmulti&m=edit&id={$object.id}" />
-						{if $object.send_count > 0}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=&t=ajax&id={$object.id}" value="提交审核" />{/if}
+						{if $object.send_count > 0}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=submitcheck&t=ajax&id={$object.id}" value="提交审核" />{/if}
 					{/if}
 				{else}{if $object.send_state == 6}
 					{if 'TASKMULTI:CANCEL'|in_array:$userpower}
@@ -52,7 +52,7 @@
 					{/if}
 					{if 'TASKMULTI:CHECK'|in_array:$userpower}
 						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=check&t=ajax&id={$object.id}&pass=1" value="审核通过" />
-						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=check&t=ajax&id={$object.id}&pass=0" value="审核不通过" />
+						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=check&t=ajax&id={$object.id}&pass=5" value="审核不通过" />
 					{/if}
 				{/if}{/if}{/if}
 		</tbody>

@@ -70,6 +70,26 @@ class ModelTarget extends ModelCommon
 		return array('state' => $state, 'message' => $message);
 	}
 
+	public function addBatch($contacts, $type)
+	{
+		$data = array();
+		foreach($contacts as $v)
+		{
+			if($this->contactType($v) == $type)
+			{
+				$data[] = array('contact' => $v, 'type' => $type);
+			}
+		}
+		$this->insertBatch(array('contact', 'type'), $data);
+		$this->record(0, LOG_DATA_TABLE_TARGET, LOG_OPERATION_TYPE_INSERT);
+
+		$condition = array();
+		$condition[] = array('contact' => array('in', $contacts));
+		$condition[] = array('is_disable' => array('eq', 0));
+		$condition[] = array('type' => array('eq', $type));
+		return $this->getPairs($condition, array('contact', 'id'));
+	}
+
 	public function edit($id, $data)
 	{
 		foreach($data as $k => $v)

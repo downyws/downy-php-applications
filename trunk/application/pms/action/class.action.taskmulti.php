@@ -3,6 +3,7 @@ class ActionTaskMulti extends ActionCommon
 {
 	public $NOT_LOGIN = array();
 	public $NOT_POWER = array();
+	public $RUN_LONG_TIME = array('importlist');
 
 	public function __construct()
 	{
@@ -138,13 +139,13 @@ class ActionTaskMulti extends ActionCommon
 				}
 				else
 				{
-					$object = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+					$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
 					// 非法过滤
-					if($object['send_state'] != 5)
+					if($taskmulti['send_state'] != 5)
 					{
 						$result = array('state' => false, 'message' => '该任务已处于无法编辑状态。');
 					}
-					else if(!in_array('TASKMULTI:EDITALL', $userObj->getUserPower()) && $object['user_id'] != $user['id'])
+					else if(!in_array('TASKMULTI:EDITALL', $userObj->getUserPower()) && $taskmulti['user_id'] != $user['id'])
 					{
 						$result = array('state' => false, 'message' => '您不能编辑他人的任务。');
 					}
@@ -182,11 +183,51 @@ class ActionTaskMulti extends ActionCommon
 		echo json_encode($result);
 	}
 
+	public function methodSubmitCheckAjax()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$result = array('state' => false, 'message' => implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+
+			$taskmultiObj = Factory::getModel('taskmulti');
+			$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+			
+			// 非法过滤
+			if($taskmulti['send_state'] != 5)
+			{
+				$result = array('state' => false, 'message' => '该任务已处于无法编辑状态。');
+			}
+			else if(!in_array('TASKMULTI:EDITALL', $userObj->getUserPower()) && $taskmulti['user_id'] != $user['id'])
+			{
+				$result = array('state' => false, 'message' => '您不能编辑他人的任务。');
+			}
+			else
+			{
+				$result = $taskmultiObj->check($params['id'], 6);
+				if($result['state'])
+				{
+					$result['script'] = '$.fn.dialogScript("提示信息", "提交成功。", "window.location.href=\"/index.php?a=taskmulti&m=detail&id=' . $params['id'] . '\"");';
+				}
+			}
+		}
+
+		echo json_encode($result);
+	}
+
 	public function methodCheckAjax()
 	{
 		$params = $this->_submit->obtain(array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0)),
-			'pass' => array(array('format', 'int'))
+			'pass' => array(array('format', 'int', array('valid', 'in', '状态参数错误', null, array(1, 5))))
 		));
 
 		if(count($this->_submit->errors) > 0)
@@ -350,6 +391,78 @@ class ActionTaskMulti extends ActionCommon
 				{
 					$result['script'] = '$.fn.dialogScript("提示信息", "清空列表成功。", "window.location.href=\"/index.php?a=taskmulti&m=sendlist&id=' . $params['id'] . '\"");';
 					$result['message'] = '清空列表成功。';
+				}
+			}
+		}
+
+		echo json_encode($result);
+	}
+
+	public function methodImportList()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->message(implode('，', $this->_submit->errors) . '。');
+		}
+		else
+		{
+			$userObj = Factory::getModel('user');
+			$taskmultiObj = Factory::getModel('taskmulti');
+			$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+			// 非法过滤
+			if($taskmulti['send_state'] != 5)
+			{
+				$this->message('该任务已处于无法编辑状态。');
+			}
+			else if(!in_array('TASKMULTI:EDITALL', $userObj->getUserPower()) && $taskmulti['user_id'] != $user['id'])
+			{
+				$this->message('您不能编辑他人的任务。');
+			}
+			else
+			{
+				// 获取文件
+				$file = $_FILES['list'];
+				if($file['name'] == '')
+				{
+					$this->message('导入失败，导入文件缺失。');
+				}
+
+				// 编码检测
+				Factory::loadLibrary('filehelper');
+				$filehelper = new FileHelper();
+				$encode = $filehelper->getEncode($file['tmp_name']);
+				if(strstr($encode, 'UTF-8') === false)
+				{
+					$this->message('文件编码错误。');
+				}
+
+				// 获取数据
+				$list = array();
+				$handle = fopen($file['tmp_name'], "r");
+				while($data = fgetcsv($handle))
+				{
+					$list[] = $data;
+				}
+				fclose($handle);
+				if(count($list) < 2)
+				{
+					$this->message('导入失败，内容不全。');
+				}
+
+				$sendlistObj = Factory::getModel('sendlist');
+				$result = $sendlistObj->import($params['id'], $list);
+
+				if($result['state'])
+				{
+					$this->message($result['message'], array(array('title' => '返回上一页', 'href' => '/index.php?a=taskmulti&m=sendlist&id=' . $params['id'])));
+				}
+				else
+				{
+					$this->message($result['message']);
 				}
 			}
 		}
