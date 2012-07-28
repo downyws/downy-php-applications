@@ -13,7 +13,7 @@ class ActionCommon extends Action
 
 		if(in_array($params['m'], $this->RUN_LONG_TIME))
 		{
-			set_time_limit(120);
+			set_time_limit(0);
 			ini_set('memory_limit', '512M');
 		}
 
