@@ -59,6 +59,7 @@ $GLOBALS['CONFIG']['TASKSINGLE'] = array(
 );
 
 $GLOBALS['CONFIG']['TASKMULTI'] = array(
+	'PV_IMAGE' => DOMAIN_OUTSIDE . '/images/pv.gif',
 	'STATE' => array(
 		'1' => '未发送',
 		'2' => '发送中',

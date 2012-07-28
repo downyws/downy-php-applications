@@ -28,7 +28,7 @@
 			{if $object.send_state == 2}
 				<tr><th>发送进度</th><td>{$object.send_rate}({if $object.send_count > 0}{intval($object.send_rate / $object.send_count * 100)}{else}0{/if}%)</td></tr>
 			{/if}
-			{if $object.send_state|in_array:array(2, 3, 4)}
+			{if $object.channel.type == 1 && $object.send_state|in_array:array(2, 3, 4)}
 				<tr><th>达到量</th><td>{$object.accept_rate}({if $object.send_count > 0}{intval($object.accept_rate / $object.send_count * 100)}{else}0{/if}%)</td></tr>
 			{/if}
 			<tr><th>备注</th><td><pre>{$object.remarks}</pre></td></tr>
