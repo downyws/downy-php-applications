@@ -115,6 +115,25 @@ class ModelTaskMulti extends ModelCommon
 		return array('state' => $state, 'message' => $message);
 	}
 
+	public function addPv($id)
+	{
+		$sql = 'UPDATE ' . $this->table('send_list') . ' SET `page_view` = `page_view` + 1, `last_read_time` = ' . time() . ', `first_read_time` = IF(`first_read_time` > 0, `first_read_time`, ' . time() . ') WHERE `id` = ' . $id;
+		$this->query($sql);
+		
+		$condition = array();
+		$condition[] = array('id' => $id);
+		$task_id = $this->getOne($condition, 'task_id', 'send_list');
+
+		$condition = array();
+		$condition[] = array('task_id' => array('eq', $task_id));
+		$condition[] = array('page_view' => array('gt', 0));
+		$accept_rate = $this->getOne($condition, 'COUNT(*)', 'send_list');
+
+		$condition = array();
+		$condition[] = array('id' => array('eq', $task_id));
+		$this->update($condition, array('accept_rate' => $accept_rate));
+	}
+
 	public function edit($id, $data)
 	{
 		$targetObj = Factory::getModel('target');
@@ -235,5 +254,26 @@ class ModelTaskMulti extends ModelCommon
 		$state && $this->record($id, LOG_DATA_TABLE_TASKMULTI, LOG_OPERATION_TYPE_UPDATE);
 
 		return array('state' => $state, 'message' => ($state ? '审核成功。' : '审核失败。'));
+	}
+
+	public function render($content, $data)
+	{
+		preg_match_all("/{\\$(.*?)}/i", $content, $tags);
+		if(count($tags) == 2)
+		{
+			foreach($tags[1] as $k => $v)
+			{
+				$tag = $v;
+				$tag = explode(',', $tag);
+
+				$key = $tag[0];
+				$len = empty($tag[1]) ? 0 : intval($tag[1]);
+
+				$value = $len > 0 ? mb_substr($data[$key], 0, $len, 'UTF-8') : $data[$key];
+				$content = str_replace($tags[0][$k], $value, $content);
+			}
+		}
+
+		return $content;
 	}
 }

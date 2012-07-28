@@ -17,7 +17,7 @@ $(function(){
 	$(".link").link();
 
 	$(".wordstata").each(function(){
-		$(this).wordStata();
+		$(this).templateWordStata();
 	});
 
 	$(".btn").button();
@@ -206,6 +206,28 @@ $.fn.extend({
 		stata();
 	},
 
+	/* 模板字数统计 */
+	templateWordStata: function(){
+		var that = this;
+		var output = $(this).data("output");
+		var stata = function(){
+			var content = $(that).val();
+			var length = 0;
+			var mh_tag = /\{\$([^\,\}]+)(,\d+){0,1}\}/gi;
+			var tags = content.match(mh_tag);
+			for(v in tags){
+				if(!isNaN(v) && tags[v].indexOf(",") > 0){
+					length += parseInt(tags[v].substring(tags[v].indexOf(",") + 1, tags[v].length - 1));
+				}
+			}
+			content = content.replace(mh_tag, '');
+			length += content.length;
+			$(output).html(length);
+		};
+		$(this).keyup(stata);
+		stata();
+	},
+
 	/* 提示信息框 */
 	msgbox: function(state, message){
 		$(".msgbox").remove();
@@ -231,7 +253,9 @@ $.fn.extend({
 		});
 		$.ajax({type: method, dataType: "JSON", url: action, data: data, async: true, success: function(result){
 			if(result.state){
-				$.fn.msgbox('success', result.message);
+				if(result.message != ""){
+					$.fn.msgbox('success', result.message);
+				}
 				result.script && eval(result.script);
 			}else{
 				$.fn.msgbox('failed', result.message);
@@ -248,7 +272,9 @@ $.fn.extend({
 			var that = this;
 			$.ajax({type: "GET", dataType: "JSON", url: $(this).data("url"), async: true, success: function(result){
 				if(result.state){
-					$.fn.msgbox('success', result.message);
+					if(result.message != ""){
+						$.fn.msgbox('success', result.message);
+					}
 					result.script && eval(result.script);
 				}else{
 					$.fn.msgbox('failed', result.message);

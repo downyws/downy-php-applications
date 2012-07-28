@@ -26,7 +26,7 @@
 				</td></tr>
 				<tr class="type_tabs_2"><th>字数统计</th><td><span class="content2_output">0</span> 个字</td></tr>
 				<tr class="type_tabs_2"><th>短信内容</th><td>
-					<textarea class="w450 h100 wordstata" name="content2" data-type="iso" data-output=".content2_output">{if $id > 0}{$object.content}{/if}</textarea>
+					<textarea class="w450 h100 wordstata" name="content2" data-output=".content2_output">{if $id > 0}{$object.content}{/if}</textarea>
 				</td></tr>
 				<tr class="type_tabs_2"><th>短信通道</th><td>
 					<div class="radiolist">
@@ -39,10 +39,12 @@
 				</td></tr>
 				<tr><th>计划发送时间</th><td><input type="text" class="datetimepicker" name="plan_send_time" value="{if $id > 0}{$object.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}{/if}" /></td></tr>
 				<tr><td>&nbsp;</td><td>
-					<input type="button" class="btn link" value="发送列表" data-href="/index.php?a=taskmulti&m=sendlist&id={$object.id}" />
-					{if $id > 0}<input type="button" class="mgl20 btn link" value="查看" data-href="/index.php?a=taskmulti&m=detail&id={$object.id}" />{/if}
-					<input type="submit" class="mgl20 btn" value="保存" />
-					{if $object.send_count > 0}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=submitcheck&t=ajax&id={$object.id}" value="提交审核" />{/if}
+					{if $id > 0}
+						<input type="button" class="btn link" value="发送列表" data-href="/index.php?a=taskmulti&m=sendlist&id={$object.id}" />
+						<input type="button" class="mgl20 btn link" value="查看" data-href="/index.php?a=taskmulti&m=detail&id={$object.id}" />
+					{/if}
+					<input type="submit" class="{if $id > 0}mgl20{/if} btn" value="保存" />
+					{if $id > 0 && $object.send_count > 0}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=submitcheck&t=ajax&id={$object.id}" value="提交审核" />{/if}
 					{if $id > 0 && 'TASKMULTI:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
 				</td></tr>
 			</tbody>
