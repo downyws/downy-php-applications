@@ -140,6 +140,18 @@ class Model extends Db
 		return $this->fetchAll($sql);
 	}
 
+	public function getCol($condition, $fields, $table ='')
+	{
+		$sql = 'SELECT ' . $fields[0] . ', ' . $fields[1] . ' FROM ' . $this->table($table) . $this->getWhere($condition);
+		return $this->fetchCol($sql);
+	}
+
+	public function getPairs($condition, $fields, $table ='')
+	{
+		$sql = 'SELECT ' . $fields[0] . ', ' . $fields[1] . ' FROM ' . $this->table($table) . $this->getWhere($condition);
+		return $this->fetchPairs($sql);
+	}
+
 	public function getWhere($condition)
 	{
 		$result = array();
@@ -163,9 +175,15 @@ class Model extends Db
 					case 'like': $_item[] = '(' . $_k . ' LIKE \'%' . $this->escape($_v[1]) . '%\')'; break;
 					case 'between': $_item[] = '(' . $_k . ' BETWEEN \'' . $this->escape($_v[1][0]) . '\' AND \'' . $this->escape($_v[1][1]) . '\')'; break;
 					case 'not between': $_item[] = '(' . $_k . ' NOT BETWEEN \'' . $this->escape($_v[1][0]) . '\' AND \'' . $this->escape($_v[1][1]) . '\')'; break;
-					case 'in': $_item[] = '(' . $_k . ' IN (\'' . implode('\',\'', $this->escape($_v[1])) . '\'))'; break;
-					case 'not in': $_item[] = '(' . $_k . ' NOT IN (\'' . implode('\',\'', $this->escape($_v[1])) . '\'))'; break;
-					case 'exp': $_item[] = '(' . $this->escape($_v[1]) . ')'; break;
+					case 'in': 
+						$temp = array();
+						foreach($_v[1] as $__v) $temp[] = $this->escape($__v);
+						$_item[] = '(' . $_k . ' IN (\'' . implode('\',\'', $temp) . '\'))'; break;
+					case 'not in': 
+						$temp = array();
+						foreach($_v[1] as $__v) $temp[] = $this->escape($__v);
+						$_item[] = '(' . $_k . ' NOT IN (\'' . implode('\',\'', $temp) . '\'))'; break;
+					case 'exp': $_item[] = '(' . $_v[1] . ')'; break;
 				}
 			}
 			$result[] = implode(' OR ', $_item);
