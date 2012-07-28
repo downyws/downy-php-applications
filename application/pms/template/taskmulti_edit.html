@@ -42,7 +42,7 @@
 					<input type="button" class="btn link" value="发送列表" data-href="/index.php?a=taskmulti&m=sendlist&id={$object.id}" />
 					{if $id > 0}<input type="button" class="mgl20 btn link" value="查看" data-href="/index.php?a=taskmulti&m=detail&id={$object.id}" />{/if}
 					<input type="submit" class="mgl20 btn" value="保存" />
-					{if $object.send_count > 0}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=&t=ajax&id={$object.id}" value="提交审核" />{/if}
+					{if $object.send_count > 0}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=submitcheck&t=ajax&id={$object.id}" value="提交审核" />{/if}
 					{if $id > 0 && 'TASKMULTI:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
 				</td></tr>
 			</tbody>

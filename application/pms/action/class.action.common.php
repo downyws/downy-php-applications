@@ -11,6 +11,12 @@ class ActionCommon extends Action
 			't' => array(array('format', 'trim'))
 		));
 
+		if(in_array($params['m'], $this->RUN_LONG_TIME))
+		{
+			set_time_limit(120);
+			ini_set('memory_limit', '512M');
+		}
+
 		if(!in_array($params['m'], $this->NOT_LOGIN))
 		{
 			$userObj = Factory::getModel('user');

@@ -119,6 +119,8 @@ class ModelTaskMulti extends ModelCommon
 	{
 		$targetObj = Factory::getModel('target');
 		$taskmulti = $this->getObject(array(array('id' => array('eq', $id))));
+		$channel = $this->getObject(array(array('id' => array('eq', $taskmulti['channel_id']))), array(), 'channel');
+
 		foreach($data as $k => $v)
 		{
 			switch($k)
@@ -132,10 +134,14 @@ class ModelTaskMulti extends ModelCommon
 					break;
 				case 'channel_id':
 					$data[$k] = intval($v);
-					$exists = $this->getOne(array(array('id' => array('eq', $data[$k]))), 'COUNT(*)', 'channel');
-					if($exists < 1)
+					$new_channel = $this->getObject(array(array('id' => array('eq', $data[$k]))), array(), 'channel');
+					if(empty($new_channel))
 					{
 						return array('state' => false, 'message' => '通道不存在。');
+					}
+					else if($channel['type'] != $new_channel['type'] && $taskmulti['send_count'] > 0)
+					{
+						return array('state' => false, 'message' => '改变通道类型前需先清空发送列表。');
 					}
 					break;
 				case 'title':
@@ -174,12 +180,6 @@ class ModelTaskMulti extends ModelCommon
 		$state = ($state !== false);
 		$state && $this->record($id, LOG_DATA_TABLE_TASKMULTI, LOG_OPERATION_TYPE_UPDATE);
 
-		// 更新发送队列
-		if($state)
-		{
-
-		}
-
 		$message = $state ? '保存成功。' : '保存失败。';
 		return array('state' => $state, 'message' => $message);
 	}
@@ -201,13 +201,36 @@ class ModelTaskMulti extends ModelCommon
 
 	public function check($id, $pass)
 	{
+		if(!in_array($pass, array(1, 5, 6)))
+		{
+			return array('state' => false, 'message' => '状态参数错误。');
+		}
 		$userObj = Factory::getModel('user');
 		$user = $userObj->getUser();
 
 		$condition = array();
 		$condition[] = array('id' => array('eq', $id));
-		$condition[] = array('send_state' => array('eq', 6));
-		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = ' . ($pass ? 1 : 5) . ', `remarks` = CONCAT(\'' . date('Y-m-d H:i:s') . '\\t' . $user['id'] . '\\t' . $user['account'] . '\\t' . ($pass ? 'check passed' : 'check not passed') . '\\n\', `remarks`)' . $this->getWhere($condition);
+		if(in_array($pass, array(1, 5)))
+		{
+			$condition[] = array('send_state' => array('eq', 6));
+		}
+		else
+		{
+			$condition[] = array('send_state' => array('eq', 5));
+		}
+		switch($pass)
+		{
+			case 1:
+				$pass_message = '审核通过';
+				break;
+			case 5:
+				$pass_message = '审核不通过';
+				break;
+			case 6:
+				$pass_message = '提交审核';
+				break;
+		}
+		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = ' . intval($pass) . ', `remarks` = CONCAT(\'' . date('Y-m-d H:i:s') . '\\t' . $user['id'] . '\\t' . $user['account'] . '\\t' . $pass_message . '\\n\', `remarks`)' . $this->getWhere($condition);
 		$state = $this->query($sql);
 		$state && $this->record($id, LOG_DATA_TABLE_TASKMULTI, LOG_OPERATION_TYPE_UPDATE);
 
