@@ -265,7 +265,7 @@ class ModelTaskMulti extends ModelCommon
 				if($channel['type'] == CHANNEL_TYPE_EMAIL)
 				{
 					$shorturiObj = Factory::getModel('shorturi');
-					$taskmulti['content'] = $shorturiObj->render($taskmulti['content'], $id);
+					$shorturiObj->monitor($taskmulti['content'], $id);
 
 					$condition = array();
 					$condition[] = array('id' => $id);
