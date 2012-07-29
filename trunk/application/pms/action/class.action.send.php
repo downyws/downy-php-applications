@@ -17,7 +17,7 @@ class ActionSend extends ActionCommon
 			'channel_id' => array(array('format', 'int'), array('valid', 'gt', '通道编号错误', null, 0))
 		));
 
-		// 保存
+		// 报错
 		if(count($this->_submit->errors) > 0)
 		{
 			$message = implode('，', $this->_submit->errors) . '。';
@@ -25,7 +25,12 @@ class ActionSend extends ActionCommon
 		}
 		else
 		{
-			// 定时脚本
+			// 运行通道
+			include_once(APP_DIR_CHANNEL . 'class.channel.php');
+			include_once(APP_DIR_CHANNEL . 'class.channel_' . $params['channel_id'] . '.php');
+			$className = 'Channel_' . $params['channel_id'];
+			$channel = new $className();
+			$result = $channel->run();
 		}
 		
 		// 返回

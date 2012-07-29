@@ -1,6 +1,8 @@
 <?php
 
 define('APP_DIR', dirname(dirname(__FILE__)) . '/');
+define('APP_DIR_CHANNEL',	APP_DIR . 'channel/');
+
 include_once(APP_DIR . 'config.php');
 include_once(APP_DIR . 'global.php');
 
