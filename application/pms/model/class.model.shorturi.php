@@ -216,4 +216,15 @@ class ModelShortUri extends ModelCommon
 			$this->update($condition, $data);
 		}
 	}
+
+	public function clear($id)
+	{
+		$condition = array();
+		$condition[] = array('id' => array('eq', $id));
+		$data = array('count' => 0);
+		$state = $this->update($condition, $data);
+		$state && $this->record($id, LOG_DATA_TABLE_SHORTURI, LOG_OPERATION_TYPE_UPDATE);
+
+		return array('state' => $state, 'message' => ($state ? '清零成功。' : '清零失败。'));
+	}
 }

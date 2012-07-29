@@ -116,7 +116,7 @@ $GLOBALS['CONFIG']['POWER'] = array(
 	'TARGET:READ' => array('NAME' => '目标查看', 'ACTIONMETHOD' => array('target:list')),
 	'TARGET:EDIT' => array('NAME' => '目标编辑', 'ACTIONMETHOD' => array('target:edit')),
 	'SURI:READ' => array('NAME' => '短网址查看', 'ACTIONMETHOD' => array('suri:list')),
-	'SURI:EDIT' => array('NAME' => '短网址编辑', 'ACTIONMETHOD' => array('suri:edit')),
+	'SURI:EDIT' => array('NAME' => '短网址编辑', 'ACTIONMETHOD' => array('suri:edit', 'suri:clear')),
 	'USER:READ' => array('NAME' => '用户查看', 'ACTIONMETHOD' => array('user:list', 'user:detail')),
 	'USER:EDIT' => array('NAME' => '用户编辑', 'ACTIONMETHOD' => array('user:edit')),
 	'TASKMULTI:READ' => array('NAME' => '多任务查看', 'ACTIONMETHOD' => array('taskmulti:list', 'taskmulti:detail', 'taskmulti:sendlist')),

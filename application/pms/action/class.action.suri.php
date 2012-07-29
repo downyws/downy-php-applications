@@ -98,6 +98,32 @@ class ActionSuri extends ActionCommon
 		$this->jsonout($result);
 	}
 
+	public function methodClearAjax()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'gt', '编号错误', null, 0))
+		));
+
+		// 保存
+		if(count($this->_submit->errors) > 0)
+		{
+			$message = implode('，', $this->_submit->errors) . '。';
+			$result = array('state' => false, 'message' => $message);
+		}
+		else
+		{
+			$shorturiObj = Factory::getModel('shorturi');
+			$result = $shorturiObj->clear($params['id']);
+			if($result['state'])
+			{
+				$result['script'] = '$(that).parent().parent().children(".count").html("0");';
+			}
+		}
+
+		// 返回
+		$this->jsonout($result);
+	}
+
 	public function methodRedirect()
 	{
 		// 获取参数
