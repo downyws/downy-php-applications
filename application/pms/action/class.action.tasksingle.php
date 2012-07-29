@@ -139,13 +139,13 @@ class ActionTaskSingle extends ActionCommon
 				}
 				else
 				{
-					$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
+					$tasksingle = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
 					// 非法过滤
-					if($object['send_state'] != 1)
+					if($tasksingle['send_state'] != 1)
 					{
 						$result = array('state' => false, 'message' => '该任务已处于无法编辑状态。');
 					}
-					else if(!in_array('TASKSINGLE:EDITALL', $userObj->getUserPower()) && $object['user_id'] != $user['id'])
+					else if(!in_array('TASKSINGLE:EDITALL', $userObj->getUserPower()) && $tasksingle['user_id'] != $user['id'])
 					{
 						$result = array('state' => false, 'message' => '您不能编辑他人的任务。');
 					}
@@ -157,7 +157,65 @@ class ActionTaskSingle extends ActionCommon
 			}
 		}
 		// 返回
-		echo json_encode($result);
+		$this->jsonout($result);
+	}
+
+	public function methodEditApi()
+	{
+		// 获取参数
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+			'target_contact' => array(array('format', 'trim')),
+			'channel_id' => array(array('format', 'int')),
+			'title' => array(array('format', 'trim')),
+			'content' => array(array('format', 'trim')),
+			'plan_send_time' => array(array('format', 'trim'))
+		));
+
+		if(count($this->_submit->errors) > 0)
+		{
+			$message = implode('，', $this->_submit->errors) . '。';
+			$result = array('state' => false, 'message' => $message, 'code' => 'PARAMS ERROR');
+		}
+		else
+		{
+			if(empty($params['target_contact'])) unset($params['target_contact']);
+			if(empty($params['channel_id'])) unset($params['channel_id']);
+			if(empty($params['title'])) unset($params['title']);
+			if(empty($params['content'])) unset($params['content']);
+			if(empty($params['plan_send_time'])) unset($params['plan_send_time']);
+
+			$tasksingleObj = Factory::getModel('tasksingle');
+			$userObj = Factory::getModel('user');
+			$user = $userObj->getUser();
+
+			if($params['id'] == 0)
+			{
+				$params['user_id'] = $user['id'];
+				$result = $tasksingleObj->add($params);
+				$result['code'] = $result['state'] ? 'SUCCESS' : 'FALIED';
+			}
+			else
+			{
+				$tasksingle = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
+				// 非法过滤
+				if($tasksingle['send_state'] != 1)
+				{
+					$result = array('state' => false, 'message' => '该任务已处于无法编辑状态。', 'code' => 'TASKSINGLE IS LOCK');
+				}
+				else if(!in_array('TASKSINGLE:EDITALL', $userObj->getUserPower()) && $tasksingle['user_id'] != $user['id'])
+				{
+					$result = array('state' => false, 'message' => '您不能编辑他人的任务。', 'code' => 'NO POWER');
+				}
+				else
+				{
+					$result = $tasksingleObj->edit($params['id'], $params);
+					$result['code'] = $result['state'] ? 'SUCCESS' : 'FALIED';
+				}
+			}
+		}
+		// 返回
+		$this->jsonout($result);
 	}
 
 	public function methodCancelAjax()
@@ -180,7 +238,28 @@ class ActionTaskSingle extends ActionCommon
 			}
 		}
 
-		echo json_encode($result);
+		$this->jsonout($result);
+	}
+
+	public function methodCancelApi()
+	{
+		$params = $this->_submit->obtain(array(
+			'id' => array(array('format', 'int'), array('valid', 'egt', '任务不存在', null, 0))
+		));
+
+		// 参数检查
+		if(count($this->_submit->errors) > 0)
+		{
+			$result = array('state' => false, 'message' => implode('，', $this->_submit->errors) . '。', 'code' => 'PARAMS ERROR');
+		}
+		else
+		{
+			$tasksinglelObj = Factory::getModel('tasksingle');
+			$result = $tasksinglelObj->cancel($params['id']);
+			$result['code'] = $result['state'] ? 'SUCCESS' : 'FALIED';
+		}
+
+		$this->jsonout($result);
 	}
 
 	public function methodDetail()
@@ -193,16 +272,14 @@ class ActionTaskSingle extends ActionCommon
 		{
 			$this->message(implode('，', $this->_submit->errors) . '。');
 		}
-		else
-		{
-			$userObj = Factory::getModel('user');
-			$tasksingleObj = Factory::getModel('tasksingle');
-			$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
-			$object = $tasksingleObj->formatObject($object);
 
-			$this->assign('user', $userObj->getUser());
-			$this->assign('userpower', $userObj->getUserPower());
-			$this->assign('object', $object);
-		}
+		$userObj = Factory::getModel('user');
+		$tasksingleObj = Factory::getModel('tasksingle');
+		$object = $tasksingleObj->getObject(array(array('id' => array('eq', $params['id']))));
+		$object = $tasksingleObj->formatObject($object);
+
+		$this->assign('user', $userObj->getUser());
+		$this->assign('userpower', $userObj->getUserPower());
+		$this->assign('object', $object);
 	}
 }

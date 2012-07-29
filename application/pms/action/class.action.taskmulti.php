@@ -157,7 +157,7 @@ class ActionTaskMulti extends ActionCommon
 			}
 		}
 		// 返回
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 
 	public function methodCancelAjax()
@@ -180,7 +180,7 @@ class ActionTaskMulti extends ActionCommon
 			}
 		}
 
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 
 	public function methodSubmitCheckAjax()
@@ -220,7 +220,7 @@ class ActionTaskMulti extends ActionCommon
 			}
 		}
 
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 
 	public function methodCheckAjax()
@@ -244,7 +244,7 @@ class ActionTaskMulti extends ActionCommon
 			}
 		}
 
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 
 	public function methodDetail()
@@ -257,17 +257,15 @@ class ActionTaskMulti extends ActionCommon
 		{
 			$this->message(implode('，', $this->_submit->errors) . '。');
 		}
-		else
-		{
-			$userObj = Factory::getModel('user');
-			$taskmultiObj = Factory::getModel('taskmulti');
-			$object = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
-			$object = $taskmultiObj->formatObject($object);
 
-			$this->assign('user', $userObj->getUser());
-			$this->assign('userpower', $userObj->getUserPower());
-			$this->assign('object', $object);
-		}
+		$userObj = Factory::getModel('user');
+		$taskmultiObj = Factory::getModel('taskmulti');
+		$object = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+		$object = $taskmultiObj->formatObject($object);
+
+		$this->assign('user', $userObj->getUser());
+		$this->assign('userpower', $userObj->getUserPower());
+		$this->assign('object', $object);
 	}
 
 	public function methodSendlist()
@@ -282,34 +280,32 @@ class ActionTaskMulti extends ActionCommon
 		{
 			$this->message(implode('，', $this->_submit->errors) . '。');
 		}
-		else
-		{
-			$taskmultiObj = Factory::getModel('taskmulti');
-			$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
-			
-			$channelObj = Factory::getModel('channel');
-			$channel = $channelObj->getObject(array(array('id' => array('eq', $taskmulti['channel_id']))));
 
-			$userObj = Factory::getModel('user');
+		$taskmultiObj = Factory::getModel('taskmulti');
+		$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+		
+		$channelObj = Factory::getModel('channel');
+		$channel = $channelObj->getObject(array(array('id' => array('eq', $taskmulti['channel_id']))));
 
-			$sendlistObj = Factory::getModel('sendlist');
-			$id = $params['id'];
-			$p = $params['p'];
-			unset($params['id']);
-			unset($params['p']);
-			$list = $sendlistObj->getList($id, $p, $params);
-			$list['data'] = $sendlistObj->formatList($list['data']);
+		$userObj = Factory::getModel('user');
 
-			$list['pager']['params'] = 'contact=' . urlencode($params['contact']);
+		$sendlistObj = Factory::getModel('sendlist');
+		$id = $params['id'];
+		$p = $params['p'];
+		unset($params['id']);
+		unset($params['p']);
+		$list = $sendlistObj->getList($id, $p, $params);
+		$list['data'] = $sendlistObj->formatList($list['data']);
 
-			$this->assign('id', $id);
-			$this->assign('list', $list);
-			$this->assign('taskmulti', $taskmulti);
-			$this->assign('channel', $channel);
-			$this->assign('user', $userObj->getUser());
-			$this->assign('userpower', $userObj->getUserPower());
-			$this->assign('params', $params);
-		}
+		$list['pager']['params'] = 'contact=' . urlencode($params['contact']);
+
+		$this->assign('id', $id);
+		$this->assign('list', $list);
+		$this->assign('taskmulti', $taskmulti);
+		$this->assign('channel', $channel);
+		$this->assign('user', $userObj->getUser());
+		$this->assign('userpower', $userObj->getUserPower());
+		$this->assign('params', $params);
 	}
 
 	public function methodRemoveSendAjax()
@@ -356,7 +352,7 @@ class ActionTaskMulti extends ActionCommon
 			}
 		}
 
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 
 	public function methodClearListAjax()
@@ -395,7 +391,7 @@ class ActionTaskMulti extends ActionCommon
 			}
 		}
 
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 
 	public function methodImportList()
@@ -408,65 +404,59 @@ class ActionTaskMulti extends ActionCommon
 		{
 			$this->message(implode('，', $this->_submit->errors) . '。');
 		}
-		else
+
+		$userObj = Factory::getModel('user');
+		$taskmultiObj = Factory::getModel('taskmulti');
+		$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
+		// 非法过滤
+		if($taskmulti['send_state'] != 5)
 		{
-			$userObj = Factory::getModel('user');
-			$taskmultiObj = Factory::getModel('taskmulti');
-			$taskmulti = $taskmultiObj->getObject(array(array('id' => array('eq', $params['id']))));
-			// 非法过滤
-			if($taskmulti['send_state'] != 5)
-			{
-				$this->message('该任务已处于无法编辑状态。');
-			}
-			else if(!in_array('TASKMULTI:EDITALL', $userObj->getUserPower()) && $taskmulti['user_id'] != $user['id'])
-			{
-				$this->message('您不能编辑他人的任务。');
-			}
-			else
-			{
-				// 获取文件
-				$file = $_FILES['list'];
-				if($file['name'] == '')
-				{
-					$this->message('导入失败，导入文件缺失。');
-				}
-
-				// 编码检测
-				Factory::loadLibrary('filehelper');
-				$filehelper = new FileHelper();
-				$encode = $filehelper->getEncode($file['tmp_name']);
-				if(strstr($encode, 'UTF-8') === false)
-				{
-					$this->message('文件编码错误。');
-				}
-
-				// 获取数据
-				$list = array();
-				$handle = fopen($file['tmp_name'], "r");
-				while($data = fgetcsv($handle))
-				{
-					$list[] = $data;
-				}
-				fclose($handle);
-				if(count($list) < 2)
-				{
-					$this->message('导入失败，内容不全。');
-				}
-
-				$sendlistObj = Factory::getModel('sendlist');
-				$result = $sendlistObj->import($params['id'], $list);
-
-				if($result['state'])
-				{
-					$this->message($result['message'], array(array('title' => '返回上一页', 'href' => '/index.php?a=taskmulti&m=sendlist&id=' . $params['id'])));
-				}
-				else
-				{
-					$this->message($result['message']);
-				}
-			}
+			$this->message('该任务已处于无法编辑状态。');
+		}
+		else if(!in_array('TASKMULTI:EDITALL', $userObj->getUserPower()) && $taskmulti['user_id'] != $user['id'])
+		{
+			$this->message('您不能编辑他人的任务。');
 		}
 
-		echo json_encode($result);
+		// 获取文件
+		$file = $_FILES['list'];
+		if($file['name'] == '')
+		{
+			$this->message('导入失败，导入文件缺失。');
+		}
+
+		// 编码检测
+		Factory::loadLibrary('filehelper');
+		$filehelper = new FileHelper();
+		$encode = $filehelper->getEncode($file['tmp_name']);
+		if(strstr($encode, 'UTF-8') === false)
+		{
+			$this->message('文件编码错误。');
+		}
+
+		// 获取数据
+		$list = array();
+		$handle = fopen($file['tmp_name'], "r");
+		while($data = fgetcsv($handle))
+		{
+			$list[] = $data;
+		}
+		fclose($handle);
+		if(count($list) < 2)
+		{
+			$this->message('导入失败，内容不全。');
+		}
+
+		$sendlistObj = Factory::getModel('sendlist');
+		$result = $sendlistObj->import($params['id'], $list);
+
+		if($result['state'])
+		{
+			$this->message($result['message'], array(array('title' => '返回上一页', 'href' => '/index.php?a=taskmulti&m=sendlist&id=' . $params['id'])));
+		}
+		else
+		{
+			$this->message($result['message']);
+		}
 	}
 }

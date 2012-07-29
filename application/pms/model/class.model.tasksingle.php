@@ -95,17 +95,24 @@ class ModelTaskSingle extends ModelCommon
 
 		// 创建人检查
 		$userObj = Factory::getModel('user');
-		$user = $userObj->getUser($data['user_id']);
+		$user = $userObj->getUser($data['user_id'], 'id');
 		if(!$user)
 		{
 			return array('state' => false, 'message' => '创建人不存在。');
 		}
 
 		// 计划发送时间
-		$data['plan_send_time'] = strtotime($data['plan_send_time']);
-		if($data['plan_send_time'] < time())
+		if(empty($data['plan_send_time']))
 		{
 			$data['plan_send_time'] = time();
+		}
+		else
+		{
+			$data['plan_send_time'] = strtotime($data['plan_send_time']);
+			if($data['plan_send_time'] < time())
+			{
+				$data['plan_send_time'] = time();
+			}
 		}
 
 		// 发送上线检查
@@ -145,6 +152,7 @@ class ModelTaskSingle extends ModelCommon
 	{
 		$targetObj = Factory::getModel('target');
 		$tasksingle = $this->getObject(array(array('id' => array('eq', $id))));
+
 		foreach($data as $k => $v)
 		{
 			switch($k)

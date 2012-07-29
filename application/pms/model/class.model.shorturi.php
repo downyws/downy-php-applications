@@ -199,4 +199,19 @@ class ModelShortUri extends ModelCommon
 		$exists = $this->getOne($condition, 'COUNT(*)');
 		return $exists > 0;
 	}
+
+	public function render($content, $task_id)
+	{
+		/*
+		$key = $this->createKey();
+		if($key !== false)
+		{
+
+		}
+		*/
+		// $data = array('task_id' => $task_id, 'key' => '', 'uri' => '', 'count' => 0, 'is_disable' => 0, 'type' => 1or2);
+		$data['key'] = $key;
+		$data['uri'] = '';
+		return 'aaaaaaaaaa' . $content;
+	}
 }
