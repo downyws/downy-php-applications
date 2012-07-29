@@ -11,7 +11,7 @@ class ActionCommon extends Action
 			't' => array(array('format', 'trim'))
 		));
 
-		if($params['t'] == 'api')
+		if(!in_array($params['m'], $this->NOT_LOGIN) && $params['t'] == 'api')
 		{
 			$api_params = $this->_submit->obtain(array(
 				'account' => array(array('format', 'trim')),
