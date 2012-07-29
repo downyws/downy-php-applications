@@ -89,6 +89,6 @@ class ActionTarget extends ActionCommon
 		}
 
 		// 返回
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 }

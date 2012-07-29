@@ -106,7 +106,7 @@ class ActionUser extends ActionCommon
 		}
 
 		// 返回
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 
 	public function methodDetail()
@@ -119,15 +119,13 @@ class ActionUser extends ActionCommon
 		{
 			$this->message(implode('，', $this->_submit->errors) . '。');
 		}
-		else
-		{
-			$userObj = Factory::getModel('user');
-			$object = $userObj->getObject(array(array('id' => array('eq', $params['id']))));
-			$object = $userObj->formatObject($object);
 
-			$this->assign('userpower', $userObj->getUserPower());
-			$this->assign('object', $object);
-		}
+		$userObj = Factory::getModel('user');
+		$object = $userObj->getObject(array(array('id' => array('eq', $params['id']))));
+		$object = $userObj->formatObject($object);
+
+		$this->assign('userpower', $userObj->getUserPower());
+		$this->assign('object', $object);
 	}
 
 	public function methodProfile()
@@ -159,6 +157,6 @@ class ActionUser extends ActionCommon
 		}
 
 		// 返回
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 }

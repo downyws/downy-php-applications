@@ -209,22 +209,28 @@ class ModelUser extends ModelCommon
 		return array('state' => $state, 'message' => $message);
 	}
 
+	public function validAccount()
+	{
+
+	}
+
 	public function isLogin()
 	{
 		return !empty($_SESSION['user']);
 	}
 
-	public function login($account, $password)
+	public function login($account, $password, $is_md5 = false)
 	{
 		$condition = array();
 		$condition[] = array('account' => array('eq', $account));
-		$condition[] = array('password' => array('eq', md5($password)));
+		$condition[] = array('password' => array('eq', $is_md5 ? $password : md5($password)));
 		$condition[] = array('is_disable' => array('eq', 0));
 		$user = $this->getObject($condition);
 		if($user)
 		{
 			$this->update($condition, array('last_login' => time()));
 			$_SESSION['user'] = $user;
+			$message = '';
 		}
 		else
 		{
@@ -257,16 +263,17 @@ class ModelUser extends ModelCommon
 		return $result;
 	}
 
-	public function getUser($id = 0)
+	public function getUser($value = 0, $type = '')
 	{
-		if($id == 0)
+		if($value == 0 && empty($type))
 		{
-			return $_SESSION['user'];
+			return empty($_SESSION['user']) ? null : $_SESSION['user'];
 		}
-		else
+		else if(in_array($type, array('id', 'account')))
 		{
-			return $this->getObject(array(array('id' => array('eq', $id))));
+			return $this->getObject(array(array($type => array('eq', $value))));
 		}
+		return false;
 	}
 
 	public function getUserPower()

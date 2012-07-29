@@ -83,7 +83,7 @@ class ModelTaskMulti extends ModelCommon
 
 		// 创建人检查
 		$userObj = Factory::getModel('user');
-		$user = $userObj->getUser($data['user_id']);
+		$user = $userObj->getUser($data['user_id'], 'id');
 		if(!$user)
 		{
 			return array('state' => false, 'message' => '创建人不存在。');
@@ -251,7 +251,28 @@ class ModelTaskMulti extends ModelCommon
 		}
 		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = ' . intval($pass) . ', `remarks` = CONCAT(\'' . date('Y-m-d H:i:s') . '\\t' . $user['id'] . '\\t' . $user['account'] . '\\t' . $pass_message . '\\n\', `remarks`)' . $this->getWhere($condition);
 		$state = $this->query($sql);
-		$state && $this->record($id, LOG_DATA_TABLE_TASKMULTI, LOG_OPERATION_TYPE_UPDATE);
+
+		if($state)
+		{
+			// 日志记录
+			$this->record($id, LOG_DATA_TABLE_TASKMULTI, LOG_OPERATION_TYPE_UPDATE);
+
+			// 邮件类型则替换内容中的uri
+			if($pass == 1)
+			{
+				$taskmulti = $this->getObject(array(array('id' => array('eq', $id))));
+				$channel = $this->getObject(array(array('id' => array('eq', $taskmulti['channel_id']))), array(), 'channel');
+				if($channel['type'] == CHANNEL_TYPE_EMAIL)
+				{
+					$shorturiObj = Factory::getModel('shorturi');
+					$taskmulti['content'] = $shorturiObj->render($taskmulti['content'], $id);
+
+					$condition = array();
+					$condition[] = array('id' => $id);
+					$this->update($condition, array('content' => $taskmulti['content']));
+				}
+			}
+		}
 
 		return array('state' => $state, 'message' => ($state ? '审核成功。' : '审核失败。'));
 	}

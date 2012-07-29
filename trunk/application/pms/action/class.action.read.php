@@ -128,7 +128,7 @@ class ActionRead extends ActionCommon
 			}
 		}
 
-		echo json_encode($result);
+		$this->jsonout($result);
 	}
 
 	public function methodPv()

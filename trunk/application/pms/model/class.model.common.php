@@ -20,7 +20,10 @@ class ModelCommon extends Model
 		{
 			$userObj = Factory::getModel('user');
 			$user = $userObj->getUser();
-			$params['user_id'] = $user['id'];
+			if(!empty($user))
+			{
+				$params['user_id'] = $user['id'];
+			}
 		}
 		if($params['user_id'] > 0)
 		{
