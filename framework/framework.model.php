@@ -140,9 +140,9 @@ class Model extends Db
 		return $this->fetchAll($sql);
 	}
 
-	public function getCol($condition, $fields, $table ='')
+	public function getCol($condition, $field, $table ='')
 	{
-		$sql = 'SELECT ' . $fields[0] . ', ' . $fields[1] . ' FROM ' . $this->table($table) . $this->getWhere($condition);
+		$sql = 'SELECT ' . $field . ' FROM ' . $this->table($table) . $this->getWhere($condition);
 		return $this->fetchCol($sql);
 	}
 
