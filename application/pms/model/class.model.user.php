@@ -72,13 +72,11 @@ class ModelUser extends ModelCommon
 	{
 		// 账号检查
 		$data['account'] = trim($data['account']);
-		if(empty($data['account']))
+		$data['account'] = strtolower($data['account']);
+		$result = $this->validAccount($data['account']);
+		if(!$result['state'])
 		{
-			return array('state' => false, 'message' => '账号不能为空。');
-		}
-		else if($this->getOne(array(array('account' => array('eq', $data['account']))), 'COUNT(*)') === false)
-		{
-			return array('state' => false, 'message' => '账号已经存在。');
+			return $result;
 		}
 
 		// 密码检查
@@ -139,13 +137,11 @@ class ModelUser extends ModelCommon
 			{
 				case 'account':
 					$data[$k] = trim($v);
-					if(empty($data[$k]))
+					$data[$k] = strtolower($data[$k]);
+					$result = $this->validAccount($data[$k], array($id));
+					if(!$result['state'])
 					{
-						return array('state' => false, 'message' => '账号不能为空。');
-					}
-					else if($this->getOne(array(array('account' => array('eq', $data[$k]))), 'COUNT(*)') === false)
-					{
-						return array('state' => false, 'message' => '账号已经存在。');
+						return $result;
 					}
 					break;
 				case 'password':
@@ -209,9 +205,42 @@ class ModelUser extends ModelCommon
 		return array('state' => $state, 'message' => $message);
 	}
 
-	public function validAccount()
+	public function validAccount($account, $not_in_id = array())
 	{
+		// 空
+		if(empty($account))
+		{
+			return array('state' => false, 'message' => '账号不能为空。');
+		}
 
+		// 长度
+		if(strlen($account) < 3)
+		{
+			return array('state' => false, 'message' => '账号长度必须大于3位。');
+		}
+
+		// 开头
+		if(!preg_match('/^[a-z]/i', $account))
+		{
+			return array('state' => false, 'message' => '账号必须以字母开头。');
+		}
+
+		// 特殊字符过滤
+		if(!preg_match('/^([0-9a-z\_\.]+)$/i', $account))
+		{
+			return array('state' => false, 'message' => '账号只允许包含数字、字母、下划线和点。');
+		}
+
+		// 是否存在
+		$condition = array();
+		$condition[] = array('account' => array('eq', $account));
+		(count($not_in_id) > 0) && $condition[] = array('id' => array('not in', $not_in_id));
+		$exists = $this->getOne($condition, 'COUNT(*)');
+		if($exists > 0)
+		{
+			return array('state' => false, 'message' => '账号已经存在。');
+		}
+		return array('state' => true, 'message' => '');
 	}
 
 	public function isLogin()

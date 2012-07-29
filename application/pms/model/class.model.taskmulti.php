@@ -54,9 +54,10 @@ class ModelTaskMulti extends ModelCommon
 	{
 		// 任务名称检查
 		$data['name'] = trim($data['name']);
-		if(empty($data['name']))
+		$result = $this->validName($data['name']);
+		if(!$result['state'])
 		{
-			return array('state' => false, 'message' => '任务名称不能为空。');
+			return $result;
 		}
 
 		// 通道检查
@@ -146,9 +147,10 @@ class ModelTaskMulti extends ModelCommon
 			{
 				case 'name':
 					$data[$k] = trim($v);
-					if(empty($data[$k]))
+					$result = $this->validName($data[$k], array($id));
+					if(!$result['state'])
 					{
-						return array('state' => false, 'message' => '任务名称不能为空。');
+						return $result;
 					}
 					break;
 				case 'channel_id':
@@ -201,6 +203,25 @@ class ModelTaskMulti extends ModelCommon
 
 		$message = $state ? '保存成功。' : '保存失败。';
 		return array('state' => $state, 'message' => $message);
+	}
+
+	public function validName($name, $not_in_id = array())
+	{
+		// 空
+		if(empty($name))
+		{
+			return array('state' => false, 'message' => '任务名称不能为空。');
+		}
+
+		// 是否存在
+		$condition = array();
+		$condition[] = array('name' => array('eq', $name));
+		(count($not_in_id) > 0) && $condition[] = array('id' => array('not in', $not_in_id));
+		$exists = $this->getOne($condition, 'COUNT(*)');
+		if($exists > 0)
+		{
+			return array('state' => false, 'message' => '任务名称已存在。');
+		}
 	}
 
 	public function cancel($id)
