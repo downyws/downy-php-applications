@@ -4,6 +4,8 @@ define('APP_NAME', '信息推送系统');
 
 define('ADMIN_ID', 100000);
 
+define('CRONTAB_SALT', '001cd7b0808ebebb');
+
 define('BATCH_IMPORT', 500);
 
 define('LOG_DATA_TABLE_CHANNEL', 1);
