@@ -27,7 +27,7 @@ class ModelSendList extends ModelCommon
 	{
 		foreach($list as $k => $v)
 		{
-			$list[$k]['is_send_format'] = $list[$k]['is_send'] ? '已发送' : '未发送';
+			$list[$k]['send_state_format'] = $list[$k]['send_state'] ? '已发送' : '未发送';
 		}
 		return $list;
 	}
