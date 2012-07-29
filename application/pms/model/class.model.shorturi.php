@@ -200,18 +200,20 @@ class ModelShortUri extends ModelCommon
 		return $exists > 0;
 	}
 
-	public function render($content, $task_id)
+	public function monitor($content, $task_id)
 	{
-		/*
-		$key = $this->createKey();
-		if($key !== false)
-		{
+		$keys = array();
+		$pattern = '/' . preg_quote(DOMAIN_SURI, '/') . '([0-9A-Za-z]+)/i';
+		preg_match_all($pattern, $content, $match);
+		$keys = $match[1];
 
+		if(count($keys) > 0)
+		{
+			$condition = array();
+			$condition[] = array('`key`' => array('in', $keys));
+			$condition[] = array('task_id' => array('eq', 0));
+			$data = array('task_id' => $task_id);
+			$this->update($condition, $data);
 		}
-		*/
-		// $data = array('task_id' => $task_id, 'key' => '', 'uri' => '', 'count' => 0, 'is_disable' => 0, 'type' => 1or2);
-		$data['key'] = $key;
-		$data['uri'] = '';
-		return 'aaaaaaaaaa' . $content;
 	}
 }
