@@ -53,6 +53,8 @@ class ModelTaskSingle extends ModelCommon
 
 	public function add($data)
 	{
+		$userObj = Factory::getModel('user');
+
 		// 目标地址检查
 		$targetObj = Factory::getModel('target');
 		$data['target_id'] = $targetObj->contactToId($data['target_contact']);
@@ -77,6 +79,10 @@ class ModelTaskSingle extends ModelCommon
 		else if($channel['type'] != $target_type)
 		{
 			return array('state' => false, 'message' => '通道类型与目标地址类型不符。');
+		}
+		else if(!$userObj->hasChannel($channel['id']))
+		{
+			return array('state' => false, 'message' => '没有该通道的权限。');
 		}
 
 		// 标题检查
@@ -150,6 +156,8 @@ class ModelTaskSingle extends ModelCommon
 
 	public function edit($id, $data)
 	{
+		$userObj = Factory::getModel('user');
+
 		$targetObj = Factory::getModel('target');
 		$tasksingle = $this->getObject(array(array('id' => array('eq', $id))));
 
@@ -175,6 +183,10 @@ class ModelTaskSingle extends ModelCommon
 					if($exists < 1)
 					{
 						return array('state' => false, 'message' => '通道不存在。');
+					}
+					else if(!$userObj->hasChannel($data[$k]))
+					{
+						return array('state' => false, 'message' => '没有该通道的权限。');
 					}
 					break;
 				case 'title':

@@ -18,7 +18,7 @@
 				<tr class="type_tabs_1"><th>邮件通道</th><td>
 					<div class="radiolist">
 						{foreach from=$channel_list item=v key=k}
-							{if $v.type == 1 && $k|in_array:$user_channel_list}
+							{if $v.type == 1 && $v.id|in_array:$user_channel_list}
 								<input type="radio" id="{$v.name}{$v.id}" value="{$v.id}" name="channel_id" {if $id > 0 && $object.channel_id == $v.id}checked="checked"{/if} /><label for="{$v.name}{$v.id}">{$v.name}</label>
 							{/if}
 						{/foreach}
@@ -31,7 +31,7 @@
 				<tr class="type_tabs_2"><th>短信通道</th><td>
 					<div class="radiolist">
 						{foreach from=$channel_list item=v key=k}
-							{if $v.type == 2 && $k|in_array:$user_channel_list}
+							{if $v.type == 2 && $v.id|in_array:$user_channel_list}
 								<input type="radio" id="{$v.name}{$v.id}" value="{$v.id}" name="channel_id" {if $id > 0 && $object.channel_id == $v.id}checked="checked"{/if} /><label for="{$v.name}{$v.id}">{$v.name}</label>
 							{/if}
 						{/foreach}

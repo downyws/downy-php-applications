@@ -52,6 +52,8 @@ class ModelTaskMulti extends ModelCommon
 
 	public function add($data)
 	{
+		$userObj = Factory::getModel('user');
+
 		// 任务名称检查
 		$data['name'] = trim($data['name']);
 		$result = $this->validName($data['name']);
@@ -66,6 +68,10 @@ class ModelTaskMulti extends ModelCommon
 		if(!$channel)
 		{
 			return array('state' => false, 'message' => '请选择通道。');
+		}
+		else if(!$userObj->hasChannel($channel['id']))
+		{
+			return array('state' => false, 'message' => '没有该通道的权限。');
 		}
 
 		// 标题检查
@@ -137,6 +143,7 @@ class ModelTaskMulti extends ModelCommon
 
 	public function edit($id, $data)
 	{
+		$userObj = Factory::getModel('user');
 		$targetObj = Factory::getModel('target');
 		$taskmulti = $this->getObject(array(array('id' => array('eq', $id))));
 		$channel = $this->getObject(array(array('id' => array('eq', $taskmulti['channel_id']))), array(), 'channel');
@@ -163,6 +170,10 @@ class ModelTaskMulti extends ModelCommon
 					else if($channel['type'] != $new_channel['type'] && $taskmulti['send_count'] > 0)
 					{
 						return array('state' => false, 'message' => '改变通道类型前需先清空发送列表。');
+					}
+					else if(!$userObj->hasChannel($new_channel['id']))
+					{
+						return array('state' => false, 'message' => '没有该通道的权限。');
 					}
 					break;
 				case 'title':
@@ -222,6 +233,7 @@ class ModelTaskMulti extends ModelCommon
 		{
 			return array('state' => false, 'message' => '任务名称已存在。');
 		}
+		return array('state' => true, 'message' => '');
 	}
 
 	public function cancel($id)
