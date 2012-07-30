@@ -330,4 +330,14 @@ class ModelTaskMulti extends ModelCommon
 
 		return $content;
 	}
+
+	public function taskReceive($channel, $count)
+	{
+
+	}
+
+	public function taskSubmit($list)
+	{
+
+	}
 }
