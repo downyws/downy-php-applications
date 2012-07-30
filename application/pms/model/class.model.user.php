@@ -347,7 +347,7 @@ class ModelUser extends ModelCommon
 
 	public function hasChannel($channel_id)
 	{
-		return in_array($channel_id, $this->hasChannel());
+		return in_array($channel_id, $this->getUserChannel());
 	}
 
 	public function existsField($field, $value)
