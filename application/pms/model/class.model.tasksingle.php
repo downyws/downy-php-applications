@@ -244,4 +244,91 @@ class ModelTaskSingle extends ModelCommon
 
 		return array('state' => $state, 'message' => ($state ? '取消成功。' : '取消失败。'));
 	}
+
+	public function taskReceive($channel, $count)
+	{
+		$nowstamp = time();
+
+		// 通道是否被禁用
+		$condition = array();
+		$condition[] = array('id' => array('eq', $channel));
+		$channel = $this->getObject($condition, array(), 'channel');
+		if(!$channel || $channel['is_disable'])
+		{
+			return array();
+		}
+
+		// 获取任务
+		$condition = array();
+		$condition[] = array('channel_id' => array('eq', $channel['id']));
+		$condition[] = array('send_state' => array('eq', 1));
+		$condition[] = array('send_time' => array('eq', 0));
+		$condition[] = array('plan_send_time' => array('elt', $nowstamp));
+		$sql = 'SELECT id FROM ' . $this->table('task_single') . $this->getWhere($condition) . ' ORDER BY `plan_send_time` ASC ' . $this->getLimit(1, $count);
+		$ids = $this->fetchCol($sql);
+		
+		// 给任务打上标记
+		$condition = array();
+		$condition[] = array('id' => array('in', $ids));
+		$condition[] = array('send_state' => array('eq', 1));
+		$condition[] = array('send_time' => array('eq', 0));
+		$data = array();
+		$data['send_state'] = 2;
+		$data['send_time'] = $nowstamp;
+		$this->update($condition, $data);
+
+		// 获取最终要发送的任务
+		$condition = array();
+		$condition[] = array('ts.`id`' => array('in', $ids));
+		$condition[] = array('ts.`send_state`' => array('eq', 2));
+		$condition[] = array('ts.`send_time`' => array('eq', $nowstamp));
+		$condition[] = array('t.`is_disable`' => array('eq', 0));
+		$sql = 'SELECT ts.`id`, t.`contact`, ts.`title`, ts.`content` FROM ' . $this->table('') . ' AS ts JOIN ' . $this->table('target') . ' AS t ON t.`id` = ts.`target_id` ' . $this->getWhere($condition);
+		$list = $this->fetchAll($sql);
+
+		// 添加PV图标
+		if($channel['type'] == CHANNEL_TYPE_EMAIL)
+		{
+			foreach($list as $k => $v)
+			{
+				$list[$k]['content'] .= '<img src="' . DOMAIN_OUTSIDE . 'index.php?a=read&m=pv&id=' . $v['id'] . '&ms=single" />';
+			}
+		}
+
+		// 更新通道最后运行时间
+		$condition = array();
+		$condition[] = array('id' => array('eq', $channel['id']));
+		$data = array();
+		$data['last_run'] = $nowstamp;
+		$this->update($condition, $data, 'channel');
+
+		return $list;
+	}
+
+	public function taskSubmit($channel, $list)
+	{
+		// 结果分类
+		$finish = array();
+		foreach($list as $k => $v)
+		{
+			$finish[($v ? '3' : '5')][] = $k;
+		}
+
+		// 更新
+		foreach($finish as $k => $v)
+		{
+			$condition = array();
+			$condition[] = array('id' => array('in', $v));
+			$condition[] = array('channel_id' => array('eq', $channel));
+			$condition[] = array('send_state' => array('eq', 2));
+			$data = array();
+			$data['send_state'] = $k;
+			$this->update($condition, $data);
+		}
+	}
+
+	public function taskReflash($channel)
+	{
+
+	}
 }
