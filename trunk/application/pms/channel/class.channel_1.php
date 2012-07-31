@@ -31,7 +31,13 @@ class Channel_1 extends Channel
 	{
 		foreach($this->task_obj as $k => $v)
 		{
-			$list = $this->task_obj[$k]->taskReceive($this->channel_id, $this->task_count[$k]);
+			$result = $this->task_obj[$k]->taskReceive($this->channel_id, $this->task_count[$k]);
+			if(!$result['state'])
+			{
+				return $result;
+			}
+			$list = $result['data'];
+
 			$this->task_count[$k] = count($list);
 			if(is_array($list) && count($list) > 0)
 			{
@@ -43,7 +49,7 @@ class Channel_1 extends Channel
 						$this->mail->AddAddress($_v['contact']);
 						$this->mail->Subject = $_v['title'];
 						$this->mail->MsgHTML($_v['content']);
-						$state = false;//$this->mail->Send();
+$state = false;//$this->mail->Send();
 						$result[$_v['id']] = $state;
 						$this->run_count[$k][$state ? 'success' : 'failed']++;
 					}
@@ -57,5 +63,6 @@ class Channel_1 extends Channel
 				$this->task_obj[$k]->taskSubmit($this->channel_id, $result);
 			}
 		}
+		return array('state' => true, 'message' => '发送信息 ' . ($this->task_count['single'] + $this->task_count['multi']) . ' 条，耗时 ' . number_format(microtime(true) - $this->run_time['start'], 4, '.', '') . ' 秒。');
 	}
 }

@@ -30,8 +30,7 @@ class ActionSend extends ActionCommon
 			include_once(APP_DIR_CHANNEL . 'class.channel_' . $params['channel_id'] . '.php');
 			$className = 'Channel_' . $params['channel_id'];
 			$channel = new $className();
-			$channel->run();
-			$result = array('state' => true, 'message' => '');
+			$result = $channel->run();
 		}
 		
 		// 返回

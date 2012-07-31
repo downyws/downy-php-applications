@@ -20,7 +20,7 @@ class Channel
 
 	public function __construct()
 	{
-		$this->run_time['start'] = microtime();
+		$this->run_time['start'] = microtime(true);
 
 		$this->task_obj['single'] = Factory::getModel('tasksingle');
 		$this->task_obj['multi'] = Factory::getModel('taskmulti');
@@ -28,9 +28,9 @@ class Channel
 
 	public function __destruct()
 	{
-		$this->run_time['end'] = microtime();
+		$this->run_time['end'] = microtime(true);
 
-		$date = explode(' ', $this->run_time['start']);
+		$date = $this->run_time['start'];
 
 		// 生成日志内容
 		$data = array(
@@ -43,11 +43,11 @@ class Channel
 			'run_count_multi_success' => $this->run_count['multi']['success'],
 			'run_count_multi_failed' => $this->run_count['multi']['failed'],
 		);
-		$log = date('Y-m-d H:i:s', $date[1]) . "\n" . json_encode($data) . "\n" . json_encode($this->errors) . "\n\n";
+		$log = date('Y-m-d H:i:s', $date) . "\n" . json_encode($data) . "\n" . json_encode($this->errors) . "\n\n";
 
 		// 保存日志
-		$path = APP_DIR_LOG . 'channel/' . date('Ym', $date[1]) . '/';
-		$file = date('d', $date[1]) . '_' . $this->channel_id . '.txt';
+		$path = APP_DIR_LOG . 'channel/' . date('Ym', $date) . '/';
+		$file = date('d', $date) . '_' . $this->channel_id . '.txt';
 		!is_dir($path) && mkdir($path, 0755, true);
 		$handle = fopen($path . $file, 'a');
 		fwrite($handle, $log);

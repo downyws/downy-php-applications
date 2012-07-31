@@ -30,7 +30,7 @@
 						<tr><td>{$v.id}</td><td>{$v.contact}</td><td>{if $v.page_view > 0}{$v.page_view}{else}-{/if}</td>
 							<td>{if $v.first_read_time > 0}{$v.first_read_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
 							<td>{if $v.last_read_time > 0}{$v.last_read_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
-							<td>{$v.send_state_format}</td>
+							<td class="tms_state{$v.send_state}">{$v.send_state_format}</td>
 							<td>{if $v.send_time > 0}{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
 							<td>
 								<a target="_blank" href="/index.php?a=read&m=email&ms=multi&id={$v.id}&preview=1">预览</a>
