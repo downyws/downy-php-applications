@@ -8,6 +8,9 @@ define('CRONTAB_SALT', '001cd7b0808ebebb');
 
 define('BATCH_IMPORT', 500);
 
+define('TASK_TIMEOUT', 3600);
+define('TASK_SCAN_RANGE', 15552000);	// 86400 * 30 * 6 天
+
 define('LOG_DATA_TABLE_CHANNEL', 1);
 define('LOG_DATA_TABLE_LOG', 2);
 define('LOG_DATA_TABLE_SENDLIST', 3);

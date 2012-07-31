@@ -292,6 +292,15 @@ class ModelTaskMulti extends ModelCommon
 		}
 		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = ' . intval($pass) . ', `remarks` = CONCAT(\'' . date('Y-m-d H:i:s') . '\\t' . $user['id'] . '\\t' . $user['account'] . '\\t' . $pass_message . '\\n\', `remarks`)' . $this->getWhere($condition);
 		$state = $this->query($sql);
+		if($state && $pass == 1)
+		{
+			$condition = array();
+			$condition[] = array('id' => array('eq', $id));
+			$data = array();
+			$data['check_user_id'] = $user['id'];
+			$data['check_time'] = time();
+			$this->update($condition, $data);
+		}
 
 		if($state)
 		{
@@ -341,10 +350,73 @@ class ModelTaskMulti extends ModelCommon
 
 	public function taskReceive($channel, $count)
 	{
-		return array('state' => true, 'message' => '', 'data' => array());
+		$nowstamp = time();
+
+		// 通道是否被禁用
+		$condition = array();
+		$condition[] = array('id' => array('eq', $channel));
+		$channel = $this->getObject($condition, array(), 'channel');
+		if(!$channel || $channel['is_disable'])
+		{
+			return array('state' => false, 'message' => '通道被禁用。');
+		}
+
+		// 获取任务
+		$condition = array();
+		$condition[] = array('channel_id' => array('eq', $channel['id']));
+		$condition[] = array('send_state' => array('eq', 2));
+		$taskmultis = $this->getObjects($condition);
+		$task_ids = array();
+		foreach($taskmultis as $v)
+		{
+			$task_ids[] = $v['id'];
+		}
+
+		// 获取发送队列
+		$condition = array();
+		$condition[] = array('task_id' => array('in', $task_ids));
+		$condition[] = array('send_state' => array('eq', 1));
+		$condition[] = array('send_time' => array('eq', 0));
+		$sql = 'SELECT id FROM ' . $this->table('send_list') . $this->getWhere($condition) . ' ORDER BY `id` ASC ' . $this->getLimit(1, $count);
+		$ids = $this->fetchCol($sql);
+
+		// 给任务打上标记
+		$condition = array();
+		$condition[] = array('id' => array('in', $ids));
+		$condition[] = array('send_state' => array('eq', 1));
+		$condition[] = array('send_time' => array('eq', 0));
+		$data = array();
+		$data['send_state'] = 2;
+		$data['send_time'] = $nowstamp;
+		$this->update($condition, $data, 'send_list');
+
+		// 获取最终要发送的任务
+		$condition = array();
+		$condition[] = array('s.`id`' => array('in', $ids));
+		$condition[] = array('s.`send_state`' => array('eq', 2));
+		$condition[] = array('s.`send_time`' => array('eq', $nowstamp));
+		$sql = 'SELECT s.`id`, t.`contact`, s.`data`, tm.`title`, tm.`content` FROM ' . $this->table('send_list') . ' AS s JOIN ' . $this->table('task_multi') . ' AS tm ON s.`task_id` = tm.`id` JOIN ' . $this->table('target') . ' AS t ON t.`id` = s.`target_id` ' . $this->getWhere($condition);
+		$list = $this->fetchAll($sql);
+		foreach($list as $k => $v)
+		{
+			$data = json_decode($list[$k]['data'], true);
+			$list[$k]['title'] = $this->render($list[$k]['title'], $data);
+			$list[$k]['content'] = $this->render($list[$k]['content'], $data);
+		}
+
+		// 添加PV图标
+		if($channel['type'] == CHANNEL_TYPE_EMAIL)
+		{
+			foreach($list as $k => $v)
+			{
+				$list[$k]['content'] .= '<img src="' . DOMAIN_OUTSIDE . 'index.php?a=read&m=pv&id=' . $v['id'] . '&ms=multi" />';
+			}
+		}
+
+		return array('state' => true, 'message' => '', 'data' => $list);
 	}
 
-	public function taskSubmit($channel, $list)
+	public function taskSubmit($list)
 	{
 		// 结果分类
 		$finish = array();
@@ -359,16 +431,58 @@ class ModelTaskMulti extends ModelCommon
 		{
 			$condition = array();
 			$condition[] = array('id' => array('in', $v));
-			$condition[] = array('channel_id' => array('eq', $channel));
 			$condition[] = array('send_state' => array('eq', 2));
 			$data = array();
 			$data['send_state'] = $k;
-			$this->update($condition, $data, 'channel');
+			$this->update($condition, $data, 'send_list');
 		}
 	}
 
 	public function taskReflash($channel)
 	{
+		// 获取通道任务
+		$condition = array();
+		$condition[] = array('channel_id' => array('eq', $channel));
+		$condition[] = array('create_time' => array('gt', time() - TASK_SCAN_RANGE));
+		$task_ids = $this->getCol($condition, 'id');
 
+		// 超时发送任务标记失败
+		$condition = array();
+		$condition[] = array('task_id' => array('in', $task_ids));
+		$condition[] = array('send_state' => array('eq', 2));
+		$condition[] = array('send_time' => array('lt', time() - TASK_TIMEOUT));
+		$data = array();
+		$data['send_state'] = 5;
+		$this->update($condition, $data);
+
+		/*
+		// 更新进度
+		$condition = array();
+		$condition[] = array('id' => array('in', array_keys($list)));
+		$task_ids = $this->getCol($condition, 'DISTINCT task_id', 'send_list');
+		$sql = 'SELECT task_id, COUNT(*) FROM ' . $this->table('send_list') . ' WHERE `task_id` IN (' . implode(', ', $task_ids) . ') AND `send_state` != 1 GROUP BY `task_id`';
+		$task = $this->fetchPairs($sql);
+		foreach($task as $k => $v)
+		{
+			$condition = array();
+			$condition[] = array('id' => array('eq', $k));
+			$data = array();
+			$data['send_rate'] = $v;
+			$this->update($condition, $data);
+		}
+
+		// 到预订发送时间
+		// 更新状态，开始时间
+
+		// 发送完成
+		// 更新状态，结束时间
+		*/
+
+		// 更新通道最后运行时间
+		$condition = array();
+		$condition[] = array('id' => array('eq', $channel));
+		$data = array();
+		$data['last_run'] = time();
+		$this->update($condition, $data, 'channel');
 	}
 }
