@@ -49,7 +49,7 @@ class Channel_1 extends Channel
 						$this->mail->AddAddress($_v['contact']);
 						$this->mail->Subject = $_v['title'];
 						$this->mail->MsgHTML($_v['content']);
-$state = false;//$this->mail->Send();
+$state = true;//$this->mail->Send();
 						$result[$_v['id']] = $state;
 						$this->run_count[$k][$state ? 'success' : 'failed']++;
 					}
@@ -60,8 +60,9 @@ $state = false;//$this->mail->Send();
 						$this->errors[] = $k . '_' . $_v['id'] . ':' . $e->errorMessage();
 					}
 				}
-				$this->task_obj[$k]->taskSubmit($this->channel_id, $result);
+				$this->task_obj[$k]->taskSubmit($result);
 			}
+			$this->task_obj[$k]->taskReflash($this->channel_id);
 		}
 		return array('state' => true, 'message' => '发送信息 ' . ($this->task_count['single'] + $this->task_count['multi']) . ' 条，耗时 ' . number_format(microtime(true) - $this->run_time['start'], 4, '.', '') . ' 秒。');
 	}

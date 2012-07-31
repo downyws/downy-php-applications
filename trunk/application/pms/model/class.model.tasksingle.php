@@ -290,7 +290,6 @@ class ModelTaskSingle extends ModelCommon
 		$condition[] = array('ts.`id`' => array('in', $ids));
 		$condition[] = array('ts.`send_state`' => array('eq', 2));
 		$condition[] = array('ts.`send_time`' => array('eq', $nowstamp));
-		$condition[] = array('t.`is_disable`' => array('eq', 0));
 		$sql = 'SELECT ts.`id`, t.`contact`, ts.`title`, ts.`content` FROM ' . $this->table('') . ' AS ts JOIN ' . $this->table('target') . ' AS t ON t.`id` = ts.`target_id` ' . $this->getWhere($condition);
 		$list = $this->fetchAll($sql);
 
@@ -303,17 +302,10 @@ class ModelTaskSingle extends ModelCommon
 			}
 		}
 
-		// 更新通道最后运行时间
-		$condition = array();
-		$condition[] = array('id' => array('eq', $channel['id']));
-		$data = array();
-		$data['last_run'] = $nowstamp;
-		$this->update($condition, $data, 'channel');
-
 		return array('state' => true, 'message' => '', 'data' => $list);
 	}
 
-	public function taskSubmit($channel, $list)
+	public function taskSubmit($list)
 	{
 		// 结果分类
 		$finish = array();
@@ -328,7 +320,6 @@ class ModelTaskSingle extends ModelCommon
 		{
 			$condition = array();
 			$condition[] = array('id' => array('in', $v));
-			$condition[] = array('channel_id' => array('eq', $channel));
 			$condition[] = array('send_state' => array('eq', 2));
 			$data = array();
 			$data['send_state'] = $k;
@@ -338,6 +329,21 @@ class ModelTaskSingle extends ModelCommon
 
 	public function taskReflash($channel)
 	{
+		// 超时发送任务标记失败
+		$condition = array();
+		$condition[] = array('channel_id' => array('eq', $channel));
+		$condition[] = array('create_time' => array('gt', time() - TASK_SCAN_RANGE));
+		$condition[] = array('send_state' => array('eq', 2));
+		$condition[] = array('send_time' => array('lt', time() - TASK_TIMEOUT));
+		$data = array();
+		$data['send_state'] = 5;
+		$this->update($condition, $data);
 
+		// 更新通道最后运行时间
+		$condition = array();
+		$condition[] = array('id' => array('eq', $channel));
+		$data = array();
+		$data['last_run'] = time();
+		$this->update($condition, $data, 'channel');
 	}
 }
