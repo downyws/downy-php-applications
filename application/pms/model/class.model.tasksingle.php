@@ -84,6 +84,10 @@ class ModelTaskSingle extends ModelCommon
 		{
 			return array('state' => false, 'message' => '没有该通道的权限。');
 		}
+		else if($channel['is_disable'])
+		{
+			return array('state' => false, 'message' => '通道已被禁用。');
+		}
 
 		// 标题检查
 		$data['title'] = trim($data['title']);
@@ -179,14 +183,18 @@ class ModelTaskSingle extends ModelCommon
 					break;
 				case 'channel_id':
 					$data[$k] = intval($v);
-					$exists = $this->getOne(array(array('id' => array('eq', $data[$k]))), 'COUNT(*)', 'channel');
-					if($exists < 1)
+					$channel = $this->getObject(array(array('id' => array('eq', $data[$k]))), array(), 'channel');
+					if(empty($channel))
 					{
 						return array('state' => false, 'message' => '通道不存在。');
 					}
 					else if(!$userObj->hasChannel($data[$k]))
 					{
 						return array('state' => false, 'message' => '没有该通道的权限。');
+					}
+					else if($channel['is_disable'])
+					{
+						return array('state' => false, 'message' => '通道已被禁用。');
 					}
 					break;
 				case 'title':
@@ -255,7 +263,7 @@ class ModelTaskSingle extends ModelCommon
 		$channel = $this->getObject($condition, array(), 'channel');
 		if(!$channel || $channel['is_disable'])
 		{
-			return array();
+			return array('state' => false, 'message' => '通道被禁用。');
 		}
 
 		// 获取任务
@@ -302,7 +310,7 @@ class ModelTaskSingle extends ModelCommon
 		$data['last_run'] = $nowstamp;
 		$this->update($condition, $data, 'channel');
 
-		return $list;
+		return array('state' => true, 'message' => '', 'data' => $list);
 	}
 
 	public function taskSubmit($channel, $list)
@@ -313,6 +321,7 @@ class ModelTaskSingle extends ModelCommon
 		{
 			$finish[($v ? '3' : '5')][] = $k;
 		}
+		unset($list);
 
 		// 更新
 		foreach($finish as $k => $v)

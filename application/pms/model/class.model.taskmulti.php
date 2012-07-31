@@ -73,6 +73,10 @@ class ModelTaskMulti extends ModelCommon
 		{
 			return array('state' => false, 'message' => '没有该通道的权限。');
 		}
+		else if($channel['is_disable'])
+		{
+			return array('state' => false, 'message' => '通道已被禁用。');
+		}
 
 		// 标题检查
 		$data['title'] = trim($data['title']);
@@ -174,6 +178,10 @@ class ModelTaskMulti extends ModelCommon
 					else if(!$userObj->hasChannel($new_channel['id']))
 					{
 						return array('state' => false, 'message' => '没有该通道的权限。');
+					}
+					else if($new_channel['is_disable'])
+					{
+						return array('state' => false, 'message' => '通道已被禁用。');
 					}
 					break;
 				case 'title':
@@ -333,10 +341,33 @@ class ModelTaskMulti extends ModelCommon
 
 	public function taskReceive($channel, $count)
 	{
-
+		return array('state' => true, 'message' => '', 'data' => array());
 	}
 
-	public function taskSubmit($list)
+	public function taskSubmit($channel, $list)
+	{
+		// 结果分类
+		$finish = array();
+		foreach($list as $k => $v)
+		{
+			$finish[($v ? '3' : '5')][] = $k;
+		}
+		unset($list);
+
+		// 更新
+		foreach($finish as $k => $v)
+		{
+			$condition = array();
+			$condition[] = array('id' => array('in', $v));
+			$condition[] = array('channel_id' => array('eq', $channel));
+			$condition[] = array('send_state' => array('eq', 2));
+			$data = array();
+			$data['send_state'] = $k;
+			$this->update($condition, $data, 'channel');
+		}
+	}
+
+	public function taskReflash($channel)
 	{
 
 	}
