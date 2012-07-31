@@ -43,7 +43,7 @@
 						<tr><td>{$v.id}</td><td>{$v.contact}</td><td>{$v.page_view}</td>
 							<td>{if $v.first_read_time > 0}{$v.first_read_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
 							<td>{if $v.last_read_time > 0}{$v.last_read_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
-							<td>{$v.send_state_format}</td>
+							<td class="tms_state{$v.send_state}">{$v.send_state_format}</td>
 							<td>{if $v.send_time > 0}{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
 							<td><a target="_blank" href="/index.php?a=read&m=email&ms=multi&id={$v.id}&preview=1">预览</a></td>
 						</tr>
@@ -54,7 +54,7 @@
 				{if $taskmulti['send_state'] == 5 && ('TASKMULTI:EDITALL'|in_array:$userpower || ('TASKMULTI:EDITSELF'|in_array:$userpower && $user['id'] == $taskmulti['user_id']))}
 					{foreach from=$list.data item=v}
 						<tr><td>{$v.id}</td><td>{$v.contact}</td>
-							<td>{$v.send_state_format}</td>
+							<td class="tms_state{$v.send_state}">{$v.send_state_format}</td>
 							<td>{if $v.send_time > 0}{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
 							<td>
 								<a class="ajaxlink" data-url="/index.php?a=read&m=sms&t=ajax&ms=multi&id={$v.id}" href="javascript:void(0);">预览</a>
@@ -65,7 +65,7 @@
 				{else}
 					{foreach from=$list.data item=v}
 						<tr><td>{$v.id}</td><td>{$v.contact}</td>
-							<td>{$v.send_state_format}</td>
+							<td class="tms_state{$v.send_state}">{$v.send_state_format}</td>
 							<td>{if $v.send_time > 0}{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
 							<td><a class="ajaxlink" data-url="/index.php?a=read&m=sms&t=ajax&ms=multi&id={$v.id}" href="javascript:void(0);">预览</a></td>
 						</tr>
