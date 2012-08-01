@@ -1,0 +1,61 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_detail">
+	<h2>多任务信息</h2>
+	<table class="table_detail">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">编号</th><td>{$object.id}</td></tr>
+			<tr><th>名称</th><td>{$object.name}</td></tr>
+			<tr><th>类型</th><td>{$object.channel.type_format}</td></tr>
+			<tr><th>创建人</th><td>{$object.user.account}</td></tr>
+			<tr><th>创建时间</th><td>{$object.create_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			{if $object.check_user_id > 0}
+				<tr><th>审核人</th><td>{$object.checkuser.account}</td></tr>
+				<tr><th>审核时间</th><td>{$object.check_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			{/if}
+			<tr><th>通道</th><td>{$object.channel.name}</td></tr>
+			<tr><th>计划发送时间</th><td>{$object.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			{if $object.send_state == 2}
+				<tr><th>开始时间</th><td>{$object.start_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+				<tr><th>预计结束时间</th><td>{if $object.send_rate > 0}{intval($object.start_time + (time() - $object.start_time) / ($object.send_rate / $object.send_count))|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td></tr>
+			{else}{if $object.send_state|in_array:array(3, 4)}
+				<tr><th>开始时间</th><td>{$object.start_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+				<tr><th>结束时间</th><td>{$object.end_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			{/if}{/if}
+			<tr><th>发送状态</th><td class="tm_state{$object.send_state}">{$object.send_state_format}</td></tr>
+			<tr><th>发送量</th><td>{$object.send_count}</td></tr>
+			{if $object.send_state == 2}
+				<tr><th>发送进度</th><td>{$object.send_rate}({if $object.send_count > 0}{intval($object.send_rate / $object.send_count * 100)}{else}0{/if}%)</td></tr>
+			{/if}
+			{if $object.channel.type == 1 && $object.send_state|in_array:array(2, 3, 4)}
+				<tr><th>达到量</th><td>{$object.accept_rate}({if $object.send_count > 0}{intval($object.accept_rate / $object.send_count * 100)}{else}0{/if}%)</td></tr>
+			{/if}
+			<tr><th>备注</th><td><pre>{$object.remarks}</pre></td></tr>
+			<tr><td>&nbsp;</td><td>
+				<input type="button" class="btn link" value="发送列表" data-href="/index.php?a=taskmulti&m=sendlist&id={$object.id}" />
+				{if $object.send_state|in_array:array(1,2)}
+					{if 'TASKMULTI:CANCEL'|in_array:$userpower}
+						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=cancel&t=ajax&id={$object.id}" value="取消发送" />
+					{/if}
+				{else}{if $object.send_state == 5}
+					{if 'TASKMULTI:CANCEL'|in_array:$userpower}
+						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=cancel&t=ajax&id={$object.id}" value="取消发送" />
+					{/if}
+					{if 'TASKMULTI:EDITALL'|in_array:$userpower || ('TASKMULTI:EDITSELF'|in_array:$userpower && $object.user_id == $user.id)}
+						<input type="button" class="mgl20 btn link" value="编辑" data-href="/index.php?a=taskmulti&m=edit&id={$object.id}" />
+						{if $object.send_count > 0}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=submitcheck&t=ajax&id={$object.id}" value="提交审核" />{/if}
+					{/if}
+				{else}{if $object.send_state == 6}
+					{if 'TASKMULTI:CANCEL'|in_array:$userpower}
+						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=cancel&t=ajax&id={$object.id}" value="取消发送" />
+					{/if}
+					{if 'TASKMULTI:CHECK'|in_array:$userpower}
+						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=check&t=ajax&id={$object.id}&pass=1" value="审核通过" />
+						<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=taskmulti&m=check&t=ajax&id={$object.id}&pass=5" value="审核不通过" />
+					{/if}
+				{/if}{/if}{/if}
+		</tbody>
+	</table>
+</div>
+{include file="common_bottom.html"}

@@ -1,0 +1,83 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_list">
+	<h2>多任务列表</h2>
+	<div class="search">
+		<div class="fl">
+			<form action="/index.php?a=taskmulti&m=list" method="post">
+				<span>计划发送时间：</span><input type="text" class="w75 txt datepicker_from" name="start_time" value="{$params['start_time']}" /> - <input type="text" class="w75 txt datepicker_to" name="end_time" value="{$params['end_time']}" />
+				<span class="mgl20">名称：</span><input type="text" class="txt" name="name" value="{$params['name']}" />
+				<span class="mgl20">创建人：</span><input type="text" class="txt" name="account" value="{$params['account']}" />
+				<span class="mgl20">通道：</span><select class="sel" name="channel">
+					<option value="0">全部</option>
+					{foreach from=$channel_list item=v key=k}
+					<option value="{$k}" {if $k == $params['channel']}selected="selected"{/if}>{$v}</option>
+					{/foreach}
+				</select>
+				<span class="mgl20">状态：</span><select class="sel" name="send_state">
+					<option value="0">全部</option>
+					{foreach from=$send_state_list item=v key=k}
+					<option value="{$k}" {if $k == $params['send_state']}selected="selected"{/if}>{$v}</option>
+					{/foreach}
+				</select>
+				<input type="submit" class="mgl20 btn" value="查询" />
+			</form>
+		</div>
+		<div class="fr"><input type="button" class="btn link" value="添加" data-href="/index.php?a=taskmulti&m=edit&id=0" /></div>
+		<div class="cb"></div>
+	</div>
+	<table class="table_list">
+		<tbody align="left" valign="top">
+			<tr><th>编号</th><th>名称</th><th>通道</th><th>创建人</th><th>发送进度</th><th>状态</th><th>计划发送时间</th><th>操作</th></tr>
+			{if 'TASKMULTI:EDITALL'|in_array:$userpower}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td>{$v.send_rate}({if $v.send_count > 0}{intval($v.send_rate / $v.send_count * 100)}{else}0{/if}%)</td>
+						<td class="tm_state{$v.send_state}">{$v.send_state_format}</td>
+						<td>{$v.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+						<td>
+							<a href="/index.php?a=taskmulti&m=detail&id={$v.id}">详情</a>
+							{if $v.send_state == 5}<a href="/index.php?a=taskmulti&m=edit&id={$v.id}">编辑</a>{/if}
+						</td>
+					</tr>
+				{/foreach}
+			{else}{if 'TASKMULTI:EDITSELF'|in_array:$userpower}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.title}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td>{$v.send_rate}({if $v.send_count > 0}{intval($v.send_rate / $v.send_count * 100)}{else}0{/if}%)</td>
+						<td class="tm_state{$v.send_state}">{$v.send_state_format}</td><td>{$v.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+						<td>
+							<a href="/index.php?a=taskmulti&m=detail&id={$v.id}">详情</a>
+							{if $v.send_state == 5 && $v.user_id == $user.id}<a href="/index.php?a=taskmulti&m=edit&id={$v.id}">编辑</a>{/if}
+						</td>
+					</tr>
+				{/foreach}
+			{else}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.title}</td><td>{$v.channel_name}</td><td>{$v.account}</td>
+						<td>{$v.send_rate}({if $v.send_count > 0}{intval($v.send_rate / $v.send_count * 100)}{else}0{/if}%)</td>
+						<td class="tm_state{$v.send_state}">{$v.send_state_format}</td><td>{$v.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+						<td><a href="/index.php?a=taskmulti&m=detail&id={$v.id}">详情</a></td>
+					</tr>
+				{/foreach}
+			{/if}{/if}
+		</tbody>
+	</table>
+	{if $list.pager.last > $list.pager.first}
+		<div class="pager">
+			<a href="/index.php?a=taskmulti&m=list&p={$list.pager.first}&{$list.pager.params}">首页</a>
+			<a href="/index.php?a=taskmulti&m=list&p={$list.pager.prev}&{$list.pager.params}">上一页</a>
+			{for $i = $list.pager.start; $i <= $list.pager.end; $i++}
+				{if $i == $list.pager.current}
+					<a href="javascript:void(0);" class="current">{$i}</a>
+				{else}
+					<a href="/index.php?a=taskmulti&m=list&p={$i}&{$list.pager.params}">{$i}</a>
+				{/if}
+			{/for}
+			<a href="/index.php?a=taskmulti&m=list&p={$list.pager.next}&{$list.pager.params}">下一页</a>
+			<a href="/index.php?a=taskmulti&m=list&p={$list.pager.last}&{$list.pager.params}">尾页</a>
+		</div>
+	{/if}
+</div>
+{include file="common_bottom.html"}

@@ -1,0 +1,47 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_detail">
+	<h2>单任务信息</h2>
+	<table class="table_detail">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">编号</th><td>{$object.id}</td></tr>
+			<tr><th>类型</th><td>{$object.channel.type_format}</td></tr>
+			<tr><th>目标地址</th><td>{$object.target.contact}</td></tr>
+			{if $object.channel.type == 1}
+				<tr><th>邮件标题</th><td>{$object.title}</td></tr>
+				<tr><th>邮件内容</th><td><a target="_blank" href="/index.php?a=read&m=email&ms=single&id={$object.id}&preview=1">预览</a></td></tr>
+			{else}{if $object.channel.type == 2}
+				<tr><th>短信内容</th><td>{$object.content}</td></tr>
+			{/if}{/if}
+			<tr><th>创建人</th><td>{$object.user.account}</td></tr>
+			<tr><th>创建时间</th><td>{$object.create_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			<tr><th>通道</th><td>{$object.channel.name}</td></tr>
+			<tr><th>计划发送时间</th><td>{$object.plan_send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			{if $object.send_state|in_array:array(2,3,5)}
+				<tr><th>发送时间</th><td>{$object.send_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+			{/if}
+			{if $object.channel.type == 1 && $object.send_state == 3}
+				<tr><th>阅读量</th><td>{$object.page_view}</td></tr>
+				{if $object.page_view > 0}
+					<tr><th>首次阅读时间</th><td>{$object.first_read_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+					<tr><th>最后阅读时间</th><td>{$object.last_read_time|date_format:"%Y-%m-%d %H:%M:%S"}</td></tr>
+				{/if}
+			{/if}
+			<tr><th>发送状态</th><td class="ts_state{$object.send_state}">{$object.send_state_format}</td></tr>
+			{if $object.send_state == 1}
+				{if 'TASKSINGLE:EDITALL'|in_array:$userpower || ('TASKSINGLE:EDITSELF'|in_array:$userpower && $object.user_id == $user.id)}
+					<tr><td>&nbsp;</td><td>
+						<input type="button" class="btn link" value="编辑" data-href="/index.php?a=tasksingle&m=edit&id={$object.id}" />
+						{if 'TASKSINGLE:CANCEL'|in_array:$userpower}<input type="button" class="mgl20 btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />{/if}
+					</td></tr>
+				{else}{if 'TASKSINGLE:CANCEL'|in_array:$userpower}
+					<tr><td>&nbsp;</td><td>
+						<input type="button" class="btn ajaxlink" data-url="/index.php?a=tasksingle&m=cancel&t=ajax&id={$object.id}" value="取消发送" />
+					</td></tr>
+				{/if}{/if}
+			{/if}
+		</tbody>
+	</table>
+</div>
+{include file="common_bottom.html"}
