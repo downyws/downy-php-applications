@@ -1,0 +1,36 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_detail">
+	<h2>短网址信息</h2>
+	<form action="/index.php?a=suri&m=edit&t=ajax" method="POST" onsubmit="return $.fn.ajaxForm(this);">
+		<input type="hidden" name="id" value="{$id}" />
+		<table class="table_detail">
+			<tbody align="left" valign="top">
+				{if $id > 0}
+					<tr><th width="120px">编号</th><td>{$object.id}</td></tr>
+					<tr><th>任务名称</th><td>{$object.taskmulti.title}</td></tr>
+					<tr><th>访问量</th><td>{$object.count}</td></tr>
+				{/if}
+				<tr><th>短网址</th><td>{$shorturi_domain} <input type="text" name="key" value="{if $id > 0}{$object.key}{/if}" /></td></tr>
+				<tr><th>重定向网址</th><td><input type="text" class="w450" name="uri" value="{if $id > 0}{$object.uri}{/if}" /></td></tr>
+				<tr><th>类型</th><td>
+					<div class="radiolist">
+						{foreach from=$shorturi_type_list item=v key=k}
+							<input type="radio" id="{$v}{$k}" value="{$k}" name="type" {if $object.type == $k}checked="checked"{/if} /><label for="{$v}{$k}">{$v}</label>
+						{/foreach}
+					</div>
+				</td></tr>
+				<tr><th>状态</th><td>
+					<div class="radiolist">
+						{foreach from=$is_disable_list item=v key=k}
+							<input type="radio" id="{$v}{$k}" value="{$k}" name="is_disable" {if $object.is_disable == $k}checked="checked"{/if} /><label for="{$v}{$k}">{$v}</label>
+						{/foreach}
+					</div>
+				</td></tr>
+				<tr><td>&nbsp;</td><td><input type="submit" class="btn" value="保存" /></td></tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+{include file="common_bottom.html"}

@@ -1,0 +1,27 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_list">
+	<h2>通道列表</h2>
+	{if 'SURI:EDIT'|in_array:$userpower}
+		<div class="search">
+			<div class="fr"><input type="button" class="btn link" value="添加" data-href="/index.php?a=channel&m=edit&id=0" /></div>
+			<div class="cb"></div>
+		</div>
+	{/if}
+	<table class="table_list">
+		<tbody align="left" valign="top">
+			<tr><th>编号</th><th>名称</th><th>类型</th><th>最后运行时间</th><th>状态</th>{if 'CHANNEL:EDIT'|in_array:$userpower}<th>操作</th>{/if}</tr>
+			{if 'CHANNEL:EDIT'|in_array:$userpower}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type_format}</td><td>{$v.last_run|date_format:"%Y-%m-%d %H:%M:%S"}</td><td style="{if $v.is_disable}color:#FF0000{/if}">{$v.is_disable_format}</td><td><a href="/index.php?a=channel&m=edit&id={$v.id}">编辑</a></td></tr>
+				{/foreach}
+			{else}
+				{foreach from=$list.data item=v}
+					<tr><td>{$v.id}</td><td>{$v.name}</td><td>{$v.type_format}</td><td>{$v.last_run|date_format:"%Y-%m-%d %H:%M:%S"}</td><td style="{if $v.is_disable}color:#FF0000{/if}">{$v.is_disable_format}</td></tr>
+				{/foreach}
+			{/if}
+		</tbody>
+	</table>
+</div>
+{include file="common_bottom.html"}

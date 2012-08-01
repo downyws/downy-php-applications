@@ -1,0 +1,44 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_detail">
+	<h2>系统信息</h2>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">操作系统</th><td>{$info.os_version}</td></tr>
+			<tr><th>服务器地址</th><td>{$info.os_ip}</td></tr>
+			<tr><th>服务器时间</th><td class="timeclock" data-timestamp="{$info.os_time * 1000}">Loding...</td></tr>
+		</tbody>
+	</table>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">Web容器</th><td>{$info.web_version}</td></tr>
+			<tr><th>安全模式</th><td>{if $info.web_safe_mode}是{else}否{/if}</td></tr>
+			<tr><th>安全模式GID</th><td>{if $info.web_safe_mode_gid}是{else}否{/if}</td></tr>
+			<tr><th>最大上传文件大小</th><td>{$info.web_upload_max_filesize}</td></tr>
+		</tbody>
+	</table>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">MYSQL 版本</th><td>{$info.mysql_version}</td></tr>
+		</tbody>
+	</table>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">PHP 版本</th><td>{$info.php_version}</td></tr>
+			<tr><th>GD版本</th><td>{$info.php_gd_version[1]}</td></tr>
+			<tr><th>Socket支持</th><td>{if $info.php_socket}是{else}否{/if}</td></tr>
+			<tr><th>Zlib支持</th><td>{if $info.php_zlib}是{else}否{/if}</td></tr>
+		</tbody>
+	</table>
+	<table class="table_detail mgb20">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">应用名称</th><td>{$info.app_name}</td></tr>
+			<tr><th>应用路径</th><td colspan="3">{$info.app_path}</td></tr>
+			<tr><th>文件大小</th><td>{($info.app_file_size / 1048576)|string_format:"%.2f"} MB</td></tr>
+			<tr><th>数据库大小</th><td>{($info.app_db_size / 1048576)|string_format:"%.2f"} MB</td></tr>
+			<tr><th>时区设置</th><td>{$info.app_timezone}</td></tr>
+		</tbody>
+	</table>
+</div>
+{include file="common_bottom.html"}

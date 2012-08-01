@@ -1,0 +1,93 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_list">
+	<h2>发送列表[ <span class="red f12 link cp" data-href="/index.php?a=taskmulti&m=detail&id={$taskmulti.id}">{$taskmulti.name}</span> ]</h2>
+	<div class="search">
+		<div class="fl">
+			<form action="/index.php?a=taskmulti&m=sendlist&id={$id}" method="post">
+				<span>目标名称：</span><input type="text" class="txt" name="contact" value="{$params['contact']}" />
+				<input type="submit" class="mgl20 btn" value="查询" />
+			</form>
+		</div>
+		{if $taskmulti['send_state'] == 5 && ('TASKMULTI:EDITALL'|in_array:$userpower || ('TASKMULTI:EDITSELF'|in_array:$userpower && $user['id'] == $taskmulti['user_id']))}
+			<div class="fr">
+				<form action="/index.php?a=taskmulti&m=importlist&id={$id}" method="post" enctype="multipart/form-data">
+					<input type="file" name="list" />
+					<input type="submit" class="mgl20 btn" value="导入" />
+					<input type="button" class="mgl20 btn ajaxlink" value="清空列表" data-url="/index.php?a=taskmulti&m=clearlist&t=ajax&id={$id}" />
+				</form>
+			</div>
+		{/if}
+		<div class="cb"></div>
+	</div>
+	<table class="table_list">
+		<tbody align="left" valign="top">
+			{if $channel['type'] == 1}
+				<tr><th>编号</th><th>目标地址</th><th>阅读量</th><th>首次阅读时间</th><th>最后阅读时间</th><th>状态</th><th>发送时间</th><th>操作</th></tr>
+				{if $taskmulti['send_state'] == 5 && ('TASKMULTI:EDITALL'|in_array:$userpower || ('TASKMULTI:EDITSELF'|in_array:$userpower && $user['id'] == $taskmulti['user_id']))}
+					{foreach from=$list.data item=v}
+						<tr><td>{$v.id}</td><td>{$v.contact}</td><td>{if $v.page_view > 0}{$v.page_view}{else}-{/if}</td>
+							<td>{if $v.first_read_time > 0}{$v.first_read_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
+							<td>{if $v.last_read_time > 0}{$v.last_read_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
+							<td class="tms_state{$v.send_state}">{$v.send_state_format}</td>
+							<td>{if $v.send_time > 0}{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
+							<td>
+								<a target="_blank" href="/index.php?a=read&m=email&ms=multi&id={$v.id}&preview=1">预览</a>
+								<a class="ajaxlink" data-url="/index.php?a=taskmulti&m=removesend&t=ajax&id={$v.id}" href="javascript:void(0);">删除</a>
+							</td>
+						</tr>
+					{/foreach}
+				{else}
+					{foreach from=$list.data item=v}
+						<tr><td>{$v.id}</td><td>{$v.contact}</td><td>{$v.page_view}</td>
+							<td>{if $v.first_read_time > 0}{$v.first_read_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
+							<td>{if $v.last_read_time > 0}{$v.last_read_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
+							<td class="tms_state{$v.send_state}">{$v.send_state_format}</td>
+							<td>{if $v.send_time > 0}{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
+							<td><a target="_blank" href="/index.php?a=read&m=email&ms=multi&id={$v.id}&preview=1">预览</a></td>
+						</tr>
+					{/foreach}
+				{/if}
+			{else}
+				<tr><th>编号</th><th>目标地址</th><th>状态</th><th>发送时间</th><th>操作</th></tr>
+				{if $taskmulti['send_state'] == 5 && ('TASKMULTI:EDITALL'|in_array:$userpower || ('TASKMULTI:EDITSELF'|in_array:$userpower && $user['id'] == $taskmulti['user_id']))}
+					{foreach from=$list.data item=v}
+						<tr><td>{$v.id}</td><td>{$v.contact}</td>
+							<td class="tms_state{$v.send_state}">{$v.send_state_format}</td>
+							<td>{if $v.send_time > 0}{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
+							<td>
+								<a class="ajaxlink" data-url="/index.php?a=read&m=sms&t=ajax&ms=multi&id={$v.id}" href="javascript:void(0);">预览</a>
+								<a class="ajaxlink" data-url="/index.php?a=taskmulti&m=removesend&t=ajax&id={$v.id}" href="javascript:void(0);">删除</a>
+							</td>
+						</tr>
+					{/foreach}
+				{else}
+					{foreach from=$list.data item=v}
+						<tr><td>{$v.id}</td><td>{$v.contact}</td>
+							<td class="tms_state{$v.send_state}">{$v.send_state_format}</td>
+							<td>{if $v.send_time > 0}{$v.send_time|date_format:"%Y-%m-%d %H:%M:%S"}{else}-{/if}</td>
+							<td><a class="ajaxlink" data-url="/index.php?a=read&m=sms&t=ajax&ms=multi&id={$v.id}" href="javascript:void(0);">预览</a></td>
+						</tr>
+					{/foreach}
+				{/if}
+			{/if}
+		</tbody>
+	</table>
+	{if $list.pager.last > $list.pager.first}
+		<div class="pager">
+			<a href="/index.php?a=taskmulti&m=sendlist&id={$id}&p={$list.pager.first}&{$list.pager.params}">首页</a>
+			<a href="/index.php?a=taskmulti&m=sendlist&id={$id}&p={$list.pager.prev}&{$list.pager.params}">上一页</a>
+			{for $i = $list.pager.start; $i <= $list.pager.end; $i++}
+				{if $i == $list.pager.current}
+					<a href="javascript:void(0);" class="current">{$i}</a>
+				{else}
+					<a href="/index.php?a=taskmulti&m=sendlist&id={$id}&p={$i}&{$list.pager.params}">{$i}</a>
+				{/if}
+			{/for}
+			<a href="/index.php?a=taskmulti&m=sendlist&id={$id}&p={$list.pager.next}&{$list.pager.params}">下一页</a>
+			<a href="/index.php?a=taskmulti&m=sendlist&id={$id}&p={$list.pager.last}&{$list.pager.params}">尾页</a>
+		</div>
+	{/if}
+</div>
+{include file="common_bottom.html"}
