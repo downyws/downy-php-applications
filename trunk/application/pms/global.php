@@ -2,7 +2,7 @@
 
 define('APP_NAME', '信息推送系统');
 
-define('ADMIN_ID', 100000);
+define('ADMIN_ID', 1);
 
 define('CRONTAB_SALT', '001cd7b0808ebebb');
 
