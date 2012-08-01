@@ -3,7 +3,8 @@ class Channel
 {
 	public $channel_id = 0;
 
-	public $mail = null;
+	public $type = '';
+	public $type_obj = null;
 	
 	public $task_obj = array('single' => null, 'multi' => null);
 	
@@ -56,6 +57,50 @@ class Channel
 
 	public function run()
 	{
-		throw new Exception('Subclass not exists run.');
+		if($this->type == CHANNEL_TYPE_EMAIL)
+		{
+			return $this->runEmail();
+		}
+		throw new Exception('code have not finish.');
+	}
+
+	public function runEmail()
+	{
+		foreach($this->task_obj as $k => $v)
+		{
+			$result = $this->task_obj[$k]->taskReceive($this->channel_id, $this->task_count[$k]);
+			if(!$result['state'])
+			{
+				return $result;
+			}
+			$list = $result['data'];
+
+			$this->task_count[$k] = count($list);
+			if(is_array($list) && count($list) > 0)
+			{
+				$result = array();
+				foreach($list as $_v)
+				{
+					try
+					{
+						$this->type_obj->AddAddress($_v['contact']);
+						$this->type_obj->Subject = $_v['title'];
+						$this->type_obj->MsgHTML($_v['content']);
+						$state = $this->type_obj->Send();
+						$result[$_v['id']] = $state;
+						$this->run_count[$k][$state ? 'success' : 'failed']++;
+					}
+					catch(phpmailerException $e)
+					{
+						$result[$_v['id']] = false;
+						$this->run_count[$k]['failed']++;
+						$this->errors[] = $k . '_' . $_v['id'] . ':' . $e->errorMessage();
+					}
+				}
+				$this->task_obj[$k]->taskSubmit($result);
+			}
+			$this->task_obj[$k]->taskReflash($this->channel_id);
+		}
+		return array('state' => true, 'message' => '发送信息 ' . ($this->task_count['single'] + $this->task_count['multi']) . ' 条，耗时 ' . number_format(microtime(true) - $this->run_time['start'], 4, '.', '') . ' 秒。');
 	}
 }
