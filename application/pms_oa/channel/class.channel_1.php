@@ -19,11 +19,11 @@ class Channel_1 extends Channel
 		$this->mail->IsSMTP();
 		$this->mail->SMTPAuth = true;
 		$this->mail->Port = 25;
-		$this->mail->Host = "smtp.exmail.qq.com";
-		$this->mail->Username = "yjmao@baifurun.com";
-		$this->mail->Password = "y12345";
-		$this->mail->From = "yjmao@baifurun.com";
-		$this->mail->FromName = "mao.yijun";
+		$this->mail->Host = "smtp.qq.com";
+		$this->mail->Username = "service@wing075.com";
+		$this->mail->Password = "myj123456";
+		$this->mail->From = "service@wing075.com";
+		$this->mail->FromName = "service";
 		$this->mail->IsHTML(true);
 	}
 
@@ -49,7 +49,7 @@ class Channel_1 extends Channel
 						$this->mail->AddAddress($_v['contact']);
 						$this->mail->Subject = $_v['title'];
 						$this->mail->MsgHTML($_v['content']);
-$state = !!mt_rand(0, 2);//$this->mail->Send();
+						$state = $this->mail->Send();
 						$result[$_v['id']] = $state;
 						$this->run_count[$k][$state ? 'success' : 'failed']++;
 					}

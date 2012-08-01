@@ -1,4 +1,0 @@
-RewriteEngine On
-
-#短网址
-RewriteRule ^([0-9A-Za-z]+)$ /index.php?a=suri&m=redirect&key=$1
