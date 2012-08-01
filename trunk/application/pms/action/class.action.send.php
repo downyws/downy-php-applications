@@ -32,7 +32,7 @@ class ActionSend extends ActionCommon
 			$channel = new $className();
 			$result = $channel->run();
 		}
-		
+
 		// 返回
 		$this->jsonout($result);
 	}

@@ -49,7 +49,7 @@ class Channel_1 extends Channel
 						$this->mail->AddAddress($_v['contact']);
 						$this->mail->Subject = $_v['title'];
 						$this->mail->MsgHTML($_v['content']);
-$state = true;//$this->mail->Send();
+$state = !!mt_rand(0, 2);//$this->mail->Send();
 						$result[$_v['id']] = $state;
 						$this->run_count[$k][$state ? 'success' : 'failed']++;
 					}
