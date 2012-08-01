@@ -440,10 +440,24 @@ class ModelTaskMulti extends ModelCommon
 
 	public function taskReflash($channel)
 	{
+		// 通道是否被禁用
+		$condition = array();
+		$condition[] = array('id' => array('eq', $channel));
+		$channel = $this->getObject($condition, array(), 'channel');
+		if(!$channel || $channel['is_disable'])
+		{
+			return;
+		}
+
 		// 获取通道任务
 		$condition = array();
-		$condition[] = array('channel_id' => array('eq', $channel));
-		$condition[] = array('create_time' => array('gt', time() - TASK_SCAN_RANGE));
+		$condition[] = array('channel_id' => array('eq', $channel['id']));
+		$condition[] = array('send_state' => array('eq', 2));
+		$condition[] = array(
+			'start_time' => array('gt', time() - TASK_SCAN_RANGE),
+			'plan_send_time' => array('gt', time() - TASK_SCAN_RANGE),
+			'create_time' => array('gt', time() - TASK_SCAN_RANGE),
+		);
 		$task_ids = $this->getCol($condition, 'id');
 
 		// 超时发送任务标记失败
@@ -453,13 +467,9 @@ class ModelTaskMulti extends ModelCommon
 		$condition[] = array('send_time' => array('lt', time() - TASK_TIMEOUT));
 		$data = array();
 		$data['send_state'] = 5;
-		$this->update($condition, $data);
+		$this->update($condition, $data, 'send_list');
 
-		/*
 		// 更新进度
-		$condition = array();
-		$condition[] = array('id' => array('in', array_keys($list)));
-		$task_ids = $this->getCol($condition, 'DISTINCT task_id', 'send_list');
 		$sql = 'SELECT task_id, COUNT(*) FROM ' . $this->table('send_list') . ' WHERE `task_id` IN (' . implode(', ', $task_ids) . ') AND `send_state` != 1 GROUP BY `task_id`';
 		$task = $this->fetchPairs($sql);
 		foreach($task as $k => $v)
@@ -469,18 +479,28 @@ class ModelTaskMulti extends ModelCommon
 			$data = array();
 			$data['send_rate'] = $v;
 			$this->update($condition, $data);
-		}
 
-		// 到预订发送时间
-		// 更新状态，开始时间
+		}
 
 		// 发送完成
 		// 更新状态，结束时间
-		*/
+		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = 3, end_time = ' . time() . ' WHERE `send_state` = 2 AND `send_count` = `send_rate`';
+		$this->query($sql);
+
+		// 到预订发送时间
+		$condition = array();
+		$condition[] = array('channel_id' => array('eq', $channel['id']));
+		$condition[] = array('check_user_id' => array('gt', 0));
+		$condition[] = array('plan_send_time' => array('elt', time()));
+		$condition[] = array('send_state' => array('eq', 1));
+		$data = array();
+		$data['start_time'] = time();
+		$data['send_state'] = 2;
+		$this->update($condition, $data);
 
 		// 更新通道最后运行时间
 		$condition = array();
-		$condition[] = array('id' => array('eq', $channel));
+		$condition[] = array('id' => array('eq', $channel['id']));
 		$data = array();
 		$data['last_run'] = time();
 		$this->update($condition, $data, 'channel');
