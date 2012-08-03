@@ -3,7 +3,8 @@ class Channel
 {
 	public $channel_id = 0;
 
-	public $type = '';
+	public $run = '';
+
 	public $type_obj = null;
 	
 	public $task_obj = array('single' => null, 'multi' => null);
@@ -57,17 +58,23 @@ class Channel
 
 	public function run()
 	{
-		if($this->type == CHANNEL_TYPE_EMAIL)
+		$call = $this->run;
+		$result = $this->$call();
+		if(empty($result))
 		{
-			return $this->runEmail();
+			$count = $this->task_count['single'] + $this->task_count['multi'];
+			$time = number_format(microtime(true) - $this->run_time['start'], 4, '.', '');
+			return array('state' => true, 'message' => '发送信息 ' . $count . ' 条，耗时 ' . $time . ' 秒。');
 		}
-		throw new Exception('code have not finish.');
+		return $result;
 	}
 
-	public function runEmail()
+	public function runBase()
 	{
+		// 单任务，多任务
 		foreach($this->task_obj as $k => $v)
 		{
+			// 获取发送内容
 			$result = $this->task_obj[$k]->taskReceive($this->channel_id, $this->task_count[$k]);
 			if(!$result['state'])
 			{
@@ -75,7 +82,8 @@ class Channel
 			}
 			$list = $result['data'];
 
-			$this->task_count[$k] = count($list);
+			// 记录发送数量
+			$this->task_count[$k] += count($list);
 			if(is_array($list) && count($list) > 0)
 			{
 				$result = array();
@@ -88,19 +96,23 @@ class Channel
 						$this->type_obj->MsgHTML($_v['content']);
 						$state = $this->type_obj->Send();
 						$result[$_v['id']] = $state;
+						// 记录成功或失败数量
 						$this->run_count[$k][$state ? 'success' : 'failed']++;
 					}
 					catch(phpmailerException $e)
 					{
 						$result[$_v['id']] = false;
+						// 记录失败数量
 						$this->run_count[$k]['failed']++;
+						// 记录错误信息
 						$this->errors[] = $k . '_' . $_v['id'] . ':' . $e->errorMessage();
 					}
 				}
+				// 提交任务结果
 				$this->task_obj[$k]->taskSubmit($result);
 			}
+			// 刷新通道任务
 			$this->task_obj[$k]->taskReflash($this->channel_id);
 		}
-		return array('state' => true, 'message' => '发送信息 ' . ($this->task_count['single'] + $this->task_count['multi']) . ' 条，耗时 ' . number_format(microtime(true) - $this->run_time['start'], 4, '.', '') . ' 秒。');
 	}
 }

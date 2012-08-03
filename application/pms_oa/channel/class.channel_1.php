@@ -1,7 +1,4 @@
 <?php
-define('TASKSINGLE_COUNT', 10);
-define('TASKMULTI_COUNT', 50);
-
 class Channel_1 extends Channel
 {
 	public function __construct()
@@ -14,7 +11,7 @@ class Channel_1 extends Channel
 		$this->task_count['multi'] = 50;
 
 		// 初始化邮件
-		$this->type = CHANNEL_TYPE_EMAIL;
+		$this->run = 'runBase';
 		Factory::loadLibrary('phpmailer');
 		$this->type_obj = new PHPMailer(true);
 		$this->type_obj->IsSMTP();
