@@ -115,4 +115,49 @@ class Channel
 			$this->task_obj[$k]->taskReflash($this->channel_id);
 		}
 	}
+
+	public function uriRequest($url, $postdata = null, $proxy = null)
+	{
+		$curl = curl_init();
+		if($proxy)
+		{
+			curl_setopt($curl, CURLOPT_PROXY, $proxy['host']); 
+			curl_setopt($curl, CURLOPT_PROXYPORT, $proxy['port']);
+		}
+		if(preg_match('/^https/i', $url))
+		{
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+		}
+		if($postdata)
+		{
+			curl_setopt($curl, CURLOPT_POST, 1);
+			$data = array();
+			foreach($postdata as $key => $val)
+			{
+				$data[] = $key . '=' . urlencode($val);
+			}
+			$data = implode('&', $data);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+		}
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($curl);
+		$http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		curl_close($curl);
+		if($http_code != 200)
+		{
+			return null;
+		}
+		return $result;
+	}
+
+	public function decodeXml($string)
+	{
+		if(is_string($string))
+		{
+			return simplexml_load_string($string);
+		}
+		return null;
+	}
 }
