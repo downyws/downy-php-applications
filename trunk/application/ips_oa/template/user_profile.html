@@ -1,0 +1,17 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="table_detail">
+	<h2>个人信息</h2>
+	<table class="table_detail">
+		<tbody align="left" valign="top">
+			<tr><th width="120px">编号</th><td>{$object.id}</td></tr>
+			<tr><th>账号</th><td>{$object.account}</td></tr>
+			<tr><th>密码</th><td><span class="realtime_edit" data-type="password" data-url="/index.php?a=user&m=profile&t=ajax&key=password" data-value=""></span></td></tr>
+			<tr><th>权限列表</th><td>{foreach from=$object.power_format item=v}{$v}　　{/foreach}</td></tr>
+			<tr><th>通道列表</th><td>{foreach from=$object.channel_format item=v}{$v}　　{/foreach}</td></tr>
+			<tr><th>单任务上线</th><td>{if $object.tasksingle_limit_day > 0}{$object.tasksingle_limit_day} 条/天{else}不限{/if}</tr>
+		</tbody>
+	</table>
+</div>
+{include file="common_bottom.html"}
