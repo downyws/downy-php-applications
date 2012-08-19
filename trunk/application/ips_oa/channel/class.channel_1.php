@@ -17,11 +17,11 @@ class Channel_1 extends Channel
 		$this->type_obj->IsSMTP();
 		$this->type_obj->SMTPAuth = true;
 		$this->type_obj->Port = 25;
-		$this->type_obj->Host = "smtp.qq.com";
-		$this->type_obj->Username = "service@wing075.com";
-		$this->type_obj->Password = "myj123456";
-		$this->type_obj->From = "service@wing075.com";
-		$this->type_obj->FromName = "service";
+		$this->type_obj->Host = "";
+		$this->type_obj->Username = "";
+		$this->type_obj->Password = "";
+		$this->type_obj->From = "";
+		$this->type_obj->FromName = "";
 		$this->type_obj->IsHTML(true);
 	}
 }
