@@ -6,51 +6,115 @@ class Submit
 
 	/*$params = array(
 		'user_name' => array(
-			array('format', 'trim'), 
+			array('mapping', 'new name'),
+			array('format', 'trim'),
 			array('vaild', 'set', 'message', 'default value', data),
 			......
 		)
 	);*/
-	public function obtain($params)
+	public function obtain($values, $params)
 	{
 		$this->errors = array();
 		$result = array();
 
 		foreach($params as $field => $rules)
 		{
-			if(!isset($_REQUEST[$field]) || (is_string($_REQUEST[$field]) && strlen(trim($_REQUEST[$field])) == 0))
+			if(!isset($values[$field]) || (is_string($values[$field]) && strlen(trim($values[$field])) == 0))
 			{
 				$result[$field] = '';
 			}
 			else
 			{
-				$result[$field] = $_REQUEST[$field];
+				$result[$field] = $values[$field];
 			}
+
+			$mapping = false;
 
 			foreach($rules as $type => $rule)
 			{
-				$function = $rule[0] . $rule[1];
-				$funres = $this->$function($rule, $result[$field]);
-				if($rule[0] == 'format')
+
+
+				if($rule[0] == 'mapping')
 				{
+					$mapping = $rule[1];
+				}
+				else if($rule[0] == 'format')
+				{
+					$function = $rule[0] . $rule[1];
+					$funres = $this->$function($rule, $result[$field]);
 					$result[$field] = $funres;
 				}
-				else if(!$funres)
+				else if($rule[0] == 'valid')
 				{
-					if($rule[3] === null)
+					$function = $rule[0] . $rule[1];
+					$funres = $this->$function($rule, $result[$field]);
+
+					if(!$funres && $rule[3] === null)
 					{
 						$this->errors[] = $rule[2];
 						unset($result[$field]);
 						break;
 					}
-					else
+					else if(!$funres)
 					{
 						$result[$field] = $rule[3];
 					}
 				}
 			}
+
+			if(!$this->errors && $mapping)
+			{
+				$result[$mapping] = $result[$field];
+				unset($result[$field]);
+			}
 		}
 
+		return $result;
+	}
+
+	public function obtainArray($values, $params)
+	{
+		$result = array(); $request = array(); $l = null;
+		foreach($params as $field => $rules)
+		{
+			if(isset($values[$field]) && is_array($values[$field]))
+			{
+				if(!isset($l))
+				{
+					$l = count($values[$field]);
+				}
+				else if($l != count($values[$field]))
+				{
+					$this->errors[] = 'params count error.';
+					break;
+				}
+				else
+				{
+					foreach($values[$field] as $k => $v)
+					{
+						$request[$k][$field] = $v;
+					}
+				}
+			}
+			else
+			{
+				$this->errors[] = 'params is null or is not array.';
+				break;
+			}
+		}
+
+		if(!$this->errors)
+		{
+			foreach($request as $k => $v)
+			{
+				$item = $this->obtain($v, $params);
+				if($this->errors)
+				{
+					break;
+				}
+				$result[] = $item;
+			}
+		}
 		return $result;
 	}
 
@@ -89,6 +153,11 @@ class Submit
 		return !($value == '');
 	}
 
+	public function validIsSet($rule, $value)
+	{
+		return isset($value);
+	}
+
 	public function validEq($rule, $value)
 	{
 		return $value == $rule[4];
@@ -99,7 +168,7 @@ class Submit
 		return $value > $rule[4];
 	}
 
-	public function validEgt($rule, $value)
+	public function validGte($rule, $value)
 	{
 		return $value >= $rule[4];
 	}
@@ -109,7 +178,7 @@ class Submit
 		return $value < $rule[4];
 	}
 
-	public function validElt($rule, $value)
+	public function validLte($rule, $value)
 	{
 		return $value <= $rule[4];
 	}
@@ -134,14 +203,14 @@ class Submit
 		return preg_match('/^\d+$/', $value);
 	}
 
-	public function validUrl($rule, $value)
-	{
-		return preg_match('/^https?:\/\/([0-9a-z-]+\.)+[a-z]{2,4}\//', $value);
-	}
-
 	public function validNum($rule, $value)
 	{
 		return preg_match('/^\d+(?:\.\d+)?(?:[Ee]\d+(?:\.\d+)?)?$/', $value);
+	}
+
+	public function validUrl($rule, $value)
+	{
+		return preg_match('/^https?:\/\/([0-9a-z-]+\.)+[a-z]{2,4}\//', $value);
 	}
 
 	public function validEmail($rule, $value)
@@ -162,5 +231,15 @@ class Submit
 	public function validTelephone($rule, $value)
 	{
 		return preg_match('/^\+?\d+(?:-\d+)$/', $value);
+	}
+
+	public function validTime($rule, $value)
+	{
+		return (strtotime($value) !== false);
+	}
+
+	public function validFunction($rule, $value)
+	{
+		return call_user_func($rule[4], $value);
 	}
 }

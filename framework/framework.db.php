@@ -5,27 +5,35 @@ class Db
 	static $dbs = array();
 	private $db = null;
 	protected $_config = array();
+	protected $_logs = null;
+	protected $_error = '';
+	protected $_trigger = array(
+		'before' => array(),
+		'after' => array(),
+		'error' => array()
+	);
 
 	public function __construct($config)
 	{
 		$this->_config = $config;
+		$this->_config['POST'] = empty($this->_config['POST']) ? ini_get("mysqli.default_port") : $this->_config['PORT'];
+		$this->_logs = new Logs();
 	}
 
 	protected function _connect()
 	{
-		$ping = $this->db ? mysql_ping($this->db) : false;
+		$ping = $this->db ? mysqli_ping($this->db) : false;
 
 		if(!$this->db || !$ping)
 		{
 			$key = md5(serialize($this->_config));
 			if(empty(db::$dbs[$key]) || !$ping)
 			{
-				$this->db = mysql_connect($this->_config['HOST'], $this->_config['USERNAME'], $this->_config['PASSWORD'], true);
+				$this->db = mysqli_connect($this->_config['HOST'], $this->_config['USERNAME'], $this->_config['PASSWORD'], $this->_config['DBNAME'], $this->_config['POST']);
 				if($this->_config['CHARSET'])
 				{
-					mysql_query('SET NAMES utf8;', $this->db);
+					mysqli_set_charset($this->db, $this->_config['CHARSET']);
 				}
-				mysql_select_db($this->_config['DBNAME'], $this->db);
 
 				db::$dbs[$key] = $this->db;
 
@@ -41,65 +49,59 @@ class Db
 	public function query($sql)
 	{
 		$this->_connect();
-		$res = mysql_unbuffered_query($sql, $this->db);
-		return $res;
-	}
 
-	public function &fetchRow($sql)
-	{
-		$data = false;
-		$res = $this->query($sql);
-		if($res !== false)
+		foreach($this->_trigger['before'] as $v)
 		{
-			$data = mysql_fetch_row($res);
+			call_user_func($v, $sql);
 		}
-		return $data;
+
+		if(mysqli_real_query($this->db, $sql))
+		{
+			$res = mysqli_use_result($this->db);
+			$res = ($res === false) ? true : $res;
+		}
+		else
+		{
+			$res = false;
+		}
+
+		foreach($this->_trigger['after'] as $v)
+		{
+			call_user_func($v, $sql, $res);
+		}
+
+		$errno = mysqli_errno($this->db);
+		if($errno)
+		{
+			$error = mysqli_error($this->db);
+			$this->_msg_error = $errno . ': ' . $error;
+			foreach($this->_trigger['error'] as $v)
+			{
+				call_user_func($v, $sql, $errno, $error);
+			}
+			$logs_file = $this->_logs->attachment('query', array('sql' => $sql, 'errno' => $errno, 'error' => $error));
+			$this->_logs->message('query', 'Error: Query Failed, see ' . $logs_file);
+		}
+		else
+		{
+			$this->_msg_error = '';
+		}
+
+		return $res;
 	}
 
 	public function fetchOne($sql)
 	{
 		$data = false;
-		$row = $this->fetchRow($sql);
-		if(is_array($row))
-		{
-			$data = $row[0];
-		}
-		return $data;
-	}
-
-	public function &fetchArray($sql)
-	{
-		$data = array();
 		$res = $this->query($sql);
 		if($res !== false)
 		{
-			$data = mysql_fetch_assoc($res);
+			$data = mysqli_fetch_row($res);
 		}
-		return $data;
-	}
-
-	public function &fetchAll($sql, $id = '', $cached = false)
-	{
-		$data = array();
-		$res = $this->query($sql, $cached);
-		if($res !== false)
+		if(is_array($data) && count($data) > 0)
 		{
-			if(empty($id))
-			{
-				while($row = mysql_fetch_assoc($res))
-				{
-					$data []= $row;
-				}
-			}
-			else
-			{
-				while($row = mysql_fetch_assoc($res))
-				{
-					$data[$row[$id]] = $row;
-				}
-			}
+			$data = $data[0];
 		}
-
 		return $data;
 	}
 
@@ -109,7 +111,7 @@ class Db
 		$res = $this->query($sql);
 		if($res !== false)
 		{
-			while($row = mysql_fetch_row($res))
+			while($row = mysqli_fetch_row($res))
 			{
 				$data[$row[0]]= $row[1];
 			}
@@ -123,11 +125,47 @@ class Db
 		$res = $this->query($sql);
 		if($res !== false)
 		{
-			while($row = mysql_fetch_row($res))
+			while($row = mysqli_fetch_row($res))
 			{
 				$data []= $row[0];
 			}
 		}
+		return $data;
+	}
+
+	public function &fetchRow($sql)
+	{
+		$data = array();
+		$res = $this->query($sql);
+		if($res !== false)
+		{
+			$data = mysqli_fetch_assoc($res);
+		}
+		return $data;
+	}
+
+	public function &fetchRows($sql, $id = '')
+	{
+		$data = array();
+		$res = $this->query($sql);
+		if($res !== false)
+		{
+			if(empty($id))
+			{
+				while($row = mysqli_fetch_assoc($res))
+				{
+					$data []= $row;
+				}
+			}
+			else
+			{
+				while($row = mysqli_fetch_assoc($res))
+				{
+					$data[$row[$id]] = $row;
+				}
+			}
+		}
+
 		return $data;
 	}
 
@@ -145,7 +183,7 @@ class Db
 
 	public function affectedRows()
 	{
-		$n = mysql_affected_rows($this->db);
+		$n = mysqli_affected_rows($this->db);
 		if($n >= 0)
 		{
 			return $n;
@@ -155,7 +193,7 @@ class Db
 
 	public function insertId()
 	{
-		$id = mysql_insert_id($this->db);
+		$id = mysqli_insert_id($this->db);
 		if($id > 0)
 		{
 			return $id;
@@ -165,23 +203,40 @@ class Db
 
 	public function mysqlError()
 	{
-		return mysql_errno() . ": " . mysql_error();
+		return $this->_error;
 	}
 
 	public function escape($str)
 	{
 		$this->_connect();
-		if(is_array($str))
+		return mysqli_real_escape_string($this->db, $str);
+	}
+
+	public function addTrigger($event, $handler)
+	{
+		foreach($this->_trigger[$event] as $v)
 		{
-			foreach($str as $k => $v)
+			if($v == $handler)
 			{
-				$str[$k] = mysql_real_escape_string($v, $this->db);
+				return false;
 			}
 		}
-		else
+
+		$this->_trigger[$event][] = $handler;
+		return true;
+	}
+
+	public function removeTrigger($event, $handler)
+	{
+		foreach($this->_trigger[$event] as $k => $v)
 		{
-			$str = mysql_real_escape_string($str, $this->db);
+			if($v == $handler)
+			{
+				unset($this->_trigger[$event][$k]);
+				return true;
+			}
 		}
-		return $str;
+
+		return false;
 	}
 }

@@ -21,6 +21,7 @@ class Action
 			$this->_tpl->compile_dir = APP_DIR_CACHE . 'smarty/compile/';
 			$this->_tpl->left_delimiter = '{';
 			$this->_tpl->right_delimiter = '}';
+			$this->_tpl->error_reporting = E_ALL;
 		}
 	}
 
