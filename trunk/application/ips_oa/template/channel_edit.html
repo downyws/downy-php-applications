@@ -12,14 +12,14 @@
 				<tr><th>类型</th><td>
 					<div class="radiolist">
 						{foreach from=$channel_type_list item=v key=k}
-							<input type="radio" id="{$v}{$k}" value="{$k}" name="type" {if $object.type == $k}checked="checked"{/if} /><label for="{$v}{$k}">{$v}</label>
+							<input type="radio" id="{$v}{$k}" value="{$k}" name="type" {if $id && $object.type == $k}checked="checked"{/if} /><label for="{$v}{$k}">{$v}</label>
 						{/foreach}
 					</div>
 				</td></tr>
 				<tr><th>状态</th><td>
 					<div class="radiolist">
 						{foreach from=$is_disable_list item=v key=k}
-							<input type="radio" id="{$v}{$k}" value="{$k}" name="is_disable" {if $object.is_disable == $k}checked="checked"{/if} /><label for="{$v}{$k}">{$v}</label>
+							<input type="radio" id="{$v}{$k}" value="{$k}" name="is_disable" {if $id && $object.is_disable == $k}checked="checked"{/if} /><label for="{$v}{$k}">{$v}</label>
 						{/foreach}
 					</div>
 				</td></tr>

@@ -48,7 +48,7 @@ class Channel
 		$log = date('Y-m-d H:i:s', $date) . "\n" . json_encode($data) . "\n" . json_encode($this->errors) . "\n\n";
 
 		// 保存日志
-		$path = APP_DIR_LOG . 'channel/' . date('Ym', $date) . '/';
+		$path = APP_DIR_LOGS . 'channel/' . date('Ym', $date) . '/';
 		$file = date('d', $date) . '_' . $this->channel_id . '.txt';
 		!is_dir($path) && mkdir($path, 0755, true);
 		$handle = fopen($path . $file, 'a');

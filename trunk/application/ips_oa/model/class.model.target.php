@@ -18,7 +18,7 @@ class ModelTarget extends ModelCommon
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);
 		$sql = 'SELECT * FROM ' . $this->table() . $this->getWhere($condition) . ' ORDER BY `contact` DESC ' . $this->getLimit($p, $ps);
-		$data = $this->fetchAll($sql);
+		$data = $this->fetchRows($sql);
 		$pager = $this->getPager($p, $count, $ps);
 
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);

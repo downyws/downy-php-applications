@@ -12,10 +12,10 @@ class ActionTarget extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
 			'contact' => array(array('format', 'trim')),
-			'type' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0)),
+			'type' => array(array('format', 'int'), array('valid', 'gte', null, 0, 0)),
 			'is_disable' => array(array('valid', 'empty', null, -1, null), array('format', 'int'), array('valid', 'in', null, 0, array(-1, 0, 1)))
 		));
 
@@ -37,8 +37,8 @@ class ActionTarget extends ActionCommon
 
 	public function methodEdit()
 	{
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', null, 0, 0))
 		));
 
 		if($params['id'])
@@ -58,8 +58,8 @@ class ActionTarget extends ActionCommon
 	public function methodEditAjax()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', '编号错误', null, 0)),
 			'contact' => array(array('format', 'trim')),
 			'is_disable' => array(array('format', 'int'), array('valid', 'in', '状态错误', null, array_keys($GLOBALS['CONFIG']['IS_DISABLE'])))
 		));

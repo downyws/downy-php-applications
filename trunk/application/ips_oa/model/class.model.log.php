@@ -14,13 +14,13 @@ class ModelLog extends ModelCommon
 		!empty($params['account']) && $condition[] = array('u.`account`' => array('like', $params['account']));
 		!empty($params['data_table']) && $condition[] = array('l.`data_table`' => array('eq', $params['data_table']));
 		!empty($params['operation_type']) && $condition[] = array('l.`operation_type`' => array('eq', $params['operation_type']));
-		!empty($params['start_time']) && $condition[] = array('l.`create_time`' => array('egt', $params['start_time']));
-		!empty($params['end_time']) && $condition[] = array('l.`create_time`' => array('elt', $params['end_time']));
+		!empty($params['start_time']) && $condition[] = array('l.`create_time`' => array('gte', $params['start_time']));
+		!empty($params['end_time']) && $condition[] = array('l.`create_time`' => array('lte', $params['end_time']));
 
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . 'AS l JOIN ' . $this->table('user') . ' AS u ON (u.`id` = l.`user_id`) ' . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);
 		$sql = 'SELECT l.*, u.account FROM ' . $this->table() . ' AS l JOIN ' . $this->table('user') . ' AS u ON (u.`id` = l.`user_id`) ' . $this->getWhere($condition) . ' ORDER BY l.`create_time` DESC ' . $this->getLimit($p, $ps);
-		$data = $this->fetchAll($sql);
+		$data = $this->fetchRows($sql);
 		$pager = $this->getPager($p, $count, $ps);
 		
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);

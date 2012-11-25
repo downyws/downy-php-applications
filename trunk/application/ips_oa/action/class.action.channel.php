@@ -24,8 +24,8 @@ class ActionChannel extends ActionCommon
 
 	public function methodEdit()
 	{
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', null, 0, 0))
 		));
 
 		if($params['id'])
@@ -44,8 +44,8 @@ class ActionChannel extends ActionCommon
 	public function methodEditAjax()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', '编号错误', null, 0)),
 			'name' => array(array('format', 'trim'), array('valid', 'empty', '通道名称不能为空。', null, null)),
 			'is_disable' => array(array('format', 'int'), array('valid', 'in', '状态错误', null, array_keys($GLOBALS['CONFIG']['IS_DISABLE']))),
 			'type' => array(array('format', 'int'), array('valid', 'in', '类型错误', null, array_keys($GLOBALS['CONFIG']['CHANNEL']['TYPE'])))

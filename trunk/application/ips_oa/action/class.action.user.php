@@ -12,7 +12,7 @@ class ActionUser extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
 			'account' => array(array('format', 'trim')),
 			'is_disable' => array(array('valid', 'empty', null, -1, null), array('format', 'int'), array('valid', 'in', null, -1, array(-1, 0, 1)))
@@ -22,7 +22,7 @@ class ActionUser extends ActionCommon
 
 		$p = $params['p'];
 		unset($params['p']);
-		
+
 		$list = $userObj->getList($p, $params);
 		$list['data'] = $userObj->formatList($list['data']);
 		$list['pager']['params'] = 'account=' . urlencode($params['account']) . '&is_disable=' . $params['is_disable'];
@@ -34,8 +34,8 @@ class ActionUser extends ActionCommon
 
 	public function methodEdit()
 	{
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', null, 0, 0))
 		));
 
 		if($params['id'])
@@ -63,14 +63,14 @@ class ActionUser extends ActionCommon
 	public function methodEditAjax()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', '编号错误', null, 0)),
 			'account' => array(array('format', 'trim'), array('valid', 'empty', '账号不能为空', null, null)),
 			'password' => array(array('format', 'trim')),
 			'channel' => array(),
 			'power' => array(),
 			'is_disable' => array(array('format', 'int'), array('valid', 'in', '状态错误', null, array_keys($GLOBALS['CONFIG']['IS_DISABLE']))),
-			'tasksingle_limit_day' => array(array('format', 'int'), array('valid', 'egt', '单任务上线必须大于等于0', null, 0))
+			'tasksingle_limit_day' => array(array('format', 'int'), array('valid', 'gte', '单任务上线必须大于等于0', null, 0))
 		));
 
 		// 保存
@@ -111,7 +111,7 @@ class ActionUser extends ActionCommon
 
 	public function methodDetail()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '用户不存在', null, 0))
 		));
 
@@ -139,7 +139,7 @@ class ActionUser extends ActionCommon
 	public function methodProfileAjax()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'key' => array(array('format', 'trim')),
 			'val' => array(array('format', 'trim'))
 		));

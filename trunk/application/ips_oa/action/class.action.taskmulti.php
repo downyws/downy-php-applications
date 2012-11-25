@@ -12,12 +12,12 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
 			'name' => array(array('format', 'trim')),
 			'account' => array(array('format', 'trim')),
-			'channel' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
-			'send_state' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
+			'channel' => array(array('format', 'int'), array('valid', 'gte', null, '0', 0)),
+			'send_state' => array(array('format', 'int'), array('valid', 'gte', null, '0', 0)),
 			'start_time' => array(array('format', 'timestamp')),
 			'end_time' => array(array('format', 'timestamp'))
 		));
@@ -54,8 +54,8 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodEdit()
 	{
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', null, 0, 0))
 		));
 
 		$userObj = Factory::getModel('user');
@@ -92,8 +92,8 @@ class ActionTaskMulti extends ActionCommon
 	public function methodEditAjax()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', '编号错误', null, 0)),
 			'name' => array(array('format', 'trim'), array('valid', 'empty', '任务名称不能为空', null, null)),
 			'type' => array(array('format', 'int'), array('valid', 'in', '类型错误', null, array_keys($GLOBALS['CONFIG']['CHANNEL']['TYPE']))),
 			'channel_id' => array(array('format', 'int'), array('valid', 'gt', '通道错误', null, 0)),
@@ -162,7 +162,7 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodCancelAjax()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
 		));
 
@@ -185,7 +185,7 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodSubmitCheckAjax()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
 		));
 
@@ -225,7 +225,7 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodCheckAjax()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0)),
 			'pass' => array(array('format', 'int', array('valid', 'in', '状态参数错误', null, array(1, 5))))
 		));
@@ -249,7 +249,7 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodDetail()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
 		));
 
@@ -270,7 +270,7 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodSendlist()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0)),
 			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
 			'contact' => array(array('format', 'trim'))
@@ -310,7 +310,7 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodRemoveSendAjax()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
 		));
 
@@ -357,7 +357,7 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodClearListAjax()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
 		));
 
@@ -396,7 +396,7 @@ class ActionTaskMulti extends ActionCommon
 
 	public function methodImportList()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '任务不存在', null, 0))
 		));
 

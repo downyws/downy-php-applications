@@ -16,7 +16,7 @@ class ModelUser extends ModelCommon
 
 		$count = $this->getOne($condition, 'COUNT(*)');
 		$sql = 'SELECT * FROM ' . $this->table() . $this->getWhere($condition) . ' ORDER BY `account` ASC ' . $this->getLimit($p, $ps);
-		$data = $this->fetchAll($sql);
+		$data = $this->fetchRows($sql);
 		$pager = $this->getPager($p, $count, $ps);
 
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);

@@ -35,7 +35,7 @@ class ActionIndex extends ActionCommon
 	public function methodLogin()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'submit' => array(array('format', 'int')),
 			'account' => array(array('format', 'trim')),
 			'password' => array(array('format', 'trim'))

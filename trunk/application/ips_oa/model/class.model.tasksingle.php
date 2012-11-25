@@ -15,13 +15,13 @@ class ModelTaskSingle extends ModelCommon
 		!empty($params['contact']) && $condition[] = array('t.`contact`' => array('like', $params['contact']));
 		!empty($params['channel']) && $condition[] = array('ts.`channel_id`' => array('eq', $params['channel']));
 		!empty($params['send_state']) && $condition[] = array('ts.`send_state`' => array('eq', $params['send_state']));
-		!empty($params['start_time']) && $condition[] = array('ts.`plan_send_time`' => array('egt', $params['start_time']));
-		!empty($params['end_time']) && $condition[] = array('ts.`plan_send_time`' => array('elt', $params['end_time']));
+		!empty($params['start_time']) && $condition[] = array('ts.`plan_send_time`' => array('gte', $params['start_time']));
+		!empty($params['end_time']) && $condition[] = array('ts.`plan_send_time`' => array('lte', $params['end_time']));
 
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . ' AS ts JOIN ' . $this->table('user') . ' AS u ON (u.`id` = ts.`user_id`) JOIN ' . $this->table('target') . ' AS t ON (t.`id` = ts.`target_id`) ' . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);
 		$sql = 'SELECT ts.*, u.account, t.contact, c.name AS channel_name, c.type AS channel_type FROM ' . $this->table() . ' AS ts JOIN ' . $this->table('user') . ' AS u ON (u.`id` = ts.`user_id`) JOIN ' . $this->table('target') . ' AS t ON (t.`id` = ts.`target_id`) JOIN ' . $this->table('channel') . ' AS c ON (c.`id` = ts.`channel_id`) ' . $this->getWhere($condition) . ' ORDER BY ts.`id` DESC ' . $this->getLimit($p, $ps);
-		$data = $this->fetchAll($sql);
+		$data = $this->fetchRows($sql);
 		$pager = $this->getPager($p, $count, $ps);
 
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);
@@ -271,7 +271,7 @@ class ModelTaskSingle extends ModelCommon
 		$condition[] = array('channel_id' => array('eq', $channel['id']));
 		$condition[] = array('send_state' => array('eq', 1));
 		$condition[] = array('send_time' => array('eq', 0));
-		$condition[] = array('plan_send_time' => array('elt', $nowstamp));
+		$condition[] = array('plan_send_time' => array('lte', $nowstamp));
 		$sql = 'SELECT id FROM ' . $this->table('task_single') . $this->getWhere($condition) . ' ORDER BY `plan_send_time` ASC ' . $this->getLimit(1, $count);
 		$ids = $this->fetchCol($sql);
 		
@@ -291,7 +291,7 @@ class ModelTaskSingle extends ModelCommon
 		$condition[] = array('ts.`send_state`' => array('eq', 2));
 		$condition[] = array('ts.`send_time`' => array('eq', $nowstamp));
 		$sql = 'SELECT ts.`id`, t.`contact`, ts.`title`, ts.`content` FROM ' . $this->table('') . ' AS ts JOIN ' . $this->table('target') . ' AS t ON t.`id` = ts.`target_id` ' . $this->getWhere($condition);
-		$list = $this->fetchAll($sql);
+		$list = $this->fetchRows($sql);
 
 		// 添加PV图标
 		if($channel['type'] == CHANNEL_TYPE_EMAIL)
