@@ -12,7 +12,7 @@ class ActionRead extends ActionCommon
 
 	public function methodEmail()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '', null, 0)),
 			'preview' => array(array('format', 'int')),
 			'ms' => array(array('format', 'trim'), array('valid', 'in', '', null, array('single', 'multi')))
@@ -79,7 +79,7 @@ class ActionRead extends ActionCommon
 
 	public function methodSmsAjax()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '', null, 0)),
 			'ms' => array(array('format', 'trim'), array('valid', 'in', '', null, array('single', 'multi')))
 		));
@@ -133,7 +133,7 @@ class ActionRead extends ActionCommon
 
 	public function methodPv()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '', null, 0)),
 			'ms' => array(array('format', 'trim'), array('valid', 'in', '', null, array('single', 'multi')))
 		));

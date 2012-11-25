@@ -15,13 +15,13 @@ class ModelTaskMulti extends ModelCommon
 		!empty($params['name']) && $condition[] = array('tm.`name`' => array('like', $params['name']));
 		!empty($params['channel']) && $condition[] = array('tm.`channel_id`' => array('eq', $params['channel']));
 		!empty($params['send_state']) && $condition[] = array('tm.`send_state`' => array('eq', $params['send_state']));
-		!empty($params['start_time']) && $condition[] = array('tm.`plan_send_time`' => array('egt', $params['start_time']));
-		!empty($params['end_time']) && $condition[] = array('tm.`plan_send_time`' => array('elt', $params['end_time']));
+		!empty($params['start_time']) && $condition[] = array('tm.`plan_send_time`' => array('gte', $params['start_time']));
+		!empty($params['end_time']) && $condition[] = array('tm.`plan_send_time`' => array('lte', $params['end_time']));
 
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . ' AS tm JOIN ' . $this->table('user') . ' AS u ON (u.`id` = tm.`user_id`) ' . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);
 		$sql = 'SELECT tm.*, u.account, c.name AS channel_name FROM ' . $this->table() . ' AS tm JOIN ' . $this->table('user') . ' AS u ON (u.`id` = tm.`user_id`) JOIN ' . $this->table('channel') . ' AS c ON (c.`id` = tm.`channel_id`) ' . $this->getWhere($condition) . ' ORDER BY tm.`id` DESC ' . $this->getLimit($p, $ps);
-		$data = $this->fetchAll($sql);
+		$data = $this->fetchRows($sql);
 		$pager = $this->getPager($p, $count, $ps);
 
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);
@@ -396,7 +396,7 @@ class ModelTaskMulti extends ModelCommon
 		$condition[] = array('s.`send_state`' => array('eq', 2));
 		$condition[] = array('s.`send_time`' => array('eq', $nowstamp));
 		$sql = 'SELECT s.`id`, t.`contact`, s.`data`, tm.`title`, tm.`content` FROM ' . $this->table('send_list') . ' AS s JOIN ' . $this->table('task_multi') . ' AS tm ON s.`task_id` = tm.`id` JOIN ' . $this->table('target') . ' AS t ON t.`id` = s.`target_id` ' . $this->getWhere($condition);
-		$list = $this->fetchAll($sql);
+		$list = $this->fetchRows($sql);
 		foreach($list as $k => $v)
 		{
 			$data = json_decode($list[$k]['data'], true);
@@ -491,7 +491,7 @@ class ModelTaskMulti extends ModelCommon
 		$condition = array();
 		$condition[] = array('channel_id' => array('eq', $channel['id']));
 		$condition[] = array('check_user_id' => array('gt', 0));
-		$condition[] = array('plan_send_time' => array('elt', time()));
+		$condition[] = array('plan_send_time' => array('lte', time()));
 		$condition[] = array('send_state' => array('eq', 1));
 		$data = array();
 		$data['start_time'] = time();

@@ -12,11 +12,11 @@ class ActionSuri extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
 			'task_title' => array(array('format', 'trim')),
 			'uri' => array(array('format', 'trim')),
-			'type' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0)),
+			'type' => array(array('format', 'int'), array('valid', 'gte', null, 0, 0)),
 			'is_disable' => array(array('valid', 'empty', null, -1, null), array('format', 'int'), array('valid', 'in', null, 0, array(-1, 0, 1)))
 		));
 
@@ -38,8 +38,8 @@ class ActionSuri extends ActionCommon
 
 	public function methodEdit()
 	{
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', null, 0, 0))
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', null, 0, 0))
 		));
 
 		if($params['id'])
@@ -60,8 +60,8 @@ class ActionSuri extends ActionCommon
 	public function methodEditAjax()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
-			'id' => array(array('format', 'int'), array('valid', 'egt', '编号错误', null, 0)),
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'id' => array(array('format', 'int'), array('valid', 'gte', '编号错误', null, 0)),
 			'key' => array(array('format', 'trim')),
 			'uri' => array(array('format', 'trim'), array('valid', 'url', '重定向网址错误', null, null)),
 			'is_disable' => array(array('format', 'int'), array('valid', 'in', '状态错误', null, array_keys($GLOBALS['CONFIG']['IS_DISABLE']))),
@@ -100,7 +100,7 @@ class ActionSuri extends ActionCommon
 
 	public function methodClearAjax()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int'), array('valid', 'gt', '编号错误', null, 0))
 		));
 
@@ -127,7 +127,7 @@ class ActionSuri extends ActionCommon
 	public function methodRedirect()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'key' => array(array('format', 'trim'), array('valid', 'regex', '', null, '/^[0-9A-za-z]+$/'))
 		));
 
@@ -158,7 +158,7 @@ class ActionSuri extends ActionCommon
 	public function methodError()
 	{
 		// 获取参数
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'code' => array(array('format', 'trim'))
 		));
 

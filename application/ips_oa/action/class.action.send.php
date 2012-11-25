@@ -12,7 +12,7 @@ class ActionSend extends ActionCommon
 
 	public function methodCrontabApi()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'salt' => array(array('format', 'trim'), array('valid', 'eq', '安全码错误', null, CRONTAB_SALT)),
 			'channel_id' => array(array('format', 'int'), array('valid', 'gt', '通道编号错误', null, 0))
 		));

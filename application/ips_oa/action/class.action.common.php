@@ -5,7 +5,7 @@ class ActionCommon extends Action
 	{
 		parent::__construct();
 		
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'a' => array(array('format', 'trim')),
 			'm' => array(array('format', 'trim')),
 			't' => array(array('format', 'trim'))
@@ -13,7 +13,7 @@ class ActionCommon extends Action
 
 		if(!in_array($params['m'], $this->NOT_LOGIN) && $params['t'] == 'api')
 		{
-			$api_params = $this->_submit->obtain(array(
+			$api_params = $this->_submit->obtain($_REQUEST, array(
 				'account' => array(array('format', 'trim')),
 				'hash' => array(array('format', 'trim')),
 				'time' => array(array('format', 'int'))

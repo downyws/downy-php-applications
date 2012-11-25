@@ -17,7 +17,7 @@ class ModelSendList extends ModelCommon
 		$sql = 'SELECT COUNT(*) FROM ' . $this->table() . ' AS s JOIN ' . $this->table('target') . ' AS t ON (t.`id` = s.`target_id`) ' . $this->getWhere($condition);
 		$count = $this->fetchOne($sql);
 		$sql = 'SELECT s.*, t.contact FROM ' . $this->table() . ' AS s JOIN ' . $this->table('target') . ' AS t ON (t.`id` = s.`target_id`) ' . $this->getWhere($condition) . ' ORDER BY s.`id` DESC ' . $this->getLimit($p, $ps);
-		$data = $this->fetchAll($sql);
+		$data = $this->fetchRows($sql);
 		$pager = $this->getPager($p, $count, $ps);
 
 		return array('count' => $count, 'data' => $data, 'pager' => $pager);

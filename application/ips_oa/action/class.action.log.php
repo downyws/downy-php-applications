@@ -12,11 +12,11 @@ class ActionLog extends ActionCommon
 
 	public function methodList()
 	{
-		$params = $this->_submit->obtain(array(
+		$params = $this->_submit->obtain($_REQUEST, array(
 			'p' => array(array('format', 'int'), array('valid', 'gt', null, 1, 0)),
 			'account' => array(array('format', 'trim')),
-			'data_table' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
-			'operation_type' => array(array('format', 'int'), array('valid', 'egt', null, '0', 0)),
+			'data_table' => array(array('format', 'int'), array('valid', 'gte', null, '0', 0)),
+			'operation_type' => array(array('format', 'int'), array('valid', 'gte', null, '0', 0)),
 			'start_time' => array(array('format', 'timestamp')),
 			'end_time' => array(array('format', 'timestamp'))
 		));
