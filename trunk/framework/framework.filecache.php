@@ -43,7 +43,7 @@ class Filecache
 		return file_put_contents($path, serialize(array('value' => $value, 'expires' => time() + $expires)), LOCK_EX);
 	}
 
-	public function setBatch($pairs, $expires = FRAMEWORLK_FILECACHE_EXPIRES)
+	public function setMulti($pairs, $expires = FRAMEWORLK_FILECACHE_EXPIRES)
 	{
 		if(empty($pairs) || !is_array($pairs))
 		{
@@ -70,7 +70,7 @@ class Filecache
 		return $content['expires'] > time() ? $content['value'] : false;
 	}
 
-	public function getBatch($keys)
+	public function getMulti($keys)
 	{
 		if(empty($keys) || !is_array($keys))
 		{
@@ -100,7 +100,7 @@ class Filecache
 		return unlink($path);
 	}
 
-	public function deleteBatch($keys)
+	public function deleteMulti($keys)
 	{
 		if(empty($keys) || !is_array($keys))
 		{

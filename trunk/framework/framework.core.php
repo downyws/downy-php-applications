@@ -13,6 +13,7 @@ define('LIBRARY_DIR',		ROOT_DIR . 'library/');
 
 define('APP_DIR_ACTION',	APP_DIR . 'action/');
 define('APP_DIR_CACHE',		APP_DIR . 'cache/');
+define('APP_DIR_LOGS',		APP_DIR . 'logs/');
 define('APP_DIR_MODEL',		APP_DIR . 'model/');
 define('APP_DIR_TEMPLATE',	APP_DIR . 'template/');
 
@@ -28,5 +29,6 @@ require_once(FRAMEWORK_DIR . '/framework.db.php');
 require_once(FRAMEWORK_DIR . '/framework.factory.php');
 require_once(FRAMEWORK_DIR . '/framework.filecache.php');
 require_once(FRAMEWORK_DIR . '/framework.front.php');
+require_once(FRAMEWORK_DIR . '/framework.logs.php');
 require_once(FRAMEWORK_DIR . '/framework.model.php');
 require_once(FRAMEWORK_DIR . '/framework.submit.php');

@@ -4,6 +4,8 @@ class Model extends Db
 {
 	protected $_prefix = '';
 	protected $_table = null;
+	protected $_fields = array();
+	protected $_trans = array('sqls' => array(), 'errors' => array());
 
 	public function __construct($config = null)
 	{
@@ -20,23 +22,39 @@ class Model extends Db
 		return '`' . $this->_prefix . $table . '`';
 	}
 
-	public function insert($data, $table = '')
+	public function fieldFilter($table, $datas, $fields = array())
 	{
-		$sql = 'DESC ' . $this->table($table);
-		$desc = array_flip($this->fetchCol($sql));
-		foreach($data as $k => $v)
+		if(empty($this->_fields[$table]))
 		{
-			if(!isset($desc[$k]))
-			{
-				unset($data[$k]);
-			}
-			else
-			{
-				$data[$k] = '"' . $this->escape($v) . '"';
-			}
+			$sql = 'DESC ' . $table;
+			$this->_fields[$table] = array_flip($this->fetchCol($sql));
 		}
 
-		$sql = 'INSERT INTO ' . $this->table($table) . ' (`' . join('`, `', array_keys($data)) . '`) VALUES (' . join(', ', $data) . ')';
+		foreach($datas as $k => $v)
+		{
+			foreach($v as $_k => $_v)
+			{
+				if(isset($this->_fields[$table][$_k]))
+				{
+					$datas[$k][$_k] = is_numeric($_v) ? $_v : $this->escape($_v);
+				}
+				else
+				{
+					unset($datas[$k][$_k]);
+				}
+			}
+		}
+		return $datas;
+	}
+
+	public function insert($data, $table = '', $ignore = false)
+	{
+		$table = $this->table($table);
+
+		$data = $this->fieldFilter($table, array($data));
+		$data = $data[0];
+
+		$sql = ' INSERT ' . ($ignore ? ' IGNORE ' : '') . ' INTO ' . $table . ' (`' . implode('`, `', array_keys($data)) . '`) VALUES ("' . implode('", "', $data) . '")';
 		$res = $this->query($sql);
 
 		if($res !== false)
@@ -47,26 +65,49 @@ class Model extends Db
 		return false;
 	}
 
-	public function insertBatch($fields, $data, $table = '')
+	public function insertBatch($fields, $datas, $table = '', $ignore = false)
 	{
-		foreach($data as $k => $v)
+		$table = $this->table($table);
+
+		$datas = $this->fieldFilter($table, $datas, $fields);
+
+		$batch = array(); $i = 0; $item; $b = 0; $byte = 0;
+		foreach($datas as $k => $v)
 		{
-			$data[$k] = array();
-			foreach($fields as $v1)
+			$item = '("' . implode('", "', $datas[$k]) . '")';
+			$byte += $b = strlen($item);
+			if($byte > $this->_config['QUERY_LIMIT_BYTE'])
 			{
-				if(isset($v[$v1]))
-				{
-					$data[$k][$v1] = '"' . $this->escape($v[$v1]) . '"';
-				}
-				else
-				{
-					$data[$k][$v1] = '""';
-				}
+				$byte = $b;
+				$i++;
 			}
-			$data[$k] = '(' . join(', ', $data[$k]) . ')';
+			$batch[$i] = $item;
 		}
 
-		$sql = 'INSERT IGNORE INTO ' . $this->table($table) . ' (' . join(', ', $fields) . ') VALUES ' . join(', ', $data);
+		$sql = 'INSERT ' . ($ignore ? ' IGNORE ' : '') . ' INTO ' . $table . ' (`' . implode('`, `', $fields) . '`) VALUES ';
+		foreach($batch as $v)
+		{
+			$res = $this->query($sql . implode(', ', $v));
+			if($res === false)
+			{
+				return false;
+			}
+		}
+		return $this->affectedRows();
+	}
+
+	public function update($condition, $data, $table = '')
+	{
+		$table = $this->table($table);
+
+		$data = $this->fieldFilter($table, array($data));
+		$data = $data[0];
+		foreach($data as $k => $v)
+		{
+			$data[$k] = '`' . $k . '` = "' . $this->escape($v) . '"';
+		}
+
+		$sql = 'UPDATE ' . $table . ' SET ' . implode(', ', $data) . $this->getWhere($condition);
 		$res = $this->query($sql);
 
 		if($res !== false)
@@ -76,28 +117,29 @@ class Model extends Db
 		return false;
 	}
 
-	public function update($condition, $data, $table = '')
+	public function insertOrUpdate($condition, $data, $table = '')
 	{
-		$sql = 'DESC ' . $this->table($table);
-		$desc = array_flip($this->fetchCol($sql));
-		foreach($data as $k => $v)
+		$table = $this->table($table);
+
+		$data = $this->fieldFilter($table, array($data));
+		$data = $data[0];
+
+		$object = $this->getObject($condition);
+		if(!!$object)
 		{
-			if(!isset($desc[$k]))
+			$sql = 'UPDATE ' . $table .  ' SET ' . implode(', ', $data) . $this->getWhere($condition);
+			if($this->query($sql) !== false)
 			{
-				unset($data[$k]);
-			}
-			else
-			{
-				$data[$k] = '`' . $k . '` = "' . $this->escape($v) . '"';
+				return isset($object['id']) ? $object['id'] : !!$object;
 			}
 		}
-
-		$sql = 'UPDATE ' . $this->table($table) . ' SET ' . join(', ', $data) . $this->getWhere($condition);
-		$res = $this->query($sql);
-
-		if($res !== false)
+		else
 		{
-			return $this->affectedRows();
+			$sql = 'INSERT INTO ' . $table .  ' (`' . implode('`, `', array_keys($data)) . '`) VALUES ("' . implode('", "', $data) . '")';
+			if($this->query($sql) !== false)
+			{
+				return $this->insertId();
+			}
 		}
 		return false;
 	}
@@ -118,7 +160,7 @@ class Model extends Db
 	{
 		$table = ($table == '') ? $this->_table : $table;
 		$sql = 'SHOW TABLE STATUS LIKE \'' . $this->_prefix . $table . '\'';
-		$result = $this->fetchArray($sql);
+		$result = $this->fetchRow($sql);
 		return $result['Auto_increment'];
 	}
 
@@ -131,13 +173,13 @@ class Model extends Db
 	public function getObject($condition, $fields = array(), $table = '')
 	{
 		$sql = 'SELECT ' . (empty($fields) ? '*' : join(', ', $fields)) . ' FROM ' . $this->table($table) . $this->getWhere($condition) . ' LIMIT 1 ';
-		return $this->fetchArray($sql);
+		return $this->fetchRow($sql);
 	}
 
 	public function getObjects($condition, $fields = array(), $table = '')
 	{
 		$sql = 'SELECT ' . (empty($fields) ? '*' : join(', ', $fields)) . ' FROM ' . $this->table($table) . $this->getWhere($condition);
-		return $this->fetchAll($sql);
+		return $this->fetchRows($sql);
 	}
 
 	public function getCol($condition, $field, $table ='')
@@ -169,9 +211,9 @@ class Model extends Db
 					case 'eq': $_item[] = '(' . $_k . ' = \'' . $this->escape($_v[1]) . '\')'; break;
 					case 'neq': $_item[] = '(' . $_k . ' != \'' . $this->escape($_v[1]) . '\')'; break;
 					case 'gt': $_item[] = '(' . $_k . ' > \'' . $this->escape($_v[1]) . '\')'; break;
-					case 'egt': $_item[] = '(' . $_k . ' >= \'' . $this->escape($_v[1]) . '\')'; break;
+					case 'gte': $_item[] = '(' . $_k . ' >= \'' . $this->escape($_v[1]) . '\')'; break;
 					case 'lt': $_item[] = '(' . $_k . ' < \'' . $this->escape($_v[1]) . '\')'; break;
-					case 'elt': $_item[] = '(' . $_k . ' <= \'' . $this->escape($_v[1]) . '\')'; break;
+					case 'lte': $_item[] = '(' . $_k . ' <= \'' . $this->escape($_v[1]) . '\')'; break;
 					case 'like': $_item[] = '(' . $_k . ' LIKE \'%' . $this->escape($_v[1]) . '%\')'; break;
 					case 'between': $_item[] = '(' . $_k . ' BETWEEN \'' . $this->escape($_v[1][0]) . '\' AND \'' . $this->escape($_v[1][1]) . '\')'; break;
 					case 'not between': $_item[] = '(' . $_k . ' NOT BETWEEN \'' . $this->escape($_v[1][0]) . '\' AND \'' . $this->escape($_v[1][1]) . '\')'; break;
@@ -228,5 +270,77 @@ class Model extends Db
 			$result['end'] = $result['start'] + $pc - 1;
 		}
 		return $result;
+	}
+
+	public function keysDisable($table = '')
+	{
+		$sql = ' ALTER TABLE ' . $this->table($table) . ' DISABLE KEYS ';
+		$this->query($sql);
+	}
+
+	public function keysEnable($table = '')
+	{
+		$sql = ' ALTER TABLE ' . $this->table($table) . ' ENABLE KEYS ';
+		$this->query($sql);
+	}
+
+	public function transAfterTrigger($sql)
+	{
+		$this->_trans['sqls'][] = $sql;
+	}
+
+	public function transErrorTrigger()
+	{
+		$this->_trans['errors'][] = func_get_args();
+	}
+
+	public function transStart($isolation = '')
+	{
+		$this->_trans['sqls'] = array();
+		$this->_trans['errors'] = array();
+
+		$this->addTrigger('after', array($this, 'transAfterTrigger'));
+		$this->addTrigger('error', array($this, 'transErrorTrigger'));
+
+		if(!empty($isolation))
+		{
+			$sql = ' SET TRANSACTION ISOLATION LEVEL ' . $isolation;
+			$this->query($sql);
+		}
+
+		$sql = ' START TRANSACTION ';
+		$this->query($sql);
+	}
+
+	public function transCommit()
+	{
+		if($this->_trans['errors'])
+		{
+			$sql = ' ROLLBACK ';
+			$logs_file = $this->_logs->attachment('query', array('sqls' => $this->_trans['sqls'], 'errors' => $this->_trans['errors']));
+			$this->_logs->message('query', 'Error: Transaction rollbacked, see ' . $logs_file);
+			$res = false;
+		}
+		else
+		{
+			$sql = ' COMMIT ';
+			$res = true;
+		}
+
+		$this->query($sql);
+
+		$this->removeTrigger('after', array($this, 'transAfterTrigger'));
+		$this->removeTrigger('error', array($this, 'transErrorTrigger'));
+
+		return $res;
+	}
+
+	public function transRollback()
+	{
+		$sql = ' ROLLBACK ';
+		$this->query($sql);
+
+		$this->removeTrigger('after', array($this, 'transAfterTrigger'));
+		$this->removeTrigger('error', array($this, 'transErrorTrigger'));
 	}
 }
