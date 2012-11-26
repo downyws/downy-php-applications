@@ -252,7 +252,7 @@ class ModelTaskMulti extends ModelCommon
 		$condition = array();
 		$condition[] = array('id' => array('eq', $id));
 		$condition[] = array('send_state' => array('in', array(1, 2, 5, 6)));
-		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = 4, `remarks` = CONCAT(\'' . date('Y-m-d H:i:s') . '\\t' . $user['id'] . '\\t' . $user['account'] . '\\tcanceled\\n\', `remarks`)' . $this->getWhere($condition);
+		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = 4, `remarks` = CONCAT("' . date('Y-m-d H:i:s') . '\\t' . $user['id'] . '\\t' . $user['account'] . '\\tcanceled\\n", `remarks`)' . $this->getWhere($condition);
 		$state = $this->query($sql);
 		$state && $this->record($id, LOG_DATA_TABLE_TASKMULTI, LOG_OPERATION_TYPE_UPDATE);
 
@@ -290,7 +290,7 @@ class ModelTaskMulti extends ModelCommon
 				$pass_message = '提交审核';
 				break;
 		}
-		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = ' . intval($pass) . ', `remarks` = CONCAT(\'' . date('Y-m-d H:i:s') . '\\t' . $user['id'] . '\\t' . $user['account'] . '\\t' . $pass_message . '\\n\', `remarks`)' . $this->getWhere($condition);
+		$sql = 'UPDATE ' . $this->table('') . ' SET `send_state` = ' . intval($pass) . ', `remarks` = CONCAT("' . date('Y-m-d H:i:s') . '\\t' . $user['id'] . '\\t' . $user['account'] . '\\t' . $pass_message . '\\n", `remarks`)' . $this->getWhere($condition);
 		$state = $this->query($sql);
 		if($state && $pass == 1)
 		{
