@@ -177,7 +177,7 @@ class Db
 
 	public function fetchDbSize()
 	{
-		$sql = 'SELECT SUM(DATA_LENGTH) + SUM(INDEX_LENGTH) FROM information_schema.`TABLES` WHERE TABLE_SCHEMA = \'' . $this->_config['DBNAME'] . '\'';
+		$sql = 'SELECT SUM(DATA_LENGTH) + SUM(INDEX_LENGTH) FROM information_schema.`TABLES` WHERE TABLE_SCHEMA = "' . $this->_config['DBNAME'] . '"';
 		return $this->fetchOne($sql);
 	}
 

@@ -159,7 +159,7 @@ class Model extends Db
 	public function getNextId($table = '')
 	{
 		$table = ($table == '') ? $this->_table : $table;
-		$sql = 'SHOW TABLE STATUS LIKE \'' . $this->_prefix . $table . '\'';
+		$sql = 'SHOW TABLE STATUS LIKE "' . $this->_prefix . $table . '"';
 		$result = $this->fetchRow($sql);
 		return $result['Auto_increment'];
 	}
@@ -208,23 +208,23 @@ class Model extends Db
 			{
 				switch($_v[0])
 				{
-					case 'eq': $_item[] = '(' . $_k . ' = \'' . $this->escape($_v[1]) . '\')'; break;
-					case 'neq': $_item[] = '(' . $_k . ' != \'' . $this->escape($_v[1]) . '\')'; break;
-					case 'gt': $_item[] = '(' . $_k . ' > \'' . $this->escape($_v[1]) . '\')'; break;
-					case 'gte': $_item[] = '(' . $_k . ' >= \'' . $this->escape($_v[1]) . '\')'; break;
-					case 'lt': $_item[] = '(' . $_k . ' < \'' . $this->escape($_v[1]) . '\')'; break;
-					case 'lte': $_item[] = '(' . $_k . ' <= \'' . $this->escape($_v[1]) . '\')'; break;
-					case 'like': $_item[] = '(' . $_k . ' LIKE \'%' . $this->escape($_v[1]) . '%\')'; break;
-					case 'between': $_item[] = '(' . $_k . ' BETWEEN \'' . $this->escape($_v[1][0]) . '\' AND \'' . $this->escape($_v[1][1]) . '\')'; break;
-					case 'not between': $_item[] = '(' . $_k . ' NOT BETWEEN \'' . $this->escape($_v[1][0]) . '\' AND \'' . $this->escape($_v[1][1]) . '\')'; break;
+					case 'eq': $_item[] = '(' . $_k . ' = "' . $this->escape($_v[1]) . '")'; break;
+					case 'neq': $_item[] = '(' . $_k . ' != "' . $this->escape($_v[1]) . '")'; break;
+					case 'gt': $_item[] = '(' . $_k . ' > "' . $this->escape($_v[1]) . '")'; break;
+					case 'gte': $_item[] = '(' . $_k . ' >= "' . $this->escape($_v[1]) . '")'; break;
+					case 'lt': $_item[] = '(' . $_k . ' < "' . $this->escape($_v[1]) . '")'; break;
+					case 'lte': $_item[] = '(' . $_k . ' <= "' . $this->escape($_v[1]) . '")'; break;
+					case 'like': $_item[] = '(' . $_k . ' LIKE "%' . $this->escape($_v[1]) . '%")'; break;
+					case 'between': $_item[] = '(' . $_k . ' BETWEEN "' . $this->escape($_v[1][0]) . '" AND "' . $this->escape($_v[1][1]) . '")'; break;
+					case 'not between': $_item[] = '(' . $_k . ' NOT BETWEEN "' . $this->escape($_v[1][0]) . '" AND "' . $this->escape($_v[1][1]) . '")'; break;
 					case 'in': 
 						$temp = array();
 						foreach($_v[1] as $__v) $temp[] = $this->escape($__v);
-						$_item[] = '(' . $_k . ' IN (\'' . implode('\',\'', $temp) . '\'))'; break;
+						$_item[] = '(' . $_k . ' IN ("' . implode('","', $temp) . '"))'; break;
 					case 'not in': 
 						$temp = array();
 						foreach($_v[1] as $__v) $temp[] = $this->escape($__v);
-						$_item[] = '(' . $_k . ' NOT IN (\'' . implode('\',\'', $temp) . '\'))'; break;
+						$_item[] = '(' . $_k . ' NOT IN ("' . implode('","', $temp) . '"))'; break;
 					case 'exp': $_item[] = '(' . $_v[1] . ')'; break;
 				}
 			}
