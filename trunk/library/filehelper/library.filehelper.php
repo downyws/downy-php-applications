@@ -18,7 +18,7 @@ class FileHelper
 
 	public function getEncode($file)
 	{
-		// 	mb_convert_encoding
+		// mb_convert_encoding
 		$string = file_get_contents($file);
 
 		if($string === @iconv('UTF-8', 'ASCII', @iconv('ASCII', 'UTF-8', $string)))
