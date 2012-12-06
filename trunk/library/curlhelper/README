@@ -1,0 +1,16 @@
+Ê¾Àý £º
+$url = 'http://localhost/web/index.php?a=xx';
+$post = '';
+$config = array(
+	'TIMEOUT' => 1,
+	'ENCODING' => 'gzip, deflate',
+	'PROXY' => false, 
+	'PROXYPORT' => '',
+	'COOKIE' => array('OPEN' => true, 'LOCK' => false, 'PATH' => 'C:\\xx.txt'),
+	'REFERER' => array('OPEN' => true, 'LOCK' => false, 'VALUE' => ''),
+	'USERAGENT' => array('OPEN' => true, 'VALUE' => ''),
+	'AUTO_REDIRECT_COUNT' => 5
+);
+$c = new CurlHelper($config);
+$c->request($url, $post);
+
