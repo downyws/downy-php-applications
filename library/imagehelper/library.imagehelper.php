@@ -90,7 +90,7 @@ class ImageHelper
 		return $version;
 	}
 
-	public function verifyCode($code, $options)
+	public function &verifyCode($code, $options)
 	{
 		$this->_initFonts();
 
