@@ -1,6 +1,24 @@
 <?php
 class ImageHelper
 {
+	public $_fonts = null;
+
+	public function _initFonts()
+	{
+		if(!isset($this->_fonts))
+		{
+			$path = dirname(__FILE__) . '/fonts/';
+			$handle = opendir($path);
+			while(false !== ($file = readdir($handle)))
+			{
+				if($file != '.' && $file != '..')
+				{
+					$this->_fonts[] = array('name' => $file, 'path' => $path . $file);
+				}
+			}
+		}
+	}
+
 	public function getVersion()
 	{
 		static $version = array(-2, '');
@@ -70,5 +88,31 @@ class ImageHelper
 		}
 
 		return $version;
+	}
+
+	public function verifyCode($code, $options)
+	{
+		$this->_initFonts();
+
+		// 颜色
+		$ftcolor = array('r' => 0, 'g' => 0, 'b' => 0);
+		$bgcolor = array('r' => 255, 'g' => 255, 'b' => 255);
+
+		// 创建画板
+		$image = ImageCreate($options['width'], $options['height']);
+		$ftcolor = ImageColorAllocate($image, $ftcolor['r'], $ftcolor['g'], $ftcolor['b']);
+		$bgcolor = ImageColorAllocate($image, $bgcolor['r'], $bgcolor['g'], $bgcolor['b']);
+		ImageFill($image, 0, 0, $bgcolor);
+
+		// 创建字体
+		$font = count($this->_fonts) - 1;
+		$font = $this->_fonts[mt_rand(0, $font)]['path'];
+
+		// 计算大小位置 
+		$font_size = floor(0.9 * $options['width'] / strlen($code));
+		$pos = array('x' => $options['width'] * 0.05, 'y' => ($options['height'] - $font_size) / 2 + $font_size);
+		ImageTtfText($image, $font_size, 0, $pos['x'], $pos['y'], $ftcolor, $font, $code);
+
+		return $image;
 	}
 }
