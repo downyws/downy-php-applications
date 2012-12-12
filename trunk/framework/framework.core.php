@@ -21,6 +21,7 @@ define('FRAMEWORLK_FILECACHE_EXPIRES', 3600);
 
 define('APP_DOMAIN', $_SERVER['HTTP_HOST']);
 define('APP_URL', (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'] . '/');
+define('APP_REQUEST_URI', (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 
 !defined('APP_TIMEZONE') && define('APP_TIMEZONE', 'Asia/Shanghai');
 date_default_timezone_set(APP_TIMEZONE);
