@@ -50,7 +50,7 @@ class CurlHelper
 
 		// 获取请求结果
 		$response = curl_exec($this->_curl);
-		$response = $split ? $this->format($response) : $response;
+		$response = ($response !== false && $split) ? $this->format($response) : $response;
 
 		// 关闭CURL
 		curl_close($this->_curl);
