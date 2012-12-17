@@ -208,6 +208,7 @@ class Model extends Db
 			{
 				switch($_v[0])
 				{
+					case 'and': $_item[] = '(' . $_k . ' & "' . $this->escape($_v[1]) . '")'; break;
 					case 'eq': $_item[] = '(' . $_k . ' = "' . $this->escape($_v[1]) . '")'; break;
 					case 'neq': $_item[] = '(' . $_k . ' != "' . $this->escape($_v[1]) . '")'; break;
 					case 'gt': $_item[] = '(' . $_k . ' > "' . $this->escape($_v[1]) . '")'; break;
