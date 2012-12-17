@@ -1,0 +1,89 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="wrapper">
+	<div class="app-header">
+		<div class="content clearfix">
+			<img class="logo" src="/images/logo.png" alt="Downy" />
+		</div>
+	</div>
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="box-login mgt15">
+				<div class="inside">
+					<h2>登录<strong></strong></h2>
+					<form method="post" action="/index.php?a=member&m=login">
+						<input type="hidden" name="callback" value="{$callback|urldecode}" />
+						<input type="hidden" name="submit" value="1" />
+						<div class="element">
+							<label for="account"><strong>账号</strong></label>
+							<input type="text" class="text-box" name="account" value="{$params.account}" />
+						</div>
+						<div class="element">
+							<label for="password"><strong>密码</strong></label>
+							<input type="password" class="text-box" name="password" />
+						</div>
+						{if $captcha}
+						<div class="element">
+							<div class="captcha">
+								<div><img alt="验证码" src="/index.php?a=index&m=captcha" /></div>
+								<strong>输入上图中显示的字母。</strong>
+								<input type="text" class="text-box" name="captcha" />
+								<span>字母不区分大小写</span>
+							</div>
+						</div>
+						{/if}
+						{if $error}
+						<div class="element">
+							<span>{$error.message}<a class="link-help" target="_blank" href="#{$error.code}">?</a></span>
+						</div>
+						{/if}
+						<input type="submit" class="button-box blue" value="登录" />
+						<label class="remember">
+							<input type="checkbox" name="remember" value="1" {if $params.remember}checked="checked"{/if} />
+							<strong>保持登录状态</strong>
+						</label>
+						<div class="element">
+							<select name="connect" class="jq-select" data-text="第三方合作网站登录" data-type="jump" data-width="281" data-height="243">
+								{foreach from=$connects item=v key=k}
+								<option value="/index.php?a=connect&m=login&name={$k}&callback={$callback}">{$v}</option>
+								{/foreach}
+							</select>
+						</div>
+					</form>
+					<ul><li><a href="#" target="_top">无法访问您的帐户？</a></li></ul>
+				</div>
+			</div>
+			<div class="product-info">
+				<div class="header">帐户</div>
+				<p>登录 Downy 帐户，享受 Downy 提供的更多服务。</p>
+				<p>在右侧登录，或 <a class="reg" href="/index.php?a=member&m=register"> 免费创建帐户</a>。</p>
+				<ul class="features clearfix">
+					<li>
+						<img src="/images/icon1.png" alt="系统一" />
+						<p class="title">Gmail</p><p>与朋友畅聊，而且不必担心错过任何重要的电子邮件。</p>
+					</li>
+					<li>
+						<img src="/images/icon2.png" alt="系统二" />
+						<p class="title">个性化搜索</p><p>根据您过去的搜索记录，提供相关性更强的搜索结果。</p>
+					</li>
+					<li>
+						<img src="/images/homepage.png" alt="设为主页" />
+						<p class="title">喜欢 Downy 吗？</p><p><a href="javascript:;" class="set-homepage">将 Downy 设为主页。</a></p>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="app-footer">
+		<div class="content clearfix">
+			<ul>
+				<li>&copy; 2012 Downy</li>
+				<li><a href="#" target="_blank">服务条款</a></li>
+				<li><a href="#" target="_blank">隐私权政策</a></li>
+				<li><a href="#" target="_blank">帮助</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+{include file="common_bottom.html"}
