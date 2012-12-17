@@ -172,13 +172,13 @@ class Model extends Db
 
 	public function getObject($condition, $fields = array(), $table = '')
 	{
-		$sql = 'SELECT ' . (empty($fields) ? '*' : join(', ', $fields)) . ' FROM ' . $this->table($table) . $this->getWhere($condition) . ' LIMIT 1 ';
+		$sql = 'SELECT ' . (empty($fields) ? '*' : implode(', ', $fields)) . ' FROM ' . $this->table($table) . $this->getWhere($condition) . ' LIMIT 1 ';
 		return $this->fetchRow($sql);
 	}
 
 	public function getObjects($condition, $fields = array(), $table = '')
 	{
-		$sql = 'SELECT ' . (empty($fields) ? '*' : join(', ', $fields)) . ' FROM ' . $this->table($table) . $this->getWhere($condition);
+		$sql = 'SELECT ' . (empty($fields) ? '*' : implode(', ', $fields)) . ' FROM ' . $this->table($table) . $this->getWhere($condition);
 		return $this->fetchRows($sql);
 	}
 
