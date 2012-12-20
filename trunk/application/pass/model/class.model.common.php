@@ -7,7 +7,10 @@ class ModelCommon extends Model
 	public function __construct()
 	{
 		parent::__construct($GLOBALS['CONFIG']['DB']);
-		include_once(APP_DIR_MESSAGE . 'package.message.' . $this->_table . '.php');
+		if(!empty($this->_table) && file_exists(APP_DIR_MESSAGE . 'package.message.' . $this->_table . '.php'))
+		{
+			include_once(APP_DIR_MESSAGE . 'package.message.' . $this->_table . '.php');
+		}
 	}
 
 	public function getError($type = '')
