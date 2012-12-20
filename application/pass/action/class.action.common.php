@@ -15,56 +15,6 @@ class ActionCommon extends Action
 
 		$options = $GLOBALS['CONFIG']['ACTION_OPTIONS'][$params['a']];
 
-		/*if(!in_array($params['m'], $options['NOT_LOGIN']) && $params['t'] == 'api')
-		{
-			$api_params = $this->_submit->obtain($_REQUEST, array(
-				'account' => array(array('format', 'trim')),
-				'hash' => array(array('format', 'trim')),
-				'time' => array(array('format', 'int'))
-			));
-
-			if(!empty($api_params['account']) && !empty($api_params['hash']) && !empty($api_params['time']))
-			{
-				// 时间戳检查
-				$now = time();
-				if($api_params['time'] - 60 > $now || $now > $api_params['time'] + 60)
-				{
-					$this->jsonout(array('state' => false, 'message' => '时间戳过期。', 'code' => 'TIMESTAMP ERROR'));
-				}
-
-				// 账号检查
-				$memberObj = Factory::getModel('member');
-				$member = $memberObj->getMember($api_params['account'], 'account');
-				if(!$member)
-				{
-					$this->jsonout(array('state' => false, 'message' => '账号错误。', 'code' => 'ACCOUNT ERROR'));
-				}
-
-				// HASH校验
-				$req = $_REQUEST;
-				unset($req['a'], $req['m'], $req['t'], $req['hash']);
-				ksort($req);
-				$hash = '';
-				foreach($req as $v) $hash .= $v;
-				$hash = md5($hash . $member['password']);
-				if($api_params['hash'] != $hash)
-				{
-					$this->jsonout(array('state' => false, 'message' => 'hash校验错误。', 'code' => 'HASH ERROR'));
-				}
-
-				// 自动登录
-				$result = $memberObj->login(0, $member['account'], $member['password'], true);
-				if(!$result['state'])
-				{
-					$this->jsonout(array('state' => false, 'message' => '账号异常或被禁用。', 'code' => 'ACCOUNT ABNORMAL'));
-				}
-			}
-			else if(!empty($api_params['account']) || !empty($api_params['hash']) || !empty($api_params['time']))
-			{
-				$this->jsonout(array('state' => false, 'message' => '参数错误。', 'code' => 'PARAMS ERROR'));
-			}
-		}*/
-
 		if(in_array($params['m'], $options['RUN_LONG_TIME']))
 		{
 			set_time_limit(0);

@@ -8,11 +8,6 @@ class ModelMember extends ModelCommon
 		parent::__construct();
 	}
 
-	public function isLogin()
-	{
-		return !empty($_SESSION['MEMBER']);
-	}
-
 	public function login($member_id, $account, $password, $is_md5 = false)
 	{
 		$condition = array();
@@ -65,12 +60,6 @@ class ModelMember extends ModelCommon
 		return $result;
 	}
 
-	public function logout()
-	{
-		unset($_SESSION['MEMBER']);
-		setcookie('AUTO_LOGIN', '', -1);
-	}
-
 	public function autoLogin()
 	{
 		if(!empty($_COOKIE['AUTO_LOGIN']))
@@ -94,9 +83,14 @@ class ModelMember extends ModelCommon
 		return false;
 	}
 
-	public function setAutoLogin()
+	public function isLogin()
 	{
-		$member_id = $_SESSION['MEMBER']['id'];
+		return !empty($_SESSION['MEMBER']);
+	}
+
+	public function setAutoLogin($member_id = 0)
+	{
+		$member_id = empty($member_id) ? $_SESSION['MEMBER']['id'] : $member_id;
 		$expire = time() + 86400 * 7;
 		$client_key = md5($member_id . mt_rand() . time());
 		$server_key = md5($member_id . $client_key . $expire);
@@ -111,6 +105,12 @@ class ModelMember extends ModelCommon
 			return true;
 		}
 		return false;
+	}
+
+	public function logout()
+	{
+		unset($_SESSION['MEMBER']);
+		setcookie('AUTO_LOGIN', '', -1);
 	}
 
 	public function register($member, $type = '')
@@ -148,7 +148,7 @@ class ModelMember extends ModelCommon
 
 	public function autoRegister()
 	{
-		$this->register($member, 'auto');
+		// $this->register($member, 'auto');
 	}
 
 	public function getMemberPower()

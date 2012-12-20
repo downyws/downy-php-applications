@@ -33,7 +33,7 @@ class ActionMember extends ActionCommon
 
 		// 是否展示验证码
 		$filecache = new Filecache();
-		$captcha = $GLOBALS['OPTIONS']['LOGIN']['CAPTCHA'];
+		$captcha = $GLOBALS['CONFIG']['LOGIN_CAPTCHA_OPTIONS'];
 		$captcha['KEY'] .= md5(REMOTE_IP_ADDRESS);
 		$captcha['NOW_COUNT'] = intval($filecache->get($captcha['KEY']));
 		$captcha['SHOW'] = ($captcha['COUNT'] < 1) ? !!($captcha['COUNT'] + 1) : ($captcha['NOW_COUNT'] >= $captcha['COUNT']);
@@ -99,7 +99,7 @@ class ActionMember extends ActionCommon
 
 		// 是否展示验证码
 		$filecache = new Filecache();
-		$captcha = $GLOBALS['OPTIONS']['REGISTER']['CAPTCHA'];
+		$captcha = $GLOBALS['CONFIG']['REGISTER_CAPTCHA_OPTIONS'];
 		$captcha['KEY'] .= md5(REMOTE_IP_ADDRESS);
 		$captcha['NOW_COUNT'] = intval($filecache->get($captcha['KEY']));
 		$captcha['SHOW'] = ($captcha['COUNT'] < 1) ? !!($captcha['COUNT'] + 1) : ($captcha['NOW_COUNT'] >= $captcha['COUNT']);
@@ -122,8 +122,17 @@ class ActionMember extends ActionCommon
 				$error['agree'] = array('message' => $GLOBALS['MESSAGE'][COMMON_AGREE_TERMSOFSERVICE], 'code' => COMMON_AGREE_TERMSOFSERVICE);
 				$type = 'check';
 			}
+			// 性别转义
+			if(!empty($params['sex']) && in_array($params['sex'], array('FEMALE', 'MALE', 'OTHER')))
+			{
+				$params['sex'] = $GLOBALS['SEX'][$params['sex']];
+			}
+			else
+			{
+				$params['sex'] = $GLOBALS['SEX']['OTHER'];
+			}
+
 			// 注册
-			$params['sex'] = empty($params['sex']) || in_array($params['sex'], array('FEMALE', 'MALE', 'OTHER')) ? $GLOBALS['SEX']['OTHER'] : $GLOBALS['SEX'][$params['sex']];
 			$member_id = $memberObj->register($params, $type);
 			if($member_id)
 			{
@@ -133,7 +142,7 @@ class ActionMember extends ActionCommon
 			else
 			{
 				$errors = $memberObj->getError();
-				if($errors && count($errors) > 0)
+				if(!empty($errors) && is_array($errors))
 				{
 					$type = array
 					(
@@ -152,7 +161,6 @@ class ActionMember extends ActionCommon
 				}
 			}
 
-			// 验证码累加
 			($captcha['COUNT'] > 0) && $filecache->set($captcha['KEY'], ++$captcha['NOW_COUNT'], $captcha['TIME']);
 			$captcha['SHOW'] = ($captcha['COUNT'] < 1) ? !!($captcha['COUNT'] + 1) : ($captcha['NOW_COUNT'] >= $captcha['COUNT']);
 		}

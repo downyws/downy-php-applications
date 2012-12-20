@@ -24,7 +24,7 @@ class ActionConnect extends ActionCommon
 		}
 		else
 		{
-echo		$params['name'];
+			echo $params['name'];
 		}
 		exit;
 	}
