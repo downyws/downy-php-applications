@@ -28,7 +28,8 @@ define('PROMPT_WARNING', 3);		// 警告
 define('MEMBER_VERIFY_EMAIL',	0x1);	// 邮箱
 define('MEMBER_VERIFY_MOBILE',	0x10);	// 手机
 
-// ACTION 设置，是否需要登录，是否需要权限，是否需要长时间执行
+// 配置
+// - ACTION 设置，是否需要登录，是否需要权限，是否需要长时间执行
 $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 	'index' => array(
 		'NOT_LOGIN' => array('index', 'captcha'),
@@ -46,26 +47,10 @@ $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 		'RUN_LONG_TIME' => array()
 	)
 );
-
-// 配置
-$GLOBALS['OPTIONS'] = array
-(
-	// 登录
-	'LOGIN' => array
-	(
-		'CAPTCHA' => array('COUNT' => 3, 'TIME' => 300, 'KEY' => 'captcha_login/')
-	),
-	// 注册
-	'REGISTER' => array
-	(
-		'CAPTCHA' => array('COUNT' => 0, 'TIME' => 300, 'KEY' => 'captcha_register/')
-	)
-);
+// - 登录验证码配置
+$GLOBALS['CONFIG']['LOGIN_CAPTCHA_OPTIONS'] = array('COUNT' => 3, 'TIME' => 300, 'KEY' => 'captcha_login/');
+// - 注册验证码配置
+$GLOBALS['CONFIG']['REGISTER_CAPTCHA_OPTIONS'] = array('COUNT' => 0, 'TIME' => 300, 'KEY' => 'captcha_register/');
 
 // 性别
-$GLOBALS['SEX'] = array
-(
-	'OTHER' => 0,
-	'MALE' => 1,
-	'FEMALE' => 2
-);
+$GLOBALS['SEX'] = array('OTHER' => 0, 'MALE' => 1, 'FEMALE' => 2);

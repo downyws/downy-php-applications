@@ -9,21 +9,15 @@ class ActionIndex extends ActionCommon
 	public function methodIndex()
 	{
 		$memberObj = Factory::getModel('member');
-		if($memberObj->isLogin())
-		{
-			$this->redirect('/index.php?a=member&m=home');
-		}
-		else
-		{
-			$this->redirect('/index.php?a=member&m=login');
-		}
+		$m = $memberObj->isLogin() ? 'home' : 'login';
+		$this->redirect('/index.php?a=member&m=' . $m);
 	}
 
 	public function methodCaptcha()
 	{
 		// 获取参数
 		$params = $this->_submit->obtain($_REQUEST, array(
-			'wh' => array(array('valid', 'regex', '', '200x70', '/\d+x\d+$/'))
+			'wh' => array(array('valid', 'regex', '', '200x70', '/^\d+x\d+$/'))
 		));
 		$params['wh'] = explode('x', $params['wh']);
 
