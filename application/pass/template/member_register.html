@@ -1,0 +1,149 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="wrapper">
+	<div class="app-header">
+		<div class="content clearfix">
+			<img class="logo" src="/images/logo.png" alt="Downy" />
+		</div>
+	</div>
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="box-register mgt35">
+				<div class="main">
+					<form action="/index.php?a=member&m=register" method="post">
+						<input type="hidden" name="callback" value="{$params.callback}" />
+						<input type="hidden" value="1" name="submit" />
+						<div class="element">
+							<fieldset>
+								<legend><strong>姓名</strong></legend>
+								<label class="first_name"><input type="text" class="text-box placeholder-txt {if $error.fname}error{/if}" name="first_name" value="{$params.first_name|htmlspecialchars}" /><span class="placeholder placeholder-txt-first_name">姓氏</span></label>
+								<label class="last_name"><input type="text" class="text-box placeholder-txt {if $error.lname}error{/if}" name="last_name" value="{$params.last_name|htmlspecialchars}" /><span class="placeholder placeholder-txt-last_name">名字</span></label>
+							</fieldset>
+							{if $error.fname}<span class="message msg-foch" data-for="first_name">{$error.fname.message}</span>{/if}
+							{if $error.lname}<span class="message msg-foch" data-for="last_name">{$error.lname.message}</span>{/if}
+						</div>
+						<div class="element">
+							<label for="account"><strong>账号</strong></label>
+							<input type="text" class="text-box {if $error.account}error{/if}" name="account" value="{$params.account|htmlspecialchars}" />
+							{if $error.account}<span class="message msg-foch" data-for="account">{$error.account.message}</span>{/if}
+						</div>
+						<div class="element">
+							<label for="password"><strong>设置密码</strong></label>
+							<input type="password" class="text-box {if $error.password}error{/if}" name="password" />
+							{if $error.password}<span class="message msg-foch" data-for="password">{$error.password.message}</span>{/if}
+						</div>
+						<div class="element">
+							<label for="passwordcfm"><strong>确认密码</strong></label>
+							<input type="password" class="text-box {if $error.passwordcfm}error{/if}" name="passwordcfm" />
+							{if $error.passwordcfm}<span class="message msg-foch" data-for="passwordcfm">{$error.passwordcfm.message}</span>{/if}
+						</div>
+						<div class="element">
+							<label for="sex"><strong>性别</strong></label>
+							<select name="sex" class="jq-select" data-text="我的性别是..." data-type="choose" data-width="308" data-height="81" {if $params.sex}data-defval="{$params.sex}"{/if}>
+								<option value="FEMALE">女</option>
+								<option value="MALE">男</option>
+								<option value="OTHER">其他</option>
+							</select>
+						</div>
+						<div class="element">
+							<label for="email"><strong>邮箱</strong></label>
+							<input type="text" class="text-box" name="email" value="{$params.email}" />
+							{if $error.email}<span class="message msg-foch" data-for="email">{$error.email.message}</span>{/if}
+						</div>
+						<div class="element">
+							<label for="mobile"><strong>手机号码</strong></label>
+							<input type="text" class="text-box {if $error.mobile}error{/if}" name="mobile" value="{$params.mobile}" />
+							{if $error.mobile}<span class="message msg-foch" data-for="mobile">{$error.mobile.message}</span>{/if}
+						</div>
+						{if $show_captcha}
+						<div class="element captcha-box">
+							<div class="img"><img alt="验证码" src="/index.php?a=index&m=captcha&wh=300x60" /></div>
+							<div class="text">
+								<label>
+									{if $error.captcha}
+										<strong class="error"><span>{$error.captcha.message}</span></strong>
+									{else}
+										<strong><span>输入上图中显示的字符：</span></strong>
+									{/if}
+									<input type="text" class="text-box {if $error.captcha}error{/if}" name="captcha" />
+								</label>
+								<div>
+									<a class="reload" title="获取新的验证方式" href="#"><span>获取新的验证方式</span></a>
+									<a class="help" title="帮助" href="#"><span>帮助</span></a>
+								</div>
+							</div>
+						</div>
+						{/if}
+						<div class="element term_service">
+							<label>
+								<input type="checkbox" name="agree" value="1" {if $params.agree}checked="checked"{/if} />
+								<span><strong>我同意接受 Downy <a href="#" target="_blank">服务条款</a> 和 <a href="#" target="_blank">隐私权政策</a> 。</strong></span>
+							</label>
+							{if $error.agree}<span class="message msg-foch" data-for="agree">{$error.agree.message}</span>{/if}
+						</div>
+						<div class="element nextstep"><input type="submit" value="下一步" class="button-box blue" /></div>
+					</form>
+				</div>
+			</div>
+			<div class="product-benefit">
+				<h1 class="header">创建新的 Downy 帐户</h1>
+				<ul>
+					<li><img src="/images/r1.jpg" /><div>
+						<h2>您的 Downy 帐户不只是能用于搜索哦。</h2>
+						<p>交谈、聊天、分享、日程安排、存储、组织、协作、探索、创建，应有尽有。您只需一组用户名和密码，就可以使用多款 Downy 产品（从 Gmail 到 Downy+，再到 YouTube）并查看您的搜索记录。这些内容会全程备份，您可在 Downy.com 上（您猜对了）轻松找到这些备份。</p>
+					</div></li>
+					<li><img src="/images/r2.jpg" /><div>
+						<h2>随时随地使用。</h2>
+						<p>有了 Downy 帐户，您可以从任意设备访问自己的所有内容（Gmail、照片、等等）。您可以通过照片或语音进行搜索，可获取免费的精细导航功能，可自动上传图片，甚至还能通过手机号码用 Downy 电子钱包进行购物。</p>
+					</div></li>
+					<li><img src="/images/r3.jpg" /><div>
+						<h2>分享多少，自己决定。</h2>
+						<p>在 Downy+ 上有选择地和您的朋友、家人（甚至老板）分享各种内容。和朋友进行环聊、群发消息或者仅关注您感兴趣的人的帖子。一切由您决定。</p>
+					</div></li>
+					<li><img src="/images/r4.jpg" /><div>
+						<h2>提前享用未来的工作方式。</h2>
+						<p>工作方式随即跃入新时代，一切更出色。即使身在千里之外，也能实时看到同事或合作伙伴上传照片、更新电子表格或润色文章段落。只要注册 Downy 帐户，还能免费获得“Downy 文档”哦。</p>
+					</div></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="app-footer">
+		<div class="content clearfix">
+			<ul>
+				<li>&copy; 2012 Downy</li>
+				<li><a href="#" target="_blank">服务条款</a></li>
+				<li><a href="#" target="_blank">隐私权政策</a></li>
+				<li><a href="#" target="_blank">帮助</a></li>
+			</ul>
+		</div>
+	</div>
+</div>{literal}
+<style>
+
+</style>
+<script type="text/javascript">
+$(function(){
+	$("input[name=account]").jqBubbleTips('您可以使用字母、数字和英文据点。', {});
+	$("input[name=password]").jqBubbleTips('<div class="passwordlv"><p style="margin-bottom:0px;"><strong>密码强度：<span style="font-weight:normal;"></span></strong></p><div style="background:#F5F5F5;height:5px;margin:4px 0px;"><span style="display:block;height:100%;"></span></div><div>请至少使用 6 个字符。请勿使用您用于登录其他网站的密码或容易被猜到的密码。</div>', {input:function(){
+		var obj = $(this).data("jq-bubble-tips");
+		var password = $(this).val();
+		var width = $(obj + " .passwordlv div").innerWidth();
+		var vals = [
+			{color:'#AA0033',txt:'不及格'},
+			{color:'#AA0033',txt:'及格'},
+			{color:'#FFCC33',txt:'中'},
+			{color:'#2D98F3',txt:'良'},
+			{color:'#76C261',txt:'优'}
+		];
+		var lv = password.length >= 6 ? (Math.ceil($.fn.assessPassword(password) / 20) - 1) : 0;
+		$(obj + " .passwordlv p span").html(vals[lv].txt);
+		$(obj + " .passwordlv div span").css({"background": vals[lv].color, "width": (width / vals.length * (lv + 1)) + "px"});
+	}});
+	$("input[name=email]").jqBubbleTips('我们会将此地址用于维持您的帐户安全之类的事宜。例如，如果我们发现您的帐户活动异常，就会向您发送一封提醒邮件。', {});
+	$("input[name=mobile]").jqBubbleTips('您的手机号码可以帮助我们保护您的帐户安全。例如，当您忘记自己的密码时，我们可以向您发送一条短信，从而帮您找回自己的帐户。', {});
+});
+{/literal}
+</script>
+{include file="common_bottom.html"}

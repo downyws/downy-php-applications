@@ -50,8 +50,22 @@ $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 // 配置
 $GLOBALS['OPTIONS'] = array
 (
-	// 登录失败后显示验证码
-	'LOGIN_FAILED_CAPTCHA' => array('COUNT' => 3, 'TIME' => 300),
-	// 验证码连续失败次数
-	'CAPTCHA_TRY_COUNT' => array('COUNT' => 100, 'TIME' => 900)
+	// 登录
+	'LOGIN' => array
+	(
+		'CAPTCHA' => array('COUNT' => 3, 'TIME' => 300, 'KEY' => 'captcha_login/')
+	),
+	// 注册
+	'REGISTER' => array
+	(
+		'CAPTCHA' => array('COUNT' => 0, 'TIME' => 300, 'KEY' => 'captcha_register/')
+	)
+);
+
+// 性别
+$GLOBALS['SEX'] = array
+(
+	'OTHER' => 0,
+	'MALE' => 1,
+	'FEMALE' => 2
 );

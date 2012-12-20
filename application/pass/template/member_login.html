@@ -10,30 +10,39 @@
 	<div class="app-body">
 		<div class="content clearfix">
 			<div class="box-login mgt15">
-				<div class="inside">
+				<div class="main">
 					<h2>登录<strong></strong></h2>
 					<form method="post" action="/index.php?a=member&m=login">
-						<input type="hidden" name="callback" value="{$callback|urldecode}" />
+						<input type="hidden" name="callback" value="{$params.callback|htmlspecialchars}" />
 						<input type="hidden" name="submit" value="1" />
 						<div class="element">
 							<label for="account"><strong>账号</strong></label>
-							<input type="text" class="text-box" name="account" value="{$params.account}" />
+							<input type="text" class="text-box" name="account" value="{$params.account|htmlspecialchars}" />
 						</div>
 						<div class="element">
 							<label for="password"><strong>密码</strong></label>
 							<input type="password" class="text-box" name="password" />
 						</div>
-						{if $captcha}
-						<div class="element">
-							<div class="captcha">
-								<div><img alt="验证码" src="/index.php?a=index&m=captcha" /></div>
-								<strong>输入上图中显示的字母。</strong>
-								<input type="text" class="text-box" name="captcha" />
-								<span>字母不区分大小写</span>
+						{if $show_captcha}
+						<div class="element captcha-box">
+							<div class="img"><img alt="Visual verification" src="/index.php?a=index&m=captcha&wh=270x54" /></div>
+							<div class="text">
+								<label>
+									{if $error && $error.code == $smarty.const.COMMON_CAPTCHA_ERROR}
+										<strong class="error"><span>{$error.message}</span></strong>
+									{else}
+										<strong><span>输入上图中显示的字符：</span></strong>
+									{/if}
+									<input type="text" class="text-box {if $error && $error.code == $smarty.const.COMMON_CAPTCHA_ERROR}error{/if}" name="captcha" />
+								</label>
+								<div>
+									<a class="reload" title="获取新的验证方式" href="#"><span>获取新的验证方式</span></a>
+									<a class="help" title="帮助" href="#"><span>帮助</span></a>
+								</div>
 							</div>
 						</div>
 						{/if}
-						{if $error}
+						{if $error && $error.code != $smarty.const.COMMON_CAPTCHA_ERROR}
 						<div class="element">
 							<span>{$error.message}<a class="link-help" target="_blank" href="#{$error.code}">?</a></span>
 						</div>
@@ -46,7 +55,7 @@
 						<div class="element">
 							<select name="connect" class="jq-select" data-text="第三方合作网站登录" data-type="jump" data-width="281" data-height="243">
 								{foreach from=$connects item=v key=k}
-								<option value="/index.php?a=connect&m=login&name={$k}&callback={$callback}">{$v}</option>
+								<option value="/index.php?a=connect&m=login&name={$k}&callback={$params.callback|urlencode}">{$v}</option>
 								{/foreach}
 							</select>
 						</div>
