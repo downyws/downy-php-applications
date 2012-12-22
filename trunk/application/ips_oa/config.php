@@ -13,7 +13,8 @@ $GLOBALS['CONFIG']['DB'] = array
 	'PASSWORD' => 'root',
 	'DBNAME' => 'ips',
 	'CHARSET' => 'utf8',
-	'PREFIX' => 'ips_'
+	'PREFIX' => 'ips_',
+	'QUERY_LIMIT_BYTE' => '200000'
 );
 
 // 域名配置
