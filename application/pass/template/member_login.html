@@ -1,7 +1,7 @@
 {include file="common_top.html"}
 {include file="common_head.html"}
 {include file="common_center.html"}
-<div class="wrapper">
+<div class="app-wrapper">
 	<div class="app-header">
 		<div class="content clearfix">
 			<img class="logo" src="/images/logo.png" alt="Downy" />
@@ -9,65 +9,51 @@
 	</div>
 	<div class="app-body">
 		<div class="content clearfix">
-			<div class="box-login mgt15">
+			<div class="block-login mgt15">
 				<div class="main">
 					<h2>登录<strong></strong></h2>
 					<form method="post" action="/index.php?a=member&m=login">
 						<input type="hidden" name="callback" value="{$params.callback|htmlspecialchars}" />
 						<input type="hidden" name="submit" value="1" />
-						<div class="element">
+						<div class="element default">
 							<label for="account"><strong>账号</strong></label>
-							<input type="text" class="text-box" name="account" value="{$params.account|htmlspecialchars}" />
+							<label class="label">
+								<input type="text" class="dy-text {if $error.account}error{/if}" name="account" value="{$params.account|htmlspecialchars}" data-dy_tips="#dy-tips-account" />
+								<span id="dy-tips-account">账号 / 邮箱 / 手机号码</span>
+							</label>
+							{if $error.account}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=account]">{$error.account.message}</span>{/if}
 						</div>
-						<div class="element">
+						<div class="element default">
 							<label for="password"><strong>密码</strong></label>
-							<input type="password" class="text-box" name="password" />
+							<input type="password" class="dy-text" name="password" />
+							{if $error.password}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=password]">{$error.password.message}</span>{/if}
 						</div>
 						{if $show_captcha}
-						<div class="element captcha-box">
-							<div class="img"><img alt="Visual verification" src="/index.php?a=index&m=captcha&wh=270x54" /></div>
-							<div class="text">
-								<label>
-									{if $error && $error.code == $smarty.const.COMMON_CAPTCHA_ERROR}
-										<strong class="error"><span>{$error.message}</span></strong>
-									{else}
-										<strong><span>输入上图中显示的字符：</span></strong>
-									{/if}
-									<input type="text" class="text-box {if $error && $error.code == $smarty.const.COMMON_CAPTCHA_ERROR}error{/if}" name="captcha" />
-								</label>
-								<div>
-									<a class="reload" title="获取新的验证方式" href="#"><span>获取新的验证方式</span></a>
-									<a class="help" title="帮助" href="#"><span>帮助</span></a>
-								</div>
-							</div>
-						</div>
+							<div class="element dy_captcha" data-url="/index.php?a=index&m=captcha&wh=270x54" data-width="200" {if $error.captcha}data-msgerr="{$error.captcha.message}"{/if}></div>
 						{/if}
-						{if $error && $error.code != $smarty.const.COMMON_CAPTCHA_ERROR}
-						<div class="element">
-							<span>{$error.message}<a class="link-help" target="_blank" href="#{$error.code}">?</a></span>
+						<div class="element control">
+							<input type="submit" class="dy-button blue" value="登录" />
+							<label>
+								<input type="checkbox" name="remember" value="1" {if $params.remember}checked="checked"{/if} />
+								<strong>保持登录状态</strong>
+							</label>
 						</div>
-						{/if}
-						<input type="submit" class="button-box blue" value="登录" />
-						<label class="remember">
-							<input type="checkbox" name="remember" value="1" {if $params.remember}checked="checked"{/if} />
-							<strong>保持登录状态</strong>
-						</label>
 						<div class="element">
-							<select name="connect" class="jq-select" data-text="第三方合作网站登录" data-type="jump" data-width="281" data-height="243">
+							<select name="connect" class="dy_select" data-text="第三方合作网站登录" data-type="jump" data-width="281" data-height="243">
 								{foreach from=$connects item=v key=k}
 								<option value="/index.php?a=connect&m=login&name={$k}&callback={$params.callback|urlencode}">{$v}</option>
 								{/foreach}
 							</select>
 						</div>
 					</form>
-					<ul><li><a href="#" target="_top">无法访问您的帐户？</a></li></ul>
+					<ul class="links"><li><a href="#" target="_top">无法访问您的帐户？</a></li></ul>
 				</div>
 			</div>
-			<div class="product-info">
-				<div class="header">帐户</div>
+			<div class="block-product">
+				<div>帐户</div>
 				<p>登录 Downy 帐户，享受 Downy 提供的更多服务。</p>
-				<p>在右侧登录，或 <a class="reg" href="/index.php?a=member&m=register"> 免费创建帐户</a>。</p>
-				<ul class="features clearfix">
+				<p>在右侧登录，或 <a class="redlink" href="/index.php?a=member&m=register"> 免费创建帐户</a>。</p>
+				<ul class="clearfix">
 					<li>
 						<img src="/images/icon1.png" alt="系统一" />
 						<p class="title">Gmail</p><p>与朋友畅聊，而且不必担心错过任何重要的电子邮件。</p>
@@ -78,7 +64,7 @@
 					</li>
 					<li>
 						<img src="/images/homepage.png" alt="设为主页" />
-						<p class="title">喜欢 Downy 吗？</p><p><a href="javascript:;" class="set-homepage">将 Downy 设为主页。</a></p>
+						<p class="title">喜欢 Downy 吗？</p><p><a href="#" target="_blank">将 Downy 设为主页。</a></p>
 					</li>
 				</ul>
 			</div>

@@ -1,7 +1,31 @@
 {include file="common_top.html"}
 {include file="common_head.html"}
+<script type="text/javascript">
+{literal}
+$(function(){
+	$("input[name=account]").dyBubble('您可以使用字母、数字和英文据点。', {});
+	$("input[name=password]").dyBubble('<div class="passwordlv"><p style="margin-bottom:0px;"><strong>密码强度：<span style="font-weight:normal;"></span></strong></p><div style="background:#F5F5F5;height:5px;margin:4px 0px;"><span style="display:block;height:100%;"></span></div><div>请至少使用 6 个字符。请勿使用您用于登录其他网站的密码或容易被猜到的密码。</div>', {input:function(){
+		var obj = $(this).data("dy-bubble");
+		var password = $(this).val();
+		var width = $(obj + " .passwordlv div").innerWidth();
+		var vals = [
+			{color:'#AA0033',txt:'不合格'},
+			{color:'#AA0033',txt:'差'},
+			{color:'#FFCC33',txt:'中'},
+			{color:'#2D98F3',txt:'良'},
+			{color:'#76C261',txt:'优'}
+		];
+		var lv = password.length >= 6 ? (Math.ceil($.fn.assessPassword(password) / 20) - 1) : 0;
+		$(obj + " .passwordlv p span").html(vals[lv].txt);
+		$(obj + " .passwordlv div span").css({"background": vals[lv].color, "width": (width / vals.length * (lv + 1)) + "px"});
+	}});
+	$("input[name=email]").dyBubble('我们会将此地址用于维持您的帐户安全之类的事宜。例如，如果我们发现您的帐户活动异常，就会向您发送一封提醒邮件。', {});
+	$("input[name=mobile]").dyBubble('您的手机号码可以帮助我们保护您的帐户安全。例如，当您忘记自己的密码时，我们可以向您发送一条短信，从而帮您找回自己的帐户。', {});
+});
+{/literal}
+</script>
 {include file="common_center.html"}
-<div class="wrapper">
+<div class="app-wrapper">
 	<div class="app-header">
 		<div class="content clearfix">
 			<img class="logo" src="/images/logo.png" alt="Downy" />
@@ -9,84 +33,68 @@
 	</div>
 	<div class="app-body">
 		<div class="content clearfix">
-			<div class="box-register mgt35">
+			<div class="block-register mgt35">
 				<div class="main">
 					<form action="/index.php?a=member&m=register" method="post">
 						<input type="hidden" name="callback" value="{$params.callback}" />
 						<input type="hidden" value="1" name="submit" />
-						<div class="element">
+						<div class="element fieldset">
 							<fieldset>
 								<legend><strong>姓名</strong></legend>
-								<label class="first_name"><input type="text" class="text-box placeholder-txt {if $error.fname}error{/if}" name="first_name" value="{$params.first_name|htmlspecialchars}" /><span class="placeholder placeholder-txt-first_name">姓氏</span></label>
-								<label class="last_name"><input type="text" class="text-box placeholder-txt {if $error.lname}error{/if}" name="last_name" value="{$params.last_name|htmlspecialchars}" /><span class="placeholder placeholder-txt-last_name">名字</span></label>
+								<label class="first_name"><input type="text" class="dy-text {if $error.fname}error{/if}" name="first_name" data-dy_tips="#dy-tips-first_name" value="{$params.first_name|htmlspecialchars}" /><span id="dy-tips-first_name">姓氏</span></label>
+								<label class="last_name"><input type="text" class="dy-text {if $error.fname}error{/if}" name="last_name" data-dy_tips="#dy-tips-last_name" value="{$params.last_name|htmlspecialchars}" /><span id="dy-tips-last_name">名字</span></label>
 							</fieldset>
-							{if $error.fname}<span class="message msg-foch" data-for="first_name">{$error.fname.message}</span>{/if}
-							{if $error.lname}<span class="message msg-foch" data-for="last_name">{$error.lname.message}</span>{/if}
+							{if $error.fname}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=first_name]">{$error.fname.message}</span>{/if}
+							{if $error.lname}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=last_name]">{$error.lname.message}</span>{/if}
 						</div>
-						<div class="element">
-							<label for="account"><strong>账号</strong></label>
-							<input type="text" class="text-box {if $error.account}error{/if}" name="account" value="{$params.account|htmlspecialchars}" />
-							{if $error.account}<span class="message msg-foch" data-for="account">{$error.account.message}</span>{/if}
+						<div class="element default">
+							<label><strong>账号</strong></label>
+							<input type="text" class="dy-text {if $error.account}error{/if}" name="account" value="{$params.account|htmlspecialchars}" />
+							{if $error.account}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=account]">{$error.account.message}</span>{/if}
 						</div>
-						<div class="element">
-							<label for="password"><strong>设置密码</strong></label>
-							<input type="password" class="text-box {if $error.password}error{/if}" name="password" />
-							{if $error.password}<span class="message msg-foch" data-for="password">{$error.password.message}</span>{/if}
+						<div class="element default">
+							<label><strong>设置密码</strong></label>
+							<input type="password" class="dy-text {if $error.password}error{/if}" name="password" />
+							{if $error.password}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=password]">{$error.password.message}</span>{/if}
 						</div>
-						<div class="element">
-							<label for="passwordcfm"><strong>确认密码</strong></label>
-							<input type="password" class="text-box {if $error.passwordcfm}error{/if}" name="passwordcfm" />
-							{if $error.passwordcfm}<span class="message msg-foch" data-for="passwordcfm">{$error.passwordcfm.message}</span>{/if}
+						<div class="element default">
+							<label><strong>确认密码</strong></label>
+							<input type="password" class="dy-text {if $error.passwordcfm}error{/if}" name="passwordcfm" />
+							{if $error.passwordcfm}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=passwordcfm]">{$error.passwordcfm.message}</span>{/if}
 						</div>
-						<div class="element">
-							<label for="sex"><strong>性别</strong></label>
-							<select name="sex" class="jq-select" data-text="我的性别是..." data-type="choose" data-width="308" data-height="81" {if $params.sex}data-defval="{$params.sex}"{/if}>
+						<div class="element default">
+							<label><strong>性别</strong></label>
+							<select name="sex" class="dy_select" data-text="我的性别是..." data-type="choose" data-width="308" data-height="81" {if $params.sex}data-defval="{$params.sex}"{/if}>
 								<option value="FEMALE">女</option>
 								<option value="MALE">男</option>
 								<option value="OTHER">其他</option>
 							</select>
 						</div>
-						<div class="element">
-							<label for="email"><strong>邮箱</strong></label>
-							<input type="text" class="text-box" name="email" value="{$params.email}" />
-							{if $error.email}<span class="message msg-foch" data-for="email">{$error.email.message}</span>{/if}
+						<div class="element default">
+							<label><strong>邮箱</strong></label>
+							<input type="text" class="dy-text {if $error.email}error{/if}" name="email" value="{$params.email}" />
+							{if $error.email}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=email]">{$error.email.message}</span>{/if}
 						</div>
-						<div class="element">
-							<label for="mobile"><strong>手机号码</strong></label>
-							<input type="text" class="text-box {if $error.mobile}error{/if}" name="mobile" value="{$params.mobile}" />
-							{if $error.mobile}<span class="message msg-foch" data-for="mobile">{$error.mobile.message}</span>{/if}
+						<div class="element default">
+							<label><strong>手机号码</strong></label>
+							<input type="text" class="dy-text {if $error.mobile}error{/if}" name="mobile" value="{$params.mobile}" />
+							{if $error.mobile}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=mobile]">{$error.mobile.message}</span>{/if}
 						</div>
 						{if $show_captcha}
-						<div class="element captcha-box">
-							<div class="img"><img alt="验证码" src="/index.php?a=index&m=captcha&wh=300x60" /></div>
-							<div class="text">
-								<label>
-									{if $error.captcha}
-										<strong class="error"><span>{$error.captcha.message}</span></strong>
-									{else}
-										<strong><span>输入上图中显示的字符：</span></strong>
-									{/if}
-									<input type="text" class="text-box {if $error.captcha}error{/if}" name="captcha" />
-								</label>
-								<div>
-									<a class="reload" title="获取新的验证方式" href="#"><span>获取新的验证方式</span></a>
-									<a class="help" title="帮助" href="#"><span>帮助</span></a>
-								</div>
-							</div>
-						</div>
+						<div class="element dy_captcha" data-url="/index.php?a=index&m=captcha&wh=300x60" data-width="230" {if $error.captcha}data-msgerr="{$error.captcha.message}"{/if}></div>
 						{/if}
-						<div class="element term_service">
+						<div class="element service">
 							<label>
 								<input type="checkbox" name="agree" value="1" {if $params.agree}checked="checked"{/if} />
 								<span><strong>我同意接受 Downy <a href="#" target="_blank">服务条款</a> 和 <a href="#" target="_blank">隐私权政策</a> 。</strong></span>
 							</label>
-							{if $error.agree}<span class="message msg-foch" data-for="agree">{$error.agree.message}</span>{/if}
+							{if $error.agree}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=agree]">{$error.agree.message}</span>{/if}
 						</div>
-						<div class="element nextstep"><input type="submit" value="下一步" class="button-box blue" /></div>
+						<div class="element control"><input type="submit" class="dy-button blue" value="下一步" /></div>
 					</form>
 				</div>
 			</div>
-			<div class="product-benefit">
+			<div class="block-benefit">
 				<h1 class="header">创建新的 Downy 帐户</h1>
 				<ul>
 					<li><img src="/images/r1.jpg" /><div>
@@ -119,31 +127,5 @@
 			</ul>
 		</div>
 	</div>
-</div>{literal}
-<style>
-
-</style>
-<script type="text/javascript">
-$(function(){
-	$("input[name=account]").jqBubbleTips('您可以使用字母、数字和英文据点。', {});
-	$("input[name=password]").jqBubbleTips('<div class="passwordlv"><p style="margin-bottom:0px;"><strong>密码强度：<span style="font-weight:normal;"></span></strong></p><div style="background:#F5F5F5;height:5px;margin:4px 0px;"><span style="display:block;height:100%;"></span></div><div>请至少使用 6 个字符。请勿使用您用于登录其他网站的密码或容易被猜到的密码。</div>', {input:function(){
-		var obj = $(this).data("jq-bubble-tips");
-		var password = $(this).val();
-		var width = $(obj + " .passwordlv div").innerWidth();
-		var vals = [
-			{color:'#AA0033',txt:'不及格'},
-			{color:'#AA0033',txt:'及格'},
-			{color:'#FFCC33',txt:'中'},
-			{color:'#2D98F3',txt:'良'},
-			{color:'#76C261',txt:'优'}
-		];
-		var lv = password.length >= 6 ? (Math.ceil($.fn.assessPassword(password) / 20) - 1) : 0;
-		$(obj + " .passwordlv p span").html(vals[lv].txt);
-		$(obj + " .passwordlv div span").css({"background": vals[lv].color, "width": (width / vals.length * (lv + 1)) + "px"});
-	}});
-	$("input[name=email]").jqBubbleTips('我们会将此地址用于维持您的帐户安全之类的事宜。例如，如果我们发现您的帐户活动异常，就会向您发送一封提醒邮件。', {});
-	$("input[name=mobile]").jqBubbleTips('您的手机号码可以帮助我们保护您的帐户安全。例如，当您忘记自己的密码时，我们可以向您发送一条短信，从而帮您找回自己的帐户。', {});
-});
-{/literal}
-</script>
+</div>
 {include file="common_bottom.html"}

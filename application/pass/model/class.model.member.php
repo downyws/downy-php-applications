@@ -8,56 +8,64 @@ class ModelMember extends ModelCommon
 		parent::__construct();
 	}
 
-	public function login($member_id, $account, $password, $is_md5 = false)
+	public function login($params, $type = '', $is_md5 = false)
 	{
+		$err = array();
 		$condition = array();
-		if($member_id)
+		if($type == 'id')
 		{
-			$condition[] = array('id' => array('eq', $member_id));
+			$condition[] = array('id' => array('eq', $params));
 		}
 		else
 		{
-			// 判断账号类型
-			Factory::loadLibrary('stringhelper');
-			$stringhelper = new StringHelper();
-			if($stringhelper->dataTypeTrue($account, 'email'))
+			empty($params['account']) && $err[] = MEMBER_LOGIN_ACCOUNTEMPTY;
+			empty($params['password']) && $err[] = MEMBER_LOGIN_PASSWORDEMPTY;
+
+			if(empty($err))
 			{
-				$condition[] = array('email' => array('eq', $account));
-				$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_EMAIL));
+				// 判断账号类型
+				Factory::loadLibrary('stringhelper');
+				$stringhelper = new StringHelper();
+				if($stringhelper->dataTypeTrue($params['account'], 'email'))
+				{
+					$condition[] = array('email' => array('eq', $params['account']));
+					$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_EMAIL));
+				}
+				else if($stringhelper->dataTypeTrue($params['account'], 'mobile'))
+				{
+					$condition[] = array('mobile' => array('eq', $params['account']));
+					$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_MOBILE));
+				}
+				else
+				{
+					$condition[] = array('account' => array('eq', $params['account']));
+				}
+				$condition[] = array('password' => array('eq', $is_md5 ? $params['password'] : md5($params['password'])));
 			}
-			else if($stringhelper->dataTypeTrue($account, 'mobile'))
-			{
-				$condition[] = array('mobile' => array('eq', $account));
-				$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_MOBILE));
-			}
-			else
-			{
-				$condition[] = array('account' => array('eq', $account));
-			}
-			$condition[] = array('password' => array('eq', $is_md5 ? $password : md5($password)));
 		}
 
 		// 查询账号
-		$member = $this->getObject($condition);
-
-		// 返回
-		$result = false;
-		if($member)
+		if(empty($err))
 		{
-			switch($member['status'])
+			$member = $this->getObject($condition);
+			if($member)
 			{
-				case MEMBER_STATUS_DEFAULT: $_SESSION['MEMBER'] = $member; $result = true; break;
-				case MEMBER_STATUS_UNACTIVE: $this->_error[] = MEMBER_LOGIN_UNACTIVE; break;
-				case MEMBER_STATUS_DISABEL: $this->_error[] = MEMBER_LOGIN_DISABEL; break;
-				case MEMBER_STATUS_DELETE: $this->_error[] = MEMBER_LOGIN_DELETE; break;
-				default: $this->_error[] = MEMBER_LOGIN_UNKNOWSTATUS; break;
+				switch($member['status'])
+				{
+					case MEMBER_STATUS_DEFAULT: $_SESSION['MEMBER'] = $member; return true; break;
+					case MEMBER_STATUS_UNACTIVE: $err[] = MEMBER_LOGIN_UNACTIVE; break;
+					case MEMBER_STATUS_DISABEL: $err[] = MEMBER_LOGIN_DISABEL; break;
+					case MEMBER_STATUS_DELETE: $err[] = MEMBER_LOGIN_DELETE; break;
+					default: $err[] = MEMBER_LOGIN_UNKNOWSTATUS; break;
+				}
+			}
+			else
+			{
+				$err[] = MEMBER_LOGIN_NOTEXIST;
 			}
 		}
-		else
-		{
-			$this->_error[] = MEMBER_LOGIN_NOTEXIST;
-		}
-		return $result;
+		$this->_error[] = $err;
+		return false;
 	}
 
 	public function autoLogin()
@@ -72,7 +80,7 @@ class ModelMember extends ModelCommon
 				$object = $this->getObject($condition, array(), 'member_login');
 				if($object && $object['auto_login_key'] == md5($key[0] . $key[1] . $key[2]) && $object['auto_login_ip'] == ip2long(REMOTE_IP_ADDRESS))
 				{
-					if($this->login($key[0], null, null))
+					if($this->login($key[0], 'id'))
 					{
 						$this->setAutoLogin();
 						return true;

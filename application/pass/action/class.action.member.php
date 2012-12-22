@@ -17,6 +17,7 @@ class ActionMember extends ActionCommon
 			'remember' => array(array('format', 'int')),
 			'callback' => array(array('valid', 'url', '', APP_URL, 0))
 		));
+		$this->assign('params', $params);
 
 		// 是否已经登录
 		$memberObj = Factory::getModel('member');
@@ -39,13 +40,16 @@ class ActionMember extends ActionCommon
 		$captcha['SHOW'] = ($captcha['COUNT'] < 1) ? !!($captcha['COUNT'] + 1) : ($captcha['NOW_COUNT'] >= $captcha['COUNT']);
 
 		// 表单提交
+		$error = array('captcha' => null, 'account' => null, 'password' => null);
 		if($params['submit'])
 		{
 			if($captcha['SHOW'] && !$this->captchaCheck($params['captcha'], 'once'))
 			{
-				$error = array('message' => $GLOBALS['MESSAGE'][COMMON_CAPTCHA_ERROR], 'code' => COMMON_CAPTCHA_ERROR);
+				$error['captcha'] = array('message' => $GLOBALS['MESSAGE'][COMMON_CAPTCHA_ERROR], 'code' => COMMON_CAPTCHA_ERROR);
+				empty($params['account']) && $error['account'] = array('message' => $GLOBALS['MESSAGE'][COMMON_ACCOUNTEMPTY], 'code' => COMMON_ACCOUNTEMPTY);
+				empty($params['password']) && $error['password'] = array('message' => $GLOBALS['MESSAGE'][COMMON_PASSWORDEMPTY], 'code' => COMMON_PASSWORDEMPTY);
 			}
-			else if($memberObj->login(0, $params['account'], $params['password']))
+			else if($memberObj->login($params))
 			{
 				// 自动登录
 				$params['remember'] && $memberObj->setAutoLogin();
@@ -54,14 +58,25 @@ class ActionMember extends ActionCommon
 			}
 			else
 			{
-				$error = $memberObj->getError();
-				$error = array('message' => $GLOBALS['MESSAGE'][$error], 'code' => $error);
+				$errors = $memberObj->getError();
+				if(!empty($errors) && is_array($errors))
+				{
+					$type = array
+					(
+						substr(MEMBER_LOGIN_ACCOUNTEMPTY, 0, 6) => 'account',
+						substr(MEMBER_LOGIN_PASSWORDEMPTY, 0, 6) => 'password'
+					);
+					foreach($errors as $v)
+					{
+						$error[$type[substr($v, 0, 6)]] = array('message' => $GLOBALS['MESSAGE'][$v], 'code' => $v);
+					}
+				}
 			}
 
 			($captcha['COUNT'] > 0) && $filecache->set($captcha['KEY'], ++$captcha['NOW_COUNT'], $captcha['TIME']);
 			$captcha['SHOW'] = ($captcha['COUNT'] < 1) ? !!($captcha['COUNT'] + 1) : ($captcha['NOW_COUNT'] >= $captcha['COUNT']);
 		}
-		$this->assign('error', empty($error) ? null : $error);
+		$this->assign('error', $error);
 		$this->assign('show_captcha', $captcha['SHOW']);
 
 		// 可用的网站接入
@@ -69,7 +84,6 @@ class ActionMember extends ActionCommon
 		$connects = $connectObj->getAllPairs('key', 'name', MEMBER_STATUS_DEFAULT, true);
 
 		$this->assign('connects', $connects);
-		$this->assign('params', $params);
 	}
 
 	public function methodLogout()
@@ -96,6 +110,7 @@ class ActionMember extends ActionCommon
 			'agree' => array(array('format', 'int')),
 			'callback' => array(array('valid', 'url', '', APP_URL, 0))
 		));
+		$this->assign('params', $params);
 
 		// 是否展示验证码
 		$filecache = new Filecache();
@@ -166,8 +181,6 @@ class ActionMember extends ActionCommon
 		}
 		$this->assign('error', $error);
 		$this->assign('show_captcha', $captcha['SHOW']);
-
-		$this->assign('params', $params);
 	}
 
 	public function methodRecover()

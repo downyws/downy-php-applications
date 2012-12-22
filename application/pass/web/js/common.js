@@ -1,74 +1,38 @@
 $(function(){
-	// 下拉框
-	$(".jq-select").each(function(){$(this).dropDown();});
-	// 设置首页
-	$(".set-homepage").click(function(){$.fn.setHomePage();});
-
 	// 验证码
-	$(".captcha-box .reload").click(function(){
-		var obj = $(this).parent().parent().parent().find(".img img");
-		if(typeof(obj.data("src")) == "undefined"){
-			$(this).attr("href", "javascript:;");
-			obj.data("src", obj.attr("src") + (obj.attr("src").indexOf("?") ? "&" : "?"));
-		}
-		obj.attr("src", obj.data("src") + Math.random());
+	$(".dy_captcha").each(function(){
+		$(this).dyCaptcha({url: $(this).data("url"), width: $(this).data("width"), msgerr: $(this).data("msgerr")});
 	});
-	$(".captcha-box .help").click(function(){
-		$(this).attr("href", "javascript:;");
-		alert("coding...");
+	// 下拉框
+	$(".dy_select").each(function(){
+		$(this).dySelect({name: $(this).attr("name"), text: $(this).data("text"), type: $(this).data("type"), width: $(this).data("width"), height: $(this).data("height"), defval: $(this).data("defval")});
 	});
-	$(".captcha-box input").focus(function(){
-		var obj = $(this).parent().find(".error");
-		obj.find("span").html("&nbsp;");
-		obj.removeClass("error");
+	$(".dy-text").each(function(){
+		$(this).dyText({tips: $(this).data("dy_tips")});
 	});
-
-	// 输入提示符
-	$(".placeholder-txt").each(function(){
-		if($(this).val() != ""){
-			$(".placeholder-txt-" + $(this).attr("name")).css("display", "none");
-		}
-		$(this).blur(function(){
-			if($(this).val() == ""){
-				$(".placeholder-txt-" + $(this).attr("name")).css("display", "block");
-			}
-		});
-		$(this).focus(function(){
-			$(".placeholder-txt-" + $(this).attr("name")).css("display", "none");
-		});
-	});
-
-	// 错误提示
-	$(".msg-foch").each(function(){
-		var obj = $("*[name=" + $(this).data("for") + "]");
-		obj.data("msgbox", this);
-		obj.one("focus", function(){
-			$($(this).data("msgbox")).css("display", "none");
-			$(this).removeClass("error");
-		});
+	$(".dy_oncemsg").each(function(){
+		$(this).dyOnceMsg({target: $(this).data("target"), event: $(this).data("event")});
 	});
 });
 
-/* ext plugs start */
 $.fn.extend({
 	// 密码强度检测
 	assessPassword: function(val){
-		var len = val.length;
 		var score = 0;
 		if(val.length > 0){
-
-			if(len >= 8){ score += 20; }
-			else if(len >= 4){ score += 10; }
-
+			// 长度检测
+			if(val.length >= 8){ score += 20; }
+			else if(val.length >= 4){ score += 10; }
+			// 大小写字母检测
 			if(/[a-z]/.test(val) && /[A-Z]/.test(val)){ score += 20; }
 			else if(/[a-z]/i.test(val)){ score += 10; }
-
+			// 数字检测
 			if(val.split(/[0-9]/g).length > 2){ score += 20; }
 			else if(/[0-9]/.test(val)){ score += 10; }
-
+			// 特殊字符检测
 			if(val.split(/\W/).length > 2){ score += 20; }
 			else if(/\W/.test(val)){ score += 10; }
-
+			// 混合加分
 			if(!/[0-9]/.test(val) || !/[a-z]/i.test(val)){ score += 0; }
 			else if(!/\W/.test(val)){ score += 5; }
 			else if(!/[a-z]/.test(val) || !/[A-Z]/.test(val)){ score += 10; }
@@ -76,102 +40,154 @@ $.fn.extend({
 		}
 		return score;
 	},
+	dyOnceMsg: function(option){
+		$(option.target).data("dy-oncemsg", this);
+		$(option.target).bind(option.event, function(){
+			$($(this).data("dy-oncemsg")).css("display", "none");
+		});
+	},
+	// 提示
+	dyTips: function(option){
+		if($(this).val() == ""){
+			$($(this).data("dy_tips")).css("display", "block");
+		}
+		$(this).focus(function(){
+			$($(this).data("dy_tips")).css("display", "none");
+		});
+		$(this).blur(function(){
+			if($(this).val() == ""){
+				$($(this).data("dy_tips")).css("display", "block");
+			}
+		});
+	},
 	// 悬浮提示
-	// For IE
-	// if(document.all){$('input[type="text"]').each(function(){var that = this; if(this.attachEvent){this.attachEvent('onpropertychange', function(e){ if(e.propertyName != 'value') return; $(that).trigger('input');});}});}
-	jqBubbleTips: function(content, option){
-		var id = "jq-bubble-tips-" + parseInt(Math.random() * 1000);
+	dyBubble: function(content, option){
 
-		$(this).data("jq-bubble-tips", "#" + id);
+		var id = "dy-bubble-" + parseInt(Math.random() * 1000);
+		$(this).data("dy-bubble", "#" + id);
 		var height = $(this).innerHeight();
 		var top = $(this).offset().top + height / 2 - 20;
 		var left = $(this).offset().left - 305;
-		var html = "<div id='" + id + "' class='jq-bubble-tips' style='top:" + top + "px;left:" + left + "px'>";
+
+		// 创建对象
+		var html = "<div id='" + id + "' class='dy-bubble' style='top:" + top + "px;left:" + left + "px'>";
 		html += "	<div class='content'>" + content + "</div>";
-		html += "	<div class='arrow'>";
-		html += "		<div class='arrow-b'></div>";
-		html += "		<div class='arrow-f'></div>";
-		html += "	</div>";
+		html += "	<div class='arrow'><div class='arrow-b'></div><div class='arrow-f'></div></div>";
 		html += "</div>";
 		$("body").append(html);
 
+		// 绑定事件
 		$(this).focus(function(){
-			$($(this).data("jq-bubble-tips")).fadeIn('fast');
+			var obj = $(this).data("dy-bubble");
+			var height = $(this).innerHeight();
+			var top = $(this).offset().top + height / 2 - 20;
+			var left = $(this).offset().left - 305;
+			$(obj).css({"top": top, "left": left});
+			$(obj).fadeIn('fast');
 		});
 		$(this).blur(function(){
-			$($(this).data("jq-bubble-tips")).fadeOut('fast');
+			$($(this).data("dy-bubble")).fadeOut('fast');
 		});
 		if(typeof(option.input) != "undefined"){
 			$(this).on("input", option.input);
 		}
 	},
-	setHomePage: function(){
-		alert('coding...');
-		var url = $(this).data("url");
-		try{
-			this.style.behavior = 'url(#default#homepage)';
-			this.setHomePage(url);
-		}catch(e){
-			if(window.netscape){
-				try{
-					netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
-				}catch(e){
-					alert("此操作被浏览器拒绝！\n请在浏览器地址栏输入“about:config”并回车\n然后将 [signed.applets.codebase_principal_support]的值设置为'true',双击即可。");
-				}
-				// var prefs = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch);
-				// prefs.setCharPref('browser.startup.homepage', url);
-			}
+	dyText: function(option){
+		if(typeof(option.tips) != "undefined"){
+			$(this).dyTips();
 		}
+		$(this).focus(function(){
+			$(this).removeClass("error");
+		});
 	},
-	dropDown: function(){
-		var name = $(this).attr("name");
-		var text = $(this).data("text");
-		var type = $(this).data("type");
-		var width = $(this).data("width");
-		var height = $(this).data("height");
-		var id = "jq-select-" + parseInt(Math.random() * 1000);
+	dySelect: function(option){
+		// 获取配置
+		var id = "dy-select-" + parseInt(Math.random() * 1000);
 
-		var html = '<div id="' + id + '" class="select-box"><input type="hidden" value="" name="' + name + '" />';
-		html += '	<div class="caption" style="width:' + (width - 24) + 'px">';
-		html += '		<div class="text">' + text + '</div><div class="dropdown">&nbsp;</div>';
+		// 创建对象
+		var html = '<div id="' + id + '" class="dy-select"><input type="hidden" name="' + option.name + '" />';
+		html += '	<div class="caption" style="width:' + (option.width - 24) + 'px">';
+		html += '		<div class="text">' + option.text + '</div><div class="dropdown">&nbsp;</div>';
 		html += '	</div>';
-		html += '	<div class="list" tabindex="0" style="height:' + height + 'px;width:' + width + 'px;">';
+		html += '	<div class="list" tabindex="0" style="height:' + option.height + 'px;width:' + option.width + 'px;">';
 		$(this).find("option").each(function(){
-			html += '<div class="menuitem" data-value="' + $(this).val() + '">' + $(this).html() + '</div>';
+			html += '<div class="item" data-value="' + $(this).val() + '">' + $(this).html() + '</div>';
 		});
 		html += '	</div>';
 		html += '</div>';
 		$(this).after(html);
-		if(typeof($(this).data("defval")) != "undefined"){
-			var defval = $(this).data("defval");
-			$("#" + id + " input[type=hidden]").val(defval);
+		if(typeof(option.defval) != "undefined"){
+			$("#" + id + " input[type=hidden]").val(option.defval);
 			$(this).find("option").each(function(){
-				if(defval == $(this).val()){
+				if(option.defval == $(this).val()){
 					$("#" + id + " .caption .text").html($(this).html());
 				}
 			});
 		}
 		$(this).remove();
 
-		if(type == "jump"){
-			$("#" + id + ".select-box .list .menuitem").click(function(){
+		// 绑定事件
+		if(option.type == "jump"){
+			$("#" + id + ".dy-select .list .item").click(function(){
 				window.location.href = $(this).data("value");
 			});
 		}else{
-			$("#" + id + ".select-box .list .menuitem").click(function(){
+			$("#" + id + ".dy-select .list .item").click(function(){
 				$(this).parent().parent().find("input").val($(this).data("value"));
 				$(this).parent().parent().find(".caption .text").html($(this).html());
 				$(this).parent().css("display", "none");
 			});
 		}
-		$("#" + id + ".select-box .caption").click(function(){
+		$("#" + id + ".dy-select .caption").click(function(){
 			var obj = $(this).parent().find(".list");
 			obj.css("display", "block");
 			obj.focus();
 			return false;
 		});
-		$("#" + id + ".select-box .list").blur(function(){
+		$("#" + id + ".dy-select .list").blur(function(){
 			$(this).css("display", "none");
+		});
+	},
+	// 验证码
+	dyCaptcha: function(option){
+		// 创建对象
+		var html = "<div class='dy-captcha'>";
+		html += "<div class='img'><img src='" + option.url + "' alt='captcha'></div>";
+		html += "<div class='text'>";
+		html += "<label>";
+		if(typeof(option.msgerr) == "undefined"){
+			html += "<strong><span>输入上图中显示的字符：</span></strong>";
+			html += "<input type='text' name='captcha' class='dy-text' style='width:" + option.width + "px' />";
+		}else{
+			html += "<strong class='msgerr'><span>" + option.msgerr + "</span></strong>";
+			html += "<input type='text' name='captcha' class='dy-text error' style='width:" + option.width + "px' />";
+		}
+		html += "</label>";
+		html += "<div class='btns'>";
+		html += "<a href='#' title='获取新的验证方式' class='reload'></a>";
+		html += "<a href='javascript:;' title='帮助' class='help'></a>";
+		html += "</div>";
+		html += "</div>";
+		html += "</div>";
+		$(this).html(html);
+
+		// 绑定事件
+		$(this).find(".btns a.reload").click(function(){
+			var obj = $(this).parent().parent().parent().find(".img img");
+			if(typeof(obj.data("src")) == "undefined"){
+				$(this).attr("href", "javascript:;");
+				obj.data("src", obj.attr("src") + (obj.attr("src").indexOf("?") ? "&" : "?"));
+			}
+			obj.attr("src", obj.data("src") + Math.random());
+		});
+		$(this).find(".btns a.help").click(function(){
+			alert("coding...");
+		});
+		$(this).find("input[name=captcha]").focus(function(){
+			var obj = $(this).parent().find(".msgerr");
+			obj.find("span").html("&nbsp;");
+			obj.removeClass("msgerr");
+			$(this).removeClass("error");
 		});
 	}
 });
