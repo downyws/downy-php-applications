@@ -38,6 +38,11 @@ $(function(){
 					<form action="/index.php?a=member&m=register" method="post">
 						<input type="hidden" name="callback" value="{$params.callback}" />
 						<input type="hidden" value="1" name="submit" />
+						{if $error.system}
+							<div class="element default">
+								<span class="msgerr">{$error.system.message}</span>
+							</div>
+						{/if}
 						<div class="element fieldset">
 							<fieldset>
 								<legend><strong>姓名</strong></legend>

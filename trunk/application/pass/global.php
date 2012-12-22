@@ -24,9 +24,22 @@ define('PROMPT_SUCCESS', 1);		// 成功
 define('PROMPT_INFORMATION', 2);	// 信息
 define('PROMPT_WARNING', 3);		// 警告
 
+// 审核分类
+define('CHECK_MEMBER_REGISTER', 1);	// 注册
+
 // 已验证信息
 define('MEMBER_VERIFY_EMAIL',	0x1);	// 邮箱
 define('MEMBER_VERIFY_MOBILE',	0x10);	// 手机
+
+// 类型
+// - InOut
+define('INOUT_TPYE_IN', 1);		// 登录
+define('INOUT_TPYE_OUT', 2);	// 登出
+// - QAndA
+define('QANDA_TYPE_SYS', 1);		// 系统
+define('QANDA_TYPE_USEFUL', 2);		// 已用
+define('QANDA_TYPE_UNUSEFUL', 3);	// 未用
+
 
 // 配置
 // - ACTION 设置，是否需要登录，是否需要权限，是否需要长时间执行
@@ -54,3 +67,5 @@ $GLOBALS['CONFIG']['REGISTER_CAPTCHA_OPTIONS'] = array('COUNT' => 0, 'TIME' => 3
 
 // 性别
 $GLOBALS['SEX'] = array('OTHER' => 0, 'MALE' => 1, 'FEMALE' => 2);
+// 血型
+$GLOBALS['BLOOD'] = array('OTHER' => 0, 'A' => 1, 'B' => 2, 'AB' => 3, 'O' => 4);

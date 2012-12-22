@@ -8,7 +8,7 @@ class ModelMember extends ModelCommon
 		parent::__construct();
 	}
 
-	public function login($params, $type = '', $is_md5 = false)
+	public function login($params, $type = '', $is_md5 = false, $log_inout = true)
 	{
 		$err = array();
 		$condition = array();
@@ -52,7 +52,11 @@ class ModelMember extends ModelCommon
 			{
 				switch($member['status'])
 				{
-					case MEMBER_STATUS_DEFAULT: $_SESSION['MEMBER'] = $member; return true; break;
+					case MEMBER_STATUS_DEFAULT: 
+							$_SESSION['MEMBER'] = $member; 
+							$log_inout && $this->logInOut(INOUT_TPYE_IN);
+							return true; 
+						break;
 					case MEMBER_STATUS_UNACTIVE: $err[] = MEMBER_LOGIN_UNACTIVE; break;
 					case MEMBER_STATUS_DISABEL: $err[] = MEMBER_LOGIN_DISABEL; break;
 					case MEMBER_STATUS_DELETE: $err[] = MEMBER_LOGIN_DELETE; break;
@@ -77,7 +81,7 @@ class ModelMember extends ModelCommon
 			{
 				$condition = array();
 				$condition[] = array('id' => array('eq', $key[0]));
-				$object = $this->getObject($condition, array(), 'member_login');
+				$object = $this->getObject($condition, array(), 'member');
 				if($object && $object['auto_login_key'] == md5($key[0] . $key[1] . $key[2]) && $object['auto_login_ip'] == ip2long(REMOTE_IP_ADDRESS))
 				{
 					if($this->login($key[0], 'id'))
@@ -107,7 +111,7 @@ class ModelMember extends ModelCommon
 		$condition = array();
 		$condition[] = array('id' => array('eq', $member_id));
 		$data = array('auto_login_key' => $server_key, 'auto_login_ip' => ip2long(REMOTE_IP_ADDRESS));
-		if($this->update($condition, $data, 'member_login'))
+		if($this->update($condition, $data))
 		{
 			setcookie('AUTO_LOGIN', $member_id . '|' . $client_key . '|' . $expire, $expire);
 			return true;
@@ -115,8 +119,9 @@ class ModelMember extends ModelCommon
 		return false;
 	}
 
-	public function logout()
+	public function logout($log_inout = true)
 	{
+		$log_inout && $this->logInOut(INOUT_TPYE_OUT);
 		unset($_SESSION['MEMBER']);
 		setcookie('AUTO_LOGIN', '', -1);
 	}
@@ -136,19 +141,41 @@ class ModelMember extends ModelCommon
 		$res && $err[] = $res;
 
 		if(empty($err) && $type != 'check')
-		{
+		{			
+			$this->transStart();
+
+			// member
 			$member['password'] = md5($member['password']);
-			$data = array
-			(
-				'image' => '',
-				'status' => MEMBER_STATUS_DEFAULT,
-				'point_coin' => 0,
-				'point_level' => 0,
-				'verify_info' => 0,
-				'create_time' => time(),
-				'update_time' => time()
-			);
-			return $this->insert(array_merge($data, $member));
+			$data = array('image' => '', 'status' => MEMBER_STATUS_DEFAULT, 'point_coin' => 0, 'point_level' => 0, 'online_long' => 0, 'verify_info' => 0, 'auto_login_ip' => 0, 'auto_login_key' => '', 'first_inout_id' => 0, 'last_inout_id' => 0, 'create_time' => time(), 'update_time' => time());
+			$member_id = $this->insert(array_merge($data, $member));
+
+			// member_info
+			$data = array('id' => $member_id, 'birthday' => 0, 'blood' => $GLOBALS['BLOOD']['OTHER'], 'sign' => '');
+			$this->insert($data, 'member_info');
+
+			// inout
+			$inout_id = $this->logInOut(INOUT_TPYE_IN, $member_id);
+			$condition = array();
+			$condition[] = array('id' => array('eq', $member_id));
+			$data = array('first_inout_id' => $inout_id, 'last_inout_id' => $inout_id);
+			$this->update($condition, $data);
+
+			// logs && check
+			$this->operateLog($member_id);
+			$this->operateCheck($member_id, CHECK_MEMBER_REGISTER, $member_id);
+
+			$res = $this->transCommit();
+
+			// login
+			if($res)
+			{
+				$this->login($member_id, 'id', false, false);
+				return true;
+			}
+			else
+			{
+				$err[] = COMMON_SYSTEMERROR;
+			}
 		}
 		$this->_error[] = $err;
 		return false;
@@ -157,6 +184,27 @@ class ModelMember extends ModelCommon
 	public function autoRegister()
 	{
 		// $this->register($member, 'auto');
+	}
+
+	public function logInOut($type, $member_id = 0)
+	{
+		$member_id = empty($member_id) ? $_SESSION['MEMBER']['id'] : $member_id;
+
+		$this->transStart();
+
+		$data = array('member_id' => $member_id, 'ip' => ip2long(REMOTE_IP_ADDRESS), 'type' => $type, 'session_key' => session_id(), 'inout_time' => time());
+		$inout_id = $this->insert($data, 'inout');
+		if($type == INOUT_TPYE_IN)
+		{
+			$condition = array();
+			$condition[] = array('id' => array('eq', $member_id));
+			$data = array('last_inout_id' => $inout_id);
+			$this->update($condition, $data);
+		}
+
+		$res = $this->transCommit();
+
+		return $inout_id;
 	}
 
 	public function getMemberPower()

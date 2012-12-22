@@ -29,11 +29,11 @@ class ActionCommon extends Action
 			{
 				if($params['t'] == 'ajax')
 				{
-					$this->jsonout(array('state' => false, 'message' => '请先登陆。'));
+					$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][COMMON_NOLOGIN]));
 				}
 				else if($params['t'] == 'api')
 				{
-					$this->jsonout(array('state' => false, 'message' => '请先登陆。', 'code' => 'NOT LOGIN'));
+					$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][COMMON_NOLOGIN], 'code' => COMMON_NOLOGIN));
 				}
 				else
 				{
@@ -47,15 +47,15 @@ class ActionCommon extends Action
 				{
 					if($params['t'] == 'ajax')
 					{
-						$this->jsonout(array('state' => false, 'message' => '您没有权限。'));
+						$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][COMMON_NOPOWER]));
 					}
 					else if($params['t'] == 'api')
 					{
-						$this->jsonout(array('state' => false, 'message' => '没有权限。', 'code' => 'NO POWER'));
+						$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][COMMON_NOPOWER], 'code' => COMMON_NOPOWER));
 					}
 					else
 					{
-						$this->message('您没有权限。', array(array('title' => '返回首页', 'href' => '/')));
+						$this->message($GLOBALS['MESSAGE'][COMMON_NOPOWER], array(array('title' => '返回首页', 'href' => '/')));
 					}
 				}
 			}
