@@ -119,11 +119,10 @@ class ActionMember extends ActionCommon
 		$captcha['NOW_COUNT'] = intval($filecache->get($captcha['KEY']));
 		$captcha['SHOW'] = ($captcha['COUNT'] < 1) ? !!($captcha['COUNT'] + 1) : ($captcha['NOW_COUNT'] >= $captcha['COUNT']);
 		// 表单提交
-		$error = array('captcha' => null, 'agree' => null, 'fname' => null, 'lname' => null, 'account' => null, 'password' => null, 'passwordcfm' => null, 'email' => null, 'mobile' => null);
+		$error = array('captcha' => null, 'agree' => null, 'fname' => null, 'lname' => null, 'account' => null, 'password' => null, 'passwordcfm' => null, 'email' => null, 'mobile' => null, 'system' => null);
 		if($params['submit'])
 		{
 			$memberObj = Factory::getModel('member');
-			$type = '';
 
 			// 验证码检查
 			if($captcha['SHOW'] && !$this->captchaCheck($params['captcha'], 'once'))
@@ -148,7 +147,7 @@ class ActionMember extends ActionCommon
 			}
 
 			// 注册
-			$member_id = $memberObj->register($params, $type);
+			$member_id = $memberObj->register($params, empty($type) ? '' : $type);
 			if($member_id)
 			{
 				// 跳转
@@ -167,7 +166,8 @@ class ActionMember extends ActionCommon
 						substr(MEMBER_REGISTER_PASSWORDEMPTY, 0, 6) => 'password',
 						substr(MEMBER_REGISTER_PASSWORDCFMEMPTY, 0, 6) => 'passwordcfm',
 						substr(MEMBER_REGISTER_EMAILEMPTY, 0, 6) => 'email',
-						substr(MEMBER_REGISTER_MOBILEEMPTY, 0, 6) => 'mobile'
+						substr(MEMBER_REGISTER_MOBILEEMPTY, 0, 6) => 'mobile',
+						substr(COMMON_SYSTEMERROR, 0, 6) => 'system'
 					);
 					foreach($errors as $v)
 					{

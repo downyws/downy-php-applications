@@ -26,4 +26,19 @@ class ModelCommon extends Model
 				return end($this->_error);
 		}
 	}
+
+	public function operateLog($member_id = 0)
+	{
+		$member_id = empty($member_id) ? $_SESSION['MEMBER']['id'] : $member_id;
+		$request_data = serialize($_POST);
+		$data = array('member_id' => $member_id, 'ip' => ip2long(REMOTE_IP_ADDRESS), 'create_time' => time(), 'request_url' => REMOTE_REQUEST_URI, 'request_data' => $request_data);
+		$this->insert($data, 'logs');
+	}
+
+	public function operateCheck($data_id, $cate_id, $member_id = 0)
+	{
+		$member_id = empty($member_id) ? $_SESSION['MEMBER']['id'] : $member_id;
+		$data = array('cate_id' => $cate_id, 'data_id' => $data_id, 'check_time' => 0, 'create_time' => time(), 'member_id' => $member_id, 'description' => '');
+		$this->insert($data, 'check');
+	}
 }
