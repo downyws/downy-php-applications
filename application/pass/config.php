@@ -13,5 +13,6 @@ $GLOBALS['CONFIG']['DB'] = array
 	'PASSWORD' => 'root',
 	'DBNAME' => 'pass',
 	'CHARSET' => 'utf8',
-	'PREFIX' => 'pass_'
+	'PREFIX' => 'pass_',
+	'QUERY_LIMIT_BYTE' => '200000'
 );
