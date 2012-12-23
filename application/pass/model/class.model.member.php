@@ -121,9 +121,12 @@ class ModelMember extends ModelCommon
 
 	public function logout($log_inout = true)
 	{
-		$log_inout && $this->logInOut(INOUT_TPYE_OUT);
-		unset($_SESSION['MEMBER']);
-		setcookie('AUTO_LOGIN', '', -1);
+		if($this->isLogin())
+		{
+			$log_inout && $this->logInOut(INOUT_TPYE_OUT);
+			unset($_SESSION['MEMBER']);
+			setcookie('AUTO_LOGIN', '', -1);
+		}
 	}
 
 	public function register($member, $type = '')

@@ -24,6 +24,12 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .app-footer .content ul li{display:inline;padding-right:20px;}
 .app-footer .content a{color:#333333;}
 
+.block-error{background:transparent url("/images/robot.png") no-repeat 80% center;height:300px;}
+.block-error .title{font-size:25px;font-weight:bold;margin-bottom:20px;}
+.block-error .message{text-indent:2em;width:450px;line-height:17px;margin-bottom:20px;}
+.block-error .links{width:450px;text-align:center;}
+.block-error .links a{margin-right:10px;}
+
 .block-product{margin-right:385px;}
 .block-product div{margin-bottom:15px;color:#DD4B39;font-size:25px;}
 .block-product p .redlink{color:#DD4B39;}

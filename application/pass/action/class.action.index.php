@@ -29,4 +29,24 @@ class ActionIndex extends ActionCommon
 		ImageDestroy($image);
 		exit;
 	}
+
+	public function methodSetHomepage()
+	{
+		echo __FUNCTION__;
+	}
+
+	public function methodTerm()
+	{
+		echo __FUNCTION__;
+	}
+
+	public function methodPrivacy()
+	{
+		echo __FUNCTION__;
+	}
+
+	public function methodHelp()
+	{
+		echo __FUNCTION__;
+	}
 }

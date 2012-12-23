@@ -1,12 +1,19 @@
 {include file="common_top.html"}
 {include file="common_head.html"}
 {include file="common_center.html"}
-<div class="common_message">
-	<div class="message information">{$message}</div>
-	<div class="links">
-	{foreach from=$links item=v}
-		<a href="{$v.href}">{$v.title}</a>
-	{/foreach}
+<div class="app-wrapper">
+	{include file="common_appheader.html"}
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="block-error">
+				<div class="title">{$title}</div>
+				<div class="message">{$message}</div>
+				<div class="links">
+					{foreach from=$links item=v}<a href="{$v.href}">{$v.title}</a>{/foreach}
+				</div>
+			</div>
+		</div>
 	</div>
+	{include file="common_appfooter.html"}
 </div>
 {include file="common_bottom.html"}

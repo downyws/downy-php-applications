@@ -55,14 +55,14 @@ class ActionCommon extends Action
 					}
 					else
 					{
-						$this->message($GLOBALS['MESSAGE'][COMMON_NOPOWER], array(array('title' => '返回首页', 'href' => '/')));
+						$this->message('', $GLOBALS['MESSAGE'][COMMON_NOPOWER], array(array('title' => '返回首页', 'href' => '/')));
 					}
 				}
 			}
 		}
 	}
 
-	public function message($message, $links = array(), $prompt_type = PROMPT_INFORMATION, $tpl = 'common_message.html')
+	public function message($title, $message, $links = array(), $prompt_type = PROMPT_INFORMATION, $tpl = 'common_message.html')
 	{
 		if(count($links) < 1)
 		{
@@ -79,6 +79,7 @@ class ActionCommon extends Action
 			}
 		}
 		$this->initTemplate(false);
+		$this->assign('title', $title);
 		$this->assign('message', $message);
 		$this->assign('links', $links);
 		$this->assign('prompt_type', $prompt_type);
