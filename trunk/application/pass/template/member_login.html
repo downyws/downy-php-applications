@@ -2,11 +2,7 @@
 {include file="common_head.html"}
 {include file="common_center.html"}
 <div class="app-wrapper">
-	<div class="app-header">
-		<div class="content clearfix">
-			<img class="logo" src="/images/logo.png" alt="Downy" />
-		</div>
-	</div>
+	{include file="common_appheader.html"}
 	<div class="app-body">
 		<div class="content clearfix">
 			<div class="block-login mgt15">
@@ -46,7 +42,7 @@
 							</select>
 						</div>
 					</form>
-					<ul class="links"><li><a href="#" target="_top">无法访问您的帐户？</a></li></ul>
+					<ul class="links"><li><a href="/index.php?a=member&m=recover" target="_top">无法访问您的帐户？</a></li></ul>
 				</div>
 			</div>
 			<div class="block-product">
@@ -64,21 +60,12 @@
 					</li>
 					<li>
 						<img src="/images/homepage.png" alt="设为主页" />
-						<p class="title">喜欢 Downy 吗？</p><p><a href="#" target="_blank">将 Downy 设为主页。</a></p>
+						<p class="title">喜欢 Downy 吗？</p><p><a href="/index.php?a=index&m=sethomepage" target="_blank">将 Downy 设为主页。</a></p>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
-	<div class="app-footer">
-		<div class="content clearfix">
-			<ul>
-				<li>&copy; 2012 Downy</li>
-				<li><a href="#" target="_blank">服务条款</a></li>
-				<li><a href="#" target="_blank">隐私权政策</a></li>
-				<li><a href="#" target="_blank">帮助</a></li>
-			</ul>
-		</div>
-	</div>
+	{include file="common_appfooter.html"}
 </div>
 {include file="common_bottom.html"}

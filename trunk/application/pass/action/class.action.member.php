@@ -185,10 +185,12 @@ class ActionMember extends ActionCommon
 
 	public function methodRecover()
 	{
+		echo __FUNCTION__;
 	}
 
 	public function methodActive()
 	{
+		echo __FUNCTION__;
 	}
 
 	public function methodHome()
@@ -199,5 +201,6 @@ class ActionMember extends ActionCommon
 
 	public function methodSetProfile()
 	{
+		echo __FUNCTION__;
 	}
 }

@@ -26,11 +26,7 @@ $(function(){
 </script>
 {include file="common_center.html"}
 <div class="app-wrapper">
-	<div class="app-header">
-		<div class="content clearfix">
-			<img class="logo" src="/images/logo.png" alt="Downy" />
-		</div>
-	</div>
+	{include file="common_appheader.html"}
 	<div class="app-body">
 		<div class="content clearfix">
 			<div class="block-register mgt35">
@@ -91,7 +87,7 @@ $(function(){
 						<div class="element service">
 							<label>
 								<input type="checkbox" name="agree" value="1" {if $params.agree}checked="checked"{/if} />
-								<span><strong>我同意接受 Downy <a href="#" target="_blank">服务条款</a> 和 <a href="#" target="_blank">隐私权政策</a> 。</strong></span>
+								<span><strong>我同意接受 Downy <a href="/index.php?a=index&m=term" target="_blank">服务条款</a> 和 <a href="/index.php?a=index&m=privacy" target="_blank">隐私权政策</a> 。</strong></span>
 							</label>
 							{if $error.agree}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=agree]">{$error.agree.message}</span>{/if}
 						</div>
@@ -122,15 +118,6 @@ $(function(){
 			</div>
 		</div>
 	</div>
-	<div class="app-footer">
-		<div class="content clearfix">
-			<ul>
-				<li>&copy; 2012 Downy</li>
-				<li><a href="#" target="_blank">服务条款</a></li>
-				<li><a href="#" target="_blank">隐私权政策</a></li>
-				<li><a href="#" target="_blank">帮助</a></li>
-			</ul>
-		</div>
-	</div>
+	{include file="common_appfooter.html"}
 </div>
 {include file="common_bottom.html"}

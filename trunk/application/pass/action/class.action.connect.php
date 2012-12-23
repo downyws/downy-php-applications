@@ -13,18 +13,20 @@ class ActionConnect extends ActionCommon
 		$connects = $connectObj->getAllPairs('id', 'key', CONNECT_STATUS_DEFAULT, true);
 
 		$params = $this->_submit->obtain($_REQUEST, array(
-			'name' => array(array('format', 'trim'), array('valid', 'in', '所选的网站登录不存在', null, $connects)),
+			'name' => array(array('format', 'trim'), array('valid', 'in', '', null, $connects)),
 			'callback' => array(array('valid', 'url', '', APP_URL, 0))
 		));
 
 		// 检查参数
 		if(count($this->_submit->errors) > 0)
 		{
-			var_Dump($this->_submit->errors);
+			$this->redirect('', 404);
 		}
 		else
 		{
-			echo $params['name'];
+		// 	include_once(APP_DIR_CONNECT . $params['name']
+		//	$params['callback']
+		//	
 		}
 		exit;
 	}
