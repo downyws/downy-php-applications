@@ -52,14 +52,21 @@ class ModelMember extends ModelCommon
 			{
 				switch($member['status'])
 				{
-					case MEMBER_STATUS_DEFAULT: 
-							$_SESSION['MEMBER'] = $member; 
-							$log_inout && $this->logInOut(INOUT_TPYE_IN);
-							return true; 
-						break;
-					case MEMBER_STATUS_UNACTIVE: $err[] = MEMBER_LOGIN_UNACTIVE; break;
-					case MEMBER_STATUS_DISABEL: $err[] = MEMBER_LOGIN_DISABEL; break;
-					case MEMBER_STATUS_DELETE: $err[] = MEMBER_LOGIN_DELETE; break;
+					case STATUS_DEFAULT: 
+						$_SESSION['MEMBER'] = $member; 
+						$log_inout && $inout_id = $this->logInOut(INOUT_TPYE_IN);
+						// 首次登录
+						if(!$member['first_inout_id'])
+						{
+							$member['first_inout_id'] = $inout_id;
+							$condition = array();
+							$condition[] = array('id' => array('eq', $member['id']));
+							$data = array('first_inout_id' => $inout_id);
+							$this->update($condition, $data);
+						}
+						return true; 
+					case STATUS_UNACTIVE: $err[] = MEMBER_LOGIN_UNACTIVE; break;
+					case STATUS_DISABEL: $err[] = MEMBER_LOGIN_DISABEL; break;
 					default: $err[] = MEMBER_LOGIN_UNKNOWSTATUS; break;
 				}
 			}
@@ -149,19 +156,13 @@ class ModelMember extends ModelCommon
 
 			// member
 			$member['password'] = md5($member['password']);
-			$data = array('image' => '', 'status' => MEMBER_STATUS_DEFAULT, 'point_coin' => 0, 'point_level' => 0, 'online_long' => 0, 'verify_info' => 0, 'auto_login_ip' => 0, 'auto_login_key' => '', 'first_inout_id' => 0, 'last_inout_id' => 0, 'create_time' => time(), 'update_time' => time());
+			$data = array('image' => '', 'status' => STATUS_DEFAULT, 'point_coin' => 0, 'point_level' => 0, 'online_long' => 0, 'verify_info' => 0, 'auto_login_ip' => 0, 'auto_login_key' => '', 'first_inout_id' => 0, 'last_inout_id' => 0, 'create_time' => time(), 'update_time' => time());
 			$member_id = $this->insert(array_merge($data, $member));
 
 			// member_info
 			$data = array('id' => $member_id, 'birthday' => 0, 'blood' => $GLOBALS['BLOOD']['OTHER'], 'sign' => '');
+			$data = array_merge($data, $member['ext_info']);
 			$this->insert($data, 'member_info');
-
-			// inout
-			$inout_id = $this->logInOut(INOUT_TPYE_IN, $member_id);
-			$condition = array();
-			$condition[] = array('id' => array('eq', $member_id));
-			$data = array('first_inout_id' => $inout_id, 'last_inout_id' => $inout_id);
-			$this->update($condition, $data);
 
 			// logs && check
 			$this->operateLog($member_id);
@@ -169,11 +170,9 @@ class ModelMember extends ModelCommon
 
 			$res = $this->transCommit();
 
-			// login
 			if($res)
 			{
-				$this->login($member_id, 'id', false, false);
-				return true;
+				return $member_id;
 			}
 			else
 			{
@@ -182,11 +181,6 @@ class ModelMember extends ModelCommon
 		}
 		$this->_error[] = $err;
 		return false;
-	}
-
-	public function autoRegister()
-	{
-		// $this->register($member, 'auto');
 	}
 
 	public function logInOut($type, $member_id = 0)
