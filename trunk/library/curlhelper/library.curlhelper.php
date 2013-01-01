@@ -194,4 +194,14 @@ class CurlHelper
 
 		return $result;
 	}
+
+	public function assemblyGet($url, $get)
+	{
+		$temp = array();
+		foreach($get as $k => $v)
+		{
+			$temp[] = $k . '=' . urlencode($v);
+		}
+		return $url . (strpos($url, '?') === false ? '?' : '&') . implode('&', $temp);
+	}
 }
