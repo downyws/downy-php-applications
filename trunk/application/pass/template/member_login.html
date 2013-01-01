@@ -35,9 +35,9 @@
 							</label>
 						</div>
 						<div class="element">
-							<select name="connect" class="dy_select" data-text="第三方合作网站登录" data-type="jump" data-width="281" data-height="243">
+							<select name="connect" class="dy_select" data-text="使用关联账号登录" data-type="jump" data-width="281" data-height="243">
 								{foreach from=$connects item=v key=k}
-								<option value="/index.php?a=connect&m=login&name={$k}&callback={$params.callback|urlencode}">{$v}</option>
+								<option value="/index.php?a=connect&m=login&name={$k}&r=authorize&callback={$params.callback|urlencode}">{$v}</option>
 								{/foreach}
 							</select>
 						</div>

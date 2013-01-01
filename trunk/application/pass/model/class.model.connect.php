@@ -39,4 +39,41 @@ class ModelConnect extends ModelCommon
 
 		return $result;
 	}
+
+	public function getId($name)
+	{
+		$list = $this->getAllPairs('key', 'id', null, true);
+		if(array_key_exists($name, $list))
+		{
+			return $list[$name];
+		}
+		return false;
+	}
+
+	public function login($connect_id, $outer_id)
+	{
+		$err = array();
+		$condition = array();
+		$condition[] = array('outer_id' => array('eq', $outer_id));
+		$condition[] = array('connect_id' => array('eq', $connect_id));
+		$object = $this->getObject($condition, null, 'member_connect');
+		if($object !== false)
+		{
+			$memberObj = Factory::getModel('member');
+			switch($object['status'])
+			{
+				case STATUS_DEFAULT:
+					if($memberObj->login($object['member_id'], 'id'))
+					{
+						return true;
+					}
+					$err = $memberObj->getError();
+					break;
+				case STATUS_DISABEL: $err[] = CONNECT_LOGIN_DISABEL; break;
+				default: $err[] = CONNECT_LOGIN_UNKNOWSTATUS; break;
+			}
+		}
+		$this->_error[] = $err;
+		return false;
+	}
 }

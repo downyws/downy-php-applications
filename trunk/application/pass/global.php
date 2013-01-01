@@ -9,14 +9,9 @@ define('APP_TIMEZONE', 'Asia/Shanghai');
 session_start();
 
 // 状态
-// - 会员
-define('MEMBER_STATUS_DEFAULT', 1);		// 正常
-define('MEMBER_STATUS_DISABEL', 2);		// 禁用
-define('MEMBER_STATUS_DELETE', 4);		// 删除
-define('MEMBER_STATUS_UNACTIVE', 8);	// 未激活
-// - 第三方登录
-define('CONNECT_STATUS_DEFAULT', 1);	// 正常
-define('CONNECT_STATUS_DISABEL', 2);	// 禁用
+define('STATUS_DEFAULT', 1);		// 正常
+define('STATUS_DISABEL', 2);		// 禁用
+define('STATUS_UNACTIVE', 4);	// 未激活
 
 // 提示类型
 define('PROMPT_ERROR', 0);			// 错误

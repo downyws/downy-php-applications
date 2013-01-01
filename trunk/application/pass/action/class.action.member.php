@@ -81,7 +81,7 @@ class ActionMember extends ActionCommon
 
 		// 可用的网站接入
 		$connectObj = Factory::getModel('connect');
-		$connects = $connectObj->getAllPairs('key', 'name', MEMBER_STATUS_DEFAULT, true);
+		$connects = $connectObj->getAllPairs('key', 'name', STATUS_DEFAULT, true);
 
 		$this->assign('connects', $connects);
 	}
@@ -150,8 +150,10 @@ class ActionMember extends ActionCommon
 			$member_id = $memberObj->register($params, empty($type) ? '' : $type);
 			if($member_id)
 			{
-				// 跳转
-				$this->redirect($params['callback']);
+				$title = '注册成功！';
+				$message = '恭喜！你已经成功注册成为会员。';
+				$links = array(array('title' => '立刻登录', 'href' => '/index.php?a=member&m=login&callback=' . urlencode($params['callback'])));
+				$this->message($title, $message, $links);
 			}
 			else
 			{
