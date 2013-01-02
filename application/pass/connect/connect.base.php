@@ -1,13 +1,16 @@
 <?php
 class ConnectBase
 {
+	public $_action;
 	public $_base_url = '';
 	public $_config;
 	public $_connectObj;
 	public $_curl;
 
-	public function __construct()
+	public function __construct($config)
 	{
+		$this->_action = $config['action'];
+
 		$this->_base_url = APP_URL . 'index.php?a=connect&m=login&name=' . $this->_name;
 
 		$this->_config = $GLOBALS['CONFIG']['CONNECT'][strtoupper($this->_name)];
@@ -26,7 +29,7 @@ class ConnectBase
 		{
 			$this->$routeName();
 		}
-		$this->message(PAGE_NOT_EXISTS);
+		$this->_action->message(PAGE_404);
 	}
 
 	public function login($connect_id, $outer_id, $data)
@@ -40,20 +43,8 @@ class ConnectBase
 			$errors = $this->_connectObj->getError();
 			if(!empty($errors) && is_array($errors))
 			{
-				$this->message(end($errors));
+				$this->_action->message(end($errors));
 			}
-		}
-		exit;
-	}
-
-	public function message($code)
-	{
-		var_dump('coding...');
-		// array('message' => $GLOBALS['MESSAGE'][$code], 'code' => $code);
-		var_dump($code);
-		if(!empty($GLOBALS['MESSAGE'][$code]))
-		{
-			var_dump($GLOBALS['MESSAGE'][$code]);
 		}
 		exit;
 	}

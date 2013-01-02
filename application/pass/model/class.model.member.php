@@ -72,7 +72,7 @@ class ModelMember extends ModelCommon
 			}
 			else
 			{
-				$err[] = MEMBER_LOGIN_NOTEXIST;
+				$err[] = ($type == 'id') ? MEMBER_LOGIN_NOTEXIST : MEMBER_LOGIN_MAYBEERROR;
 			}
 		}
 		$this->_error[] = $err;
@@ -161,7 +161,7 @@ class ModelMember extends ModelCommon
 
 			// member_info
 			$data = array('id' => $member_id, 'birthday' => 0, 'blood' => $GLOBALS['BLOOD']['OTHER'], 'sign' => '');
-			$data = array_merge($data, $member['ext_info']);
+			!empty($member['ext_info']) && $data = array_merge($data, $member['ext_info']);
 			$this->insert($data, 'member_info');
 
 			// logs && check

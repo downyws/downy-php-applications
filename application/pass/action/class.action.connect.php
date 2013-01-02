@@ -30,7 +30,7 @@ class ActionConnect extends ActionCommon
 			// 打开网站接入
 			include_once(APP_DIR_CONNECT . 'connect.' . $params['name'] . '.php');
 			$class = 'connect' . $params['name'];
-			$connect = new $class();
+			$connect = new $class(array('action' => $this));
 			$connect->redirect();
 		}
 	}

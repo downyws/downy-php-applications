@@ -150,10 +150,8 @@ class ActionMember extends ActionCommon
 			$member_id = $memberObj->register($params, empty($type) ? '' : $type);
 			if($member_id)
 			{
-				$title = '注册成功！';
-				$message = '恭喜！你已经成功注册成为会员。';
-				$links = array(array('title' => '立刻登录', 'href' => '/index.php?a=member&m=login&callback=' . urlencode($params['callback'])));
-				$this->message($title, $message, $links);
+				$data = $params['callback'];
+				$this->message(MEMBER_REGISTER_SUCCESS, $data);
 			}
 			else
 			{
