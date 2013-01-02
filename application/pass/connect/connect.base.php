@@ -43,7 +43,7 @@ class ConnectBase
 			$errors = $this->_connectObj->getError();
 			if(!empty($errors) && is_array($errors))
 			{
-				$this->_action->message(end($errors));
+				$this->_action->message(end($errors), $_COOKIE['CONNECT_CALLBACK']);
 			}
 		}
 		exit;

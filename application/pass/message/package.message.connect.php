@@ -2,7 +2,7 @@
 // Code mean: [model][function][type][no.][status] => AABBCCDDE
 
 define('GET_TOKEN_FAILED',	'030101010');
-$GLOBALS['MESSAGE'][GET_TOKEN_FAILED] = '获取第三方授权失败。';
+$GLOBALS['MESSAGE'][GET_TOKEN_FAILED] = '获取关联账号授权失败。';
 define('GET_OPENID_FAILED',	'030101020');
 $GLOBALS['MESSAGE'][GET_OPENID_FAILED] = '获取用户身份失败。';
 

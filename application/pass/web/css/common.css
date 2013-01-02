@@ -24,11 +24,14 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .app-footer .content ul li{display:inline;padding-right:20px;}
 .app-footer .content a{color:#333333;}
 
-.block-message{background:transparent url("/images/robot-default.png") no-repeat 80% center;height:300px;}
+.block-message{height:300px;}
+.block-message.error{background:transparent url("/images/robot-error.png") no-repeat 80% center;}
+.block-message.success{background:transparent url("/images/robot-success.png") no-repeat 80% center;}
 .block-message .title{font-size:26px;font-weight:bold;margin-bottom:20px;color:#328ADB;}
-.block-message .message{text-indent:2em;width:450px;line-height:17px;margin-bottom:20px;}
+.block-message .message{text-indent:2em;width:450px;line-height:17px;margin-bottom:20px;font-size:16px;}
 .block-message .info{text-align:right;width:450px;}
 .block-message .info font{color:#EF2B35;}
+.block-message a{color:#EF2B35;}
 
 .block-product{margin-right:385px;}
 .block-product div{margin-bottom:15px;color:#DD4B39;font-size:25px;}
