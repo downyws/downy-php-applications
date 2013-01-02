@@ -15,3 +15,6 @@ define('COMMON_NOPOWER',				'010102020');
 $GLOBALS['MESSAGE'][COMMON_NOPOWER] = '您没有权限。';
 define('COMMON_SYSTEMERROR',			'010103010');
 $GLOBALS['MESSAGE'][COMMON_SYSTEMERROR] = '系统发生错误，请联系管理员。';
+
+define('PAGE_404',	'010104010');
+$GLOBALS['MESSAGE'][PAGE_404] = '您访问的页面不存在。';

@@ -57,7 +57,7 @@ class ModelConnect extends ModelCommon
 		$condition[] = array('outer_id' => array('eq', $outer_id));
 		$condition[] = array('connect_id' => array('eq', $connect_id));
 		$object = $this->getObject($condition, null, 'member_connect');
-		if($object !== false)
+		if($object)
 		{
 			$memberObj = Factory::getModel('member');
 			switch($object['status'])
@@ -72,6 +72,10 @@ class ModelConnect extends ModelCommon
 				case STATUS_DISABEL: $err[] = CONNECT_LOGIN_DISABEL; break;
 				default: $err[] = CONNECT_LOGIN_UNKNOWSTATUS; break;
 			}
+		}
+		else
+		{
+			$err[] = CONNECT_LOGIN_NOTEXISTS;
 		}
 		$this->_error[] = $err;
 		return false;

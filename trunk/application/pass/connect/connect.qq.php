@@ -5,9 +5,9 @@ class ConnectQQ extends ConnectOauth2
 {
 	public $_name = 'qq';
 	public $_id;
-	public function __construct()
+	public function __construct($config)
 	{
-		parent::__construct();
+		parent::__construct($config);
 		$this->_id = $this->_connectObj->getId($this->_name);
 	}
 
@@ -23,13 +23,13 @@ class ConnectQQ extends ConnectOauth2
 		$token_data = $this->getToken($code);
 		if($token_data === false || !empty($token_data['error']))
 		{
-			$this->message(GET_TOKEN_FAILED);
+			$this->_action->message(GET_TOKEN_FAILED);
 		}
 
 		$open_data = $this->getOpenId($token_data['access_token']);
 		if($open_data === false || !empty($open_data['error']))
 		{
-			$this->message(GET_OPENID_FAILED);
+			$this->_acion->message(GET_OPENID_FAILED);
 		}
 
 		$this->login($this->_id, $open_data["openid"], $token_data);

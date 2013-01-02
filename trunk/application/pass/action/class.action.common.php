@@ -55,34 +55,19 @@ class ActionCommon extends Action
 					}
 					else
 					{
-						$this->message('', $GLOBALS['MESSAGE'][COMMON_NOPOWER], array(array('title' => '返回首页', 'href' => '/')));
+						$this->message(COMMON_NOPOWER);
 					}
 				}
 			}
 		}
 	}
 
-	public function message($title, $message, $links = array(), $prompt_type = PROMPT_INFORMATION, $tpl = 'common_message.html')
+	public function message($code, $data = null, $tpl = 'common_message.html')
 	{
-		if(count($links) < 1)
-		{
-			$links[] = array('title' => '返回上一页', 'href' => 'javascript:history.go(-1)');
-		}
-		else
-		{
-			foreach($links as $k => $v)
-			{
-				if($v['title'] == '返回' && empty($links[$k]['href']))
-				{
-					$links[$k]['href'] = $_SERVER['HTTP_REFERER'];
-				}
-			}
-		}
 		$this->initTemplate(false);
-		$this->assign('title', $title);
-		$this->assign('message', $message);
-		$this->assign('links', $links);
-		$this->assign('prompt_type', $prompt_type);
+		$this->assign('code_page', file_exists(APP_DIR_TEMPLATE . 'common_message/' . $code . '.html'));
+		$this->assign('code', $code);
+		$this->assign('data', $data);
 		$this->render($tpl);
 		exit;
 	}
