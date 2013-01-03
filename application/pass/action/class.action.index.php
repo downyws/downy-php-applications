@@ -35,18 +35,18 @@ class ActionIndex extends ActionCommon
 		echo __FUNCTION__;
 	}
 
-	public function methodTerm()
+	public function methodIntl()
 	{
-		echo __FUNCTION__;
-	}
+		// 获取参数
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'article' => array(array('valid', 'isset', '', '', 0), array('format', 'trim')),
+		));
 
-	public function methodPrivacy()
-	{
-		echo __FUNCTION__;
-	}
+		if(count($this->_submit->errors) > 0 || !file_exists(APP_DIR_TEMPLATE . 'index_intl/' . $params['article'] . '.html'))
+		{
+			$this->message(PAGE_404);
+		}
 
-	public function methodHelp()
-	{
-		echo __FUNCTION__;
+		$this->assign('article', $params['article']);
 	}
 }

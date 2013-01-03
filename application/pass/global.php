@@ -40,7 +40,7 @@ define('QANDA_TYPE_UNUSEFUL', 3);	// 未用
 // - ACTION 设置，是否需要登录，是否需要权限，是否需要长时间执行
 $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 	'index' => array(
-		'NOT_LOGIN' => array('index', 'captcha', 'sethomepage', 'term', 'privacy', 'help'),
+		'NOT_LOGIN' => array('index', 'captcha', 'sethomepage', 'intl'),
 		'NOT_POWER' => array(),
 		'RUN_LONG_TIME' => array()
 	),
