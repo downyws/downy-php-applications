@@ -1,0 +1,24 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="app-wrapper">
+	{include file="common_appheader.html"}
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="block-article">
+				<div class="items">
+					<ul class="clearfix">
+						<li>{if $article == 'help'}<strong>帮助</strong>{else}<a href="/index.php?a=index&m=intl&article=help">帮助</a>{/if}</li>
+						<li>{if $article == 'term'}<strong>服务条款</strong>{else}<a href="/index.php?a=index&m=intl&article=term">服务条款</a>{/if}</li>
+						<li>{if $article == 'privacy'}<strong>隐私权政策</strong>{else}<a href="/index.php?a=index&m=intl&article=privacy">隐私权政策</a>{/if}</li>
+					</ul>
+				</div>
+				<div class="content">
+					{include file="index_intl/$article.html"}
+				</div>
+			</div>
+		</div>
+	</div>
+	{include file="common_appfooter.html"}
+</div>
+{include file="common_bottom.html"}

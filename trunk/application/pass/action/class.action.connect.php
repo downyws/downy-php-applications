@@ -21,7 +21,7 @@ class ActionConnect extends ActionCommon
 		// 检查参数
 		if(count($this->_submit->errors) > 0)
 		{
-			$this->redirect('', 404);
+			$this->message(PAGE_404);
 		}
 		else
 		{
