@@ -37,19 +37,20 @@ define('MAX_COUNT', 3);	// QA最大数量
 // 配置
 // - ACTION 设置，是否需要登录，是否需要权限，是否需要长时间执行
 $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
+	'common' => array(
+		'NOT_LOGIN' => array('message'),
+		'RUN_LONG_TIME' => array()
+	),
 	'index' => array(
 		'NOT_LOGIN' => array('index', 'captcha', 'sethomepage', 'intl'),
-		'NOT_POWER' => array(),
 		'RUN_LONG_TIME' => array()
 	),
 	'member' => array(
 		'NOT_LOGIN' => array('login', 'logout', 'register', 'recover', 'active'),
-		'NOT_POWER' => array('home', 'setprofile'),
 		'RUN_LONG_TIME' => array()
 	),
 	'connect' => array(
 		'NOT_LOGIN' => array('login'),
-		'NOT_POWER' => array(),
 		'RUN_LONG_TIME' => array()
 	)
 );

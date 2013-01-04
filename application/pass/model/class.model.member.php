@@ -204,33 +204,6 @@ class ModelMember extends ModelCommon
 		return $inout_id;
 	}
 
-	public function getMemberPower()
-	{
-		$result = explode(';', $_SESSION['MEMBER']['POWER']);
-		foreach($result as $k => $v)
-		{
-			if(empty($v))
-			{
-				unset($result[$k]);
-			}
-		}
-		return $result;
-	}
-
-	public function hasPower($a, $m)
-	{
-		$am = $a . ':' . $m;
-		foreach($GLOBALS['CONFIG']['POWER'] as $k => $v)
-		{
-			if(in_array($am, $v['ACTIONMETHOD']))
-			{
-				$am = $k;
-				break;
-			}
-		}
-		return in_array($am, $this->getMemberPower());
-	}
-
 	public function checkErrName($vals, $can_empty = false)
 	{
 		if(empty($vals['first_name'])) return $can_empty ? false : MEMBER_REGISTER_FNAMEEMPTY;
