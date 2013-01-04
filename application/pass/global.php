@@ -30,11 +30,9 @@ define('MEMBER_VERIFY_MOBILE',	0x10);	// 手机
 // - InOut
 define('INOUT_TPYE_IN', 1);		// 登录
 define('INOUT_TPYE_OUT', 2);	// 登出
-// - QAndA
-define('QANDA_TYPE_SYS', 1);		// 系统
-define('QANDA_TYPE_USEFUL', 2);		// 已用
-define('QANDA_TYPE_UNUSEFUL', 3);	// 未用
 
+// QAndA
+define('MAX_COUNT', 3);	// QA最大数量
 
 // 配置
 // - ACTION 设置，是否需要登录，是否需要权限，是否需要长时间执行
