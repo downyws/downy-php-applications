@@ -192,24 +192,36 @@ class ActionMember extends ActionCommon
 		$this->assign('show_captcha', $captcha['SHOW']);
 	}
 
-	public function methodRecover()
-	{
-		echo __FUNCTION__;
-	}
-
-	public function methodActive()
-	{
-		echo __FUNCTION__;
-	}
-
 	public function methodHome()
 	{
-		var_dump($_SESSION);
-		echo '<a href="/index.php?a=member&m=logout">logout</a>';
+
 	}
 
-	public function methodSetProfile()
+	public function methodBase()
 	{
-		echo __FUNCTION__;
+	}
+
+	public function methodConnect()
+	{
+	}
+
+	public function methodSafe()
+	{
+	}
+
+	public function methodPassword()
+	{
+	}
+
+	public function methodQandA()
+	{
+	}
+
+	public function methodSafeMobile()
+	{
+	}
+
+	public function methodSafeEmail()
+	{
 	}
 }

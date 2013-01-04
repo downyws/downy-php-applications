@@ -40,25 +40,6 @@ class ActionCommon extends Action
 					$this->redirect('/index.php?a=member&m=login&callback=' . urlencode(REMOTE_REQUEST_URI));
 				} 
 			}
-			// 已登录，无权限
-			else if(!in_array($params['m'], $options['NOT_POWER']))
-			{
-				if(!$memberObj->hasPower($params['a'], $params['m']))
-				{
-					if($params['t'] == 'ajax')
-					{
-						$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][COMMON_NOPOWER]));
-					}
-					else if($params['t'] == 'api')
-					{
-						$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][COMMON_NOPOWER], 'code' => COMMON_NOPOWER));
-					}
-					else
-					{
-						$this->message(COMMON_NOPOWER);
-					}
-				}
-			}
 		}
 	}
 
@@ -70,6 +51,15 @@ class ActionCommon extends Action
 		$this->assign('data', $data);
 		$this->render($tpl);
 		exit;
+	}
+
+	public function methodMessage()
+	{
+		// 获取参数
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'code' => array(array('format', 'trim'))
+		));
+		$this->message($params['code']);
 	}
 
 	public function jsonout($json)
