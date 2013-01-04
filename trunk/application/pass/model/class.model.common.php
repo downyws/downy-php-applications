@@ -41,4 +41,11 @@ class ModelCommon extends Model
 		$data = array('cate_id' => $cate_id, 'data_id' => $data_id, 'check_time' => 0, 'create_time' => time(), 'member_id' => $member_id, 'description' => '');
 		$this->insert($data, 'check');
 	}
+
+	public function productDomain($url)
+	{
+		preg_match('/(\w+)(\.\w+)+/', $url, $result);
+		$result = (count($result) > 0) ? $result[0] : '';
+		return $result;
+	}
 }

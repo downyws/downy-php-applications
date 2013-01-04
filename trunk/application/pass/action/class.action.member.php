@@ -83,6 +83,15 @@ class ActionMember extends ActionCommon
 		$connectObj = Factory::getModel('connect');
 		$connects = $connectObj->getAllPairs('key', 'name', STATUS_DEFAULT, true);
 
+		// 产品介绍
+		$product = $connectObj->productDomain($params['callback']);
+		$product = empty($product) ? 'default' : str_replace('.', '_', $product);
+		if(!file_exists(APP_DIR_TEMPLATE . 'member_login/' . $product . '.html'))
+		{
+			$product = 'default';
+		}
+
+		$this->assign('product', $product);
 		$this->assign('connects', $connects);
 	}
 
