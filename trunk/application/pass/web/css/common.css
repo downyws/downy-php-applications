@@ -110,7 +110,7 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .block-member .navg a:hover{background:#EEEEEE;border-left:3px solid #EEEEEE;}
 .block-member .navg a.current:hover{border-left:3px solid #DD4B39;}
 .block-member .navg .lv1{padding-left:45px;}
-.block-member .navg .lv2{padding-left:57px;}
+.block-member .navg .lv2{padding-left:69px;}
 .block-member .detail{width:800px;float:right;}
 
 .link-round{background:#DD4B39;padding:0 5px;color:#FFFFFF;font-weight:bold;display:inline-block;text-decoration:none;position:relative;top:0px;border-radius:9px;}
