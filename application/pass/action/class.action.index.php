@@ -32,7 +32,6 @@ class ActionIndex extends ActionCommon
 
 	public function methodSetHomepage()
 	{
-		echo __FUNCTION__;
 	}
 
 	public function methodIntl()

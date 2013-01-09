@@ -1,0 +1,56 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+<script type="text/javascript">
+{literal}
+$(function(){
+	var broswer = $.fn.broswerName();
+	var obj = $("#" + broswer);
+	obj.clone().prependTo(".broswer");
+	obj.remove();
+	$(".broswer li .name").click(function(){
+		var detail = $(this).parent().find(".detail");
+		if(detail.css("display") == "none"){
+			$(this).find(".arrow").addClass("open");
+			$(this).find(".arrow").removeClass("close");
+			detail.css("display", "block");
+		}else{
+			$(this).find(".arrow").addClass("close");
+			$(this).find(".arrow").removeClass("open");
+			detail.css("display", "none");
+		}
+	});
+	$("#" + broswer + " .name").click();
+});
+{/literal}
+</script>
+{include file="common_center.html"}
+<div class="app-wrapper">
+	{include file="common_appheader.html"}
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="block-homepage">
+				<div class="title">如何把Downy设为您的上网主页？</div>
+				<div class="description">请参考以下步骤，设置 Downy 为您的上网主页。</div>
+				<ul class="broswer">
+					<li id="ie"><a class="name" href="#ie"><span class="logo ie"></span>IE浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="s360"><a class="name" href="#s360"><span class="logo s360"></span>360浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="maxthon"><a class="name" href="#maxthon"><span class="logo maxthon"></span>傲游浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="sougou"><a class="name" href="#sougou"><span class="logo sougou"></span>搜狗浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="qq"><a class="name" href="#qq"><span class="logo qq"></span>QQ浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="tt"><a class="name" href="#tt"><span class="logo tt"></span>TT浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="firefox"><a class="name" href="#firefox"><span class="logo firefox"></span>Firefox浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="chrome"><a class="name" href="#chrome"><span class="logo chrome"></span>Chrome浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="s360js"><a class="name" href="#s360js"><span class="logo s360js"></span>360极速浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="worldjs"><a class="name" href="#worldjs"><span class="logo worldjs"></span>世界之窗极速版浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="opera"><a class="name" href="#opera"><span class="logo opera"></span>Opera浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="world"><a class="name" href="#world"><span class="logo world"></span>世界之窗浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="safari"><a class="name" href="#safari"><span class="logo safari"></span>Safari浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="green"><a class="name" href="#green"><span class="logo green"></span>绿色浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+					<li id="kr"><a class="name" href="#kr"><span class="logo kr"></span>KR浏览器<span class="arrow close"></span></a><div class="detail"><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /><p class="split"></p><p>1.点击"工具"菜单， 选择"主页设置"。</p><img src="/images/360_1.png" /></div></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	{include file="common_appfooter.html"}
+</div>
+{include file="common_bottom.html"}
