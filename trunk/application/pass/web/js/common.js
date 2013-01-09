@@ -16,6 +16,40 @@ $(function(){
 });
 
 $.fn.extend({
+	// 浏览器
+	broswerName: function(){
+		if(/firefox/gi.test(navigator.userAgent)){
+			return 'firefox';
+		}else if(/AppleWebKit/gi.test(navigator.userAgent) && /theworld/gi.test(navigator.userAgent)){
+			return 'worldjs';
+		}else if(/theworld/gi.test(navigator.userAgent)){
+			return 'world';
+		}else if((/qqbrowser/gi.test(navigator.userAgent)) || (/chrome/gi.test(navigator.userAgent) && /qqbrowser/gi.test(navigator.userAgent))){
+			return 'qq';
+		}else if(/360chrome/gi.test(navigator.userAgent) || (/360/gi.test(navigator.userAgent) && /qihu/gi.test(navigator.userAgent))){
+			return 's360js';
+		}else if(/se /gi.test(navigator.userAgent)){
+			return 'sogou';
+		}else if(/chrome/gi.test(navigator.userAgent)){
+			return 'chrome';
+		}else if(/opera/gi.test(navigator.userAgent)){
+			return 'opera';
+		}else if(/360se/gi.test(navigator.userAgent)){
+			return 's360';
+		}else if(/greenbrowser/gi.test(navigator.userAgent)){
+			return 'green';
+		}else if(/tencenttraveler/gi.test(navigator.userAgent)){
+			return 'tt';
+		}else if(/maxthon/gi.test(navigator.userAgent)){
+			return 'maxthon';
+		}else if(/safari/gi.test(navigator.userAgent)){
+			return 'safari';
+		}else if(/krbrowser/gi.test(navigator.userAgent)){
+			return 'kr';
+		}else{
+			return 'ie';
+		}
+	},
 	// 密码强度检测
 	assessPassword: function(val){
 		var score = 0;
