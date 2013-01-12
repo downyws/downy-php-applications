@@ -129,9 +129,6 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .block-homepage .broswer li{margin-bottom:10px;border:1px solid #E5E5E5;}
 .block-homepage .broswer li .name{font-size:16px;font-weight:bold;background:#F1F1F1;padding:8px;cursor:pointer;display:block;text-decoration:none;color:#000000;}
 .block-homepage .broswer li .name:hover{background:#E1E1E1;}
-.block-homepage .broswer li .name .arrow{width:20px;height:20px;float:right;}
-.block-homepage .broswer li .name .arrow.open{background:url("/images/arrow_open.gif") no-repeat scroll center center transparent;}
-.block-homepage .broswer li .name .arrow.close{background:url("/images/arrow_close.gif") no-repeat scroll center center transparent;}
 .block-homepage .broswer li .name .logo{width:20px;height:20px;display:block;float:left;margin-right:10px;}
 .block-homepage .broswer li .name .logo.ie{background:url("/images/ie.gif") no-repeat scroll center center transparent;}
 .block-homepage .broswer li .name .logo.s360{background:url("/images/s360.gif") no-repeat scroll center center transparent;}
@@ -148,9 +145,12 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .block-homepage .broswer li .name .logo.safari{background:url("/images/safari.gif") no-repeat scroll center center transparent;}
 .block-homepage .broswer li .name .logo.green{background:url("/images/green.gif") no-repeat scroll center center transparent;}
 .block-homepage .broswer li .name .logo.kr{background:url("/images/kr.gif") no-repeat scroll center center transparent;}
-.block-homepage .broswer li .detail{display:none;padding:20px;}
-.block-homepage .broswer li .detail p{font-weight:bold;margin-bottom:10px;}
-.block-homepage .broswer li .detail .split{margin:20px 0px;border-bottom:1px solid #E5E5E5;}
+.block-homepage .broswer li .name .arrow{width:20px;height:20px;float:right;background:url("/images/arrow_close.gif") no-repeat scroll center center transparent;}
+.block-homepage .broswer li.open .name .arrow{background:url("/images/arrow_open.gif") no-repeat scroll center center transparent;}
+.block-homepage .broswer li.open .detail{display:block;}
+.block-homepage .broswer li .detail{display:none;}
+.block-homepage .broswer li .detail p{font-weight:bold;background:#F4F9FF;padding:10px;font-size:14px;margin:0px;}
+.block-homepage .broswer li .detail img{margin:10px 10px 15px 10px;}
 
 .link-round{background:#DD4B39;padding:0 5px;color:#FFFFFF;font-weight:bold;display:inline-block;text-decoration:none;position:relative;top:0px;border-radius:9px;}
 .link-round:hover{background:#C03523;text-decoration:none;}
@@ -196,3 +196,28 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .dy-bubble .arrow div{display:block;height:0;position:absolute;width:0;}
 .dy-bubble .arrow .arrow-b{border:9px solid;border-color:transparent #BBBBBB;top:-9px;border-right-width:0;}
 .dy-bubble .arrow .arrow-f{border:8px solid;border-color:transparent #FFFFFF;top:-8px;border-right-width:0;}
+
+.homepage .product{float:left;width:65%;}
+.homepage .product .item{border:1px solid #EEEEEE;padding:12px 20px;margin-bottom:10px;}
+.homepage .product .item .title{border-bottom:1px solid #EEEEEE;padding-bottom:5px;margin-bottom:10px;}
+.homepage .product .item .title .logo{width:16px;height:16px;float:left;}
+.homepage .product .item .title .logo.kj{background:url("/images/1.png");margin-top:1px;}
+.homepage .product .item .title .name{font-size:16px;margin:0px 5px;text-decoration:none;color:#000000;}
+.homepage .product .item .title .name:hover{color:#DD4B39;}
+.homepage .product .item .title .exp{color:#999999;}
+.homepage .product .item .info{margin:0px;}
+.homepage .product .item .info li{float:left;margin-right:30px;}
+.homepage .product .item .info li .val{display:block;text-align:center;font-size:18px;padding-bottom:3px;}
+.homepage .product .item .info li .key{display:block;text-align:center;margin-bottom:15px;}
+.homepage .account{float:right;width:30%;}
+.homepage .account .portrait{padding:16px;border: 1px solid #E5E5E5;border-radius: 3px 3px 3px 3px;box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);}
+.homepage .account .portrait img{width:100%;margin-bottom:15px;}
+.homepage .account .portrait h1{color:#666666;font-weight:normal;font-size:16px;}
+.homepage .account .login_info{padding:16px;background:#F9F9F9;border:1px solid #E5E5E5;}
+.homepage .account .login_info h1{color:#666666;font-weight:normal;font-size:16px;}
+.homepage .account .login_info ul li{margin-top:15px;}
+.homepage .account .login_info ul li p{line-height:20px;}
+.homepage .account .login_info .key{color:#222222;padding:0px;margin:0px;}
+.homepage .account .login_info .val{color:#777777;padding:0px;margin:0px;}
+.homepage .account .account_log{padding:16px;border:1px solid #EBEBEB;border-top:0px;}
+.homepage .account .account_log a{text-decoration:none;}

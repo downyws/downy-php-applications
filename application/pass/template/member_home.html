@@ -7,8 +7,41 @@
 		<div class="content clearfix">
 			<div class="block-member">
 				{include file="member_common_navg.html"}
-				<div class="detail">
-				
+				<div class="detail homepage">
+					<div class="product">
+						<ul>
+							{foreach from=$product item=v key=k}
+							<li class="item">
+								<div class="title">
+									<span class="logo {$k}"></span>
+									<a class="name" href="{$v.href}">{$v.name}</a>
+									<span class="exp">[ {$v.exp} ]</span>
+								</div>
+								<div class="info">
+									<ul class="clearfix">
+										{foreach from=$v.info item=_v}
+										<li><span class="val">{$_v.val}</span><span class="key">{$_v.key}</span></li>
+										{/foreach}
+									</ul>
+								</div>
+							</li>
+							{/foreach}
+						</ul>
+					</div>
+					<div class="account">
+						<div class="portrait">
+							<img src="{if $MEMBER.image}{$MEMBER.image}{else}/images/me.jpg{/if}" />
+							<h1>{$MEMBER.first_name} {$MEMBER.last_name}</h1>
+						</div>
+						<div class="login_info">
+							<h1>帐户活动报告</h1>
+							<ul>
+								<li><p class="key">上次登录日期</p><p class="val">{$MEMBER.last.inout_time|date_format:"%Y/%m/%d %H:%M"}</p></li>
+								<li><p class="key">上次登录时所用的IP地址</p><p class="val">{$MEMBER.last.ip|long2ip}</p></li>
+							</ul>
+						</div>
+						<div class="account_log"><a href="#">了解更多详情，请查看您的账户活动报告。</a></div>
+					</div>
 				</div>
 			</div>
 		</div>

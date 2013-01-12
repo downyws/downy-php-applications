@@ -53,8 +53,23 @@ class ModelMember extends ModelCommon
 				switch($member['status'])
 				{
 					case STATUS_DEFAULT: 
+						// 上次登录信息
+						if($member['last_inout_id'])
+						{
+							$condition = array();
+							$condition[] = array('id' => array('eq', $member['last_inout_id']));
+							$member['last'] = $this->getObject($condition, null, 'inout');
+						}
+						else
+						{
+							$member['last'] = null;
+						}
+
 						$_SESSION['MEMBER'] = $member; 
+
+						// 记录本次登录
 						$log_inout && $inout_id = $this->logInOut(INOUT_TPYE_IN);
+
 						// 首次登录
 						if(!$member['first_inout_id'])
 						{

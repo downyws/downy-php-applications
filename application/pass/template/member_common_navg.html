@@ -2,19 +2,23 @@
 var method = "{$method}";
 {literal}
 $(function(){
-	$("#" + method).addClass("current");
-	if($("#" + method).hasClass("lv2")){
-		var obj = $("#" + method).parent().parent();
-		obj.find(".arrow").removeClass("close");
-		obj.find(".arrow").addClass("open");
-		obj.find(".sub").css("display", "block");
-	}
 	$(".block-member .navg .tree .arrow").click(function(){
 		var is_close = $(this).hasClass("close");
 		$(this).removeClass(is_close ? "close" : "open");
 		$(this).addClass(is_close ? "open" : "close");
 		$(this).parent().find(".sub").css("display", is_close ? "block" : "none");
 	});
+	var obj = $("#" + method);
+	obj.addClass("current");
+	if(obj.hasClass("lv2")){
+		obj = obj.parent().parent();
+		obj.find(".arrow").removeClass("close").addClass("open");
+		obj.find(".sub").css("display", "block");
+	}else if(obj.hasClass("hassub")){
+		obj = obj.parent();
+		obj.find(".arrow").removeClass("close").addClass("open");
+		obj.find(".sub").css("display", "block");
+	}
 });
 {/literal}
 </script>
@@ -24,7 +28,7 @@ $(function(){
 	<a href="/index.php?a=member&m=connect" class="lv1" id="connect">关联帐号</a>
 	<div class="tree">
 		<div class="arrow close"></div>
-		<a href="/index.php?a=member&m=safe" class="lv1" id="safe">账号安全性</a>
+		<a href="/index.php?a=member&m=safe" class="lv1 hassub" id="safe">账号安全性</a>
 		<div class="sub">
 			<a href="/index.php?a=member&m=password" class="lv2" id="password">修改密码</a>
 			<a href="/index.php?a=member&m=qanda" class="lv2" id="qanda">保密问题</a>
