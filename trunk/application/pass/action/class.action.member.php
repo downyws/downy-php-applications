@@ -196,8 +196,9 @@ class ActionMember extends ActionCommon
 	{
 		$product = array
 		(
-			'kj' => array('name' => '空间', 'exp' => '使用5年', 'href' => '#1', 'info' => array(array('key' => '访客', 'val' => '321'), array('key' => '金币', 'val' => '321'))),
-			'kj1' => array('name' => '博客', 'exp' => '初级', 'href' => '#2', 'info' => array(array('key' => '文章', 'val' => '321'), array('key' => '评论', 'val' => '321')))
+			'kj' => array('name' => '空间', 'logo' => '/images/1.png', 'exp' => '使用5年', 'href' => '#1', 'info' => array(array('key' => '访客', 'val' => '321'), array('key' => '金币', 'val' => '321'))),
+			'kj1' => array('name' => '博客', 'logo' => '/images/1.png', 'exp' => '初级', 'href' => '#2', 'info' => array(array('key' => '文章', 'val' => '321'), array('key' => '评论', 'val' => '321'))),
+			'kj2' => array('name' => '微波', 'logo' => '/images/1.png', 'exp' => '噶击', 'href' => '#3', 'html' => '<a href="asdf">asdf</a><br />asdfasdfa')
 		);
 
 		$this->assign('product', $product);

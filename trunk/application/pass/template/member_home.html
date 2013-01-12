@@ -10,19 +10,21 @@
 				<div class="detail homepage">
 					<div class="product">
 						<ul>
-							{foreach from=$product item=v key=k}
+							{foreach from=$product item=v}
 							<li class="item">
 								<div class="title">
-									<span class="logo {$k}"></span>
+									<img src="{$v.logo}" class="logo" />
 									<a class="name" href="{$v.href}">{$v.name}</a>
 									<span class="exp">[ {$v.exp} ]</span>
 								</div>
 								<div class="info">
-									<ul class="clearfix">
-										{foreach from=$v.info item=_v}
-										<li><span class="val">{$_v.val}</span><span class="key">{$_v.key}</span></li>
-										{/foreach}
-									</ul>
+									{if !empty($v.html)}{$v.html}{else}
+										<ul class="clearfix">
+											{foreach from=$v.info item=_v}
+											<li><span class="val">{$_v.val}</span><span class="key">{$_v.key}</span></li>
+											{/foreach}
+										</ul>
+									{/if}
 								</div>
 							</li>
 							{/foreach}
