@@ -194,7 +194,14 @@ class ActionMember extends ActionCommon
 
 	public function methodHome()
 	{
+		$product = array
+		(
+			'kj' => array('name' => '空间', 'exp' => '使用5年', 'href' => '#1', 'info' => array(array('key' => '访客', 'val' => '321'), array('key' => '金币', 'val' => '321'))),
+			'kj1' => array('name' => '博客', 'exp' => '初级', 'href' => '#2', 'info' => array(array('key' => '文章', 'val' => '321'), array('key' => '评论', 'val' => '321')))
+		);
 
+		$this->assign('product', $product);
+		$this->assign('MEMBER', $_SESSION['MEMBER']);
 	}
 
 	public function methodBase()
@@ -211,6 +218,12 @@ class ActionMember extends ActionCommon
 
 	public function methodPassword()
 	{
+		// 获取参数
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'submit' => array(array('format', 'int'))
+		));
+		$this->assign('params', $params);
+
 	}
 
 	public function methodQandA()
