@@ -10,8 +10,9 @@ session_start();
 
 // 状态
 define('STATUS_DEFAULT', 1);		// 正常
-define('STATUS_DISABEL', 2);		// 禁用
+define('STATUS_DISABEL', 2);		// 禁用（被动）
 define('STATUS_UNACTIVE', 4);	// 未激活
+define('STATUS_DISCARD', 8);	// 抛弃（主动）
 
 // 提示类型
 define('PROMPT_ERROR', 0);			// 错误

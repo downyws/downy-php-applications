@@ -198,12 +198,14 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .dy-bubble .arrow .arrow-f{border:8px solid;border-color:transparent #FFFFFF;top:-8px;border-right-width:0;}
 
 .homepage .product{float:left;width:65%;}
+.homepage .product .btn-product{text-align:center;border:1px solid #E5E5E5;padding:5px;cursor:pointer;color:#DD4B39;background:#F9F9F9;}
+.homepage .product .btn-product:hover{background:#F6F6F6;}
 .homepage .product .item{border:1px solid #EEEEEE;padding:12px 20px;margin-bottom:10px;}
 .homepage .product .item .title{border-bottom:1px solid #EEEEEE;padding-bottom:5px;margin-bottom:10px;}
 .homepage .product .item .title .logo{width:16px;height:16px;float:left;margin-top:2px;}
 .homepage .product .item .title .name{font-size:16px;margin:0px 5px;text-decoration:none;color:#000000;}
 .homepage .product .item .title .name:hover{color:#DD4B39;}
-.homepage .product .item .title .exp{color:#999999;}
+.homepage .product .item .title span{color:#999999;margin-left:5px;}
 .homepage .product .item .info{margin:0px;}
 .homepage .product .item .info li{float:left;margin-right:30px;}
 .homepage .product .item .info li .val{display:block;text-align:center;font-size:18px;padding-bottom:3px;}
