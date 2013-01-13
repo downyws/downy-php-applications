@@ -8,6 +8,37 @@ class ModelMember extends ModelCommon
 		parent::__construct();
 	}
 
+	public function getMemberId()
+	{
+		return $_SESSION['MEMBER']['id'];
+	}
+
+	public function memberApps($member_id)
+	{
+		$filecache = new Filecache();
+		$cache = array('key' => strtolower(__CLASS__ . '_' . __FUNCTION__ . '/' . $member_id), 'time' => 1800);
+		$apps = $filecache->get($cache['key']);
+		if(!$apps)
+		{
+			$condition = array();
+			$condition[] = array('ma.member_id' => array('eq', $member_id));
+			$condition[] = array('a.status' => array('eq', STATUS_DEFAULT));
+			$condition[] = array('ma.status' => array('neq', STATUS_DISCARD));
+			$sql = 'SELECT ma.*, a.name, a.image, a.home_page FROM ' . $this->table('member_application') . ' AS ma JOIN ' . $this->table('appliction') . ' AS a ON a.id = ma.application_id ' . 
+				$this->getWhere($condition) . ' ORDER BY update_time DESC ';
+			$apps = $this->fetchRows($sql);
+			foreach($apps as $k => $v)
+			{
+				$today = mktime(1, 0, 0, date('m'), date('d'), date('Y'));
+				$addday = mktime(0, 0, 0, date('m', $apps[$k]['create_time']), date('d', $apps[$k]['create_time']), date('Y', $apps[$k]['create_time']));
+				$apps[$k]['exp'] = ceil(($today - $addday) / 86400);
+				$apps[$k]['data'] = json_decode($apps[$k]['data'], true);
+			}
+			$filecache->set($cache['key'], $apps, $cache['time']);
+		}
+		return $apps;
+	}
+
 	public function login($params, $type = '', $is_md5 = false, $log_inout = true)
 	{
 		$err = array();

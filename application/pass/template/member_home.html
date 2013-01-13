@@ -9,18 +9,37 @@
 				{include file="member_common_navg.html"}
 				<div class="detail homepage">
 					<div class="product">
+						<script type="text/javascript">
+						{literal}
+						$(function(){
+							$(".btn-product").click(function(){
+								if($(this).hasClass("close")){
+									$(this).parent().find(".item").css("display", "block");
+									$(this).removeClass("close").addClass("open").html("收起列表");
+								}else{							
+									$(this).parent().find(".item").each(function(index){
+										$(this).css("display", (index > 3) ? "none" : "block");
+									});
+									$(this).removeClass("open").addClass("close").html("展开列表");
+								}
+							});
+							$(".btn-product").click();
+						});
+						{/literal}
+						</script>
 						<ul>
 							{foreach from=$product item=v}
 							<li class="item">
 								<div class="title">
-									<img src="{$v.logo}" class="logo" />
-									<a class="name" href="{$v.href}">{$v.name}</a>
-									<span class="exp">[ {$v.exp} ]</span>
+									<img src="{$v.image}" class="logo" />
+									<a class="name" target="_blank" href="{$v.home_page}">{$v.name}</a>
+									<span>[ 已使用 {if $v.exp >= 365}{($v.exp / 365)|string_format:'%0.1f'} 年{else}{$v.exp} 天{/if} ]</span>
+									{if !empty($v.status_msg)}<span>[ {$v.status_msg} ]</span>{/if}
 								</div>
 								<div class="info">
-									{if !empty($v.html)}{$v.html}{else}
+									{if !empty($v.data.html)}{$v.data.html}{else}
 										<ul class="clearfix">
-											{foreach from=$v.info item=_v}
+											{foreach from=$v.data.info item=_v}
 											<li><span class="val">{$_v.val}</span><span class="key">{$_v.key}</span></li>
 											{/foreach}
 										</ul>
@@ -28,6 +47,7 @@
 								</div>
 							</li>
 							{/foreach}
+							<li class="btn-product open">展开列表</li>
 						</ul>
 					</div>
 					<div class="account">
