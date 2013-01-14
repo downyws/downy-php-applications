@@ -64,3 +64,5 @@ $GLOBALS['CONFIG']['REGISTER_CAPTCHA_OPTIONS'] = array('COUNT' => 0, 'TIME' => 3
 $GLOBALS['SEX'] = array('OTHER' => 0, 'MALE' => 1, 'FEMALE' => 2);
 // 血型
 $GLOBALS['BLOOD'] = array('OTHER' => 0, 'A' => 1, 'B' => 2, 'AB' => 3, 'O' => 4);
+// 隐私
+$GLOBALS['PRIVACY'] = array('ALL' => 0, 'SELF' => 1);
