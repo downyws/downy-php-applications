@@ -8,12 +8,14 @@ class ModelMember extends ModelCommon
 		parent::__construct();
 	}
 
-	public function getMemberId()
+	public function getMemberInfo($member_id)
 	{
-		return $_SESSION['MEMBER']['id'];
+		$condition = array();
+		$condition[] = array('id' => array('eq', $member_id));
+		return $this->getObject($condition, null, 'member_info');
 	}
 
-	public function memberApps($member_id)
+	public function getMemberApps($member_id)
 	{
 		$filecache = new Filecache();
 		$cache = array('key' => strtolower(__CLASS__ . '_' . __FUNCTION__ . '/' . $member_id), 'time' => 1800);

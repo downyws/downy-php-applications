@@ -195,7 +195,8 @@ class ActionMember extends ActionCommon
 	public function methodHome()
 	{
 		$memberObj = Factory::getModel('member');
-		$product = $memberObj->memberApps($memberObj->getMemberId());
+		$member = $memberObj->getSessionMember();
+		$product = $memberObj->getMemberApps($member['id']);
 		foreach($product as $k => $v)
 		{
 			if($product[$k]['status'] != STATUS_DEFAULT)
@@ -209,11 +210,15 @@ class ActionMember extends ActionCommon
 			}
 		}
 		$this->assign('product', $product);
-		$this->assign('MEMBER', $_SESSION['MEMBER']);
+		$this->assign('member', $member);
 	}
 
 	public function methodBase()
 	{
+		$memberObj = Factory::getModel('member');
+		$member = $memberObj->getSessionMember();
+		$member['info'] = $memberObj->getMemberInfo($member['id']);
+		$this->assign('member', $member);
 	}
 
 	public function methodConnect()
@@ -231,7 +236,6 @@ class ActionMember extends ActionCommon
 			'submit' => array(array('format', 'int'))
 		));
 		$this->assign('params', $params);
-
 	}
 
 	public function methodQandA()

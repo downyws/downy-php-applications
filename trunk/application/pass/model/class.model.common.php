@@ -48,4 +48,9 @@ class ModelCommon extends Model
 		$result = (count($result) > 0) ? $result[0] : '';
 		return $result;
 	}
+
+	public function getSessionMember()
+	{
+		return $_SESSION['MEMBER'];
+	}
 }
