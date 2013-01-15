@@ -1,5 +1,36 @@
 {include file="common_top.html"}
 {include file="common_head.html"}
+<script type="text/javascript">
+{literal}
+$(function(){
+	$(".page-member_base .item").click(function(){
+		$.fn.dyDialog({
+			content: "<div style='padding:5px;background:#FFFFFF;border:1px solid #000000;width:100px;height:100px;'><font class='xx' >123</font></div>", 
+			bgStyle: {},
+			locate: {
+				type: "tag", // window、page、tag
+				target: {	// 仅type=tag时有效
+					object: $(this),
+					origin: "mm"	// lt lm lb mt mm mb rt rm rb
+				},
+				x: "0",	// left middle right
+				y: "0",	// top middle bottom
+				origin: "mm"	// lt lm lb mt mm mb rt rm rb
+			}, 
+			onEvent: {
+				open: function(){/* code */}, 
+				close: function(){/* code */},
+				resize: function(){/* code */}
+			},
+			close:{
+				className: "xx",
+				bgBtn: false
+			}
+		});
+	});
+});
+{/literal}
+</script>
 {include file="common_center.html"}
 <div class="app-wrapper">
 	{include file="common_appheader.html"}
@@ -8,15 +39,46 @@
 			<div class="block-member">
 				{include file="member_common_navg.html"}
 				<div class="detail page-member_base">
-					<div class="item"><div class="key">头像</div><div class="val"><img src="/images/me.jpg" width="100px" /></div><div class="privacy">仅个人</div></div>
-					<div class="item"><div class="key">姓氏</div><div class="val">您的个性宣言</div><div class="privacy">仅个人</div></div>
-					<div class="item"><div class="key">名字</div><div class="val">您的个性宣言</div><div class="privacy">仅个人</div></div>
-					<div class="item"><div class="key">性别</div><div class="val">您的个性宣言</div><div class="privacy">仅个人</div></div>
-					<div class="item"><div class="key">生日</div><div class="val">您的个性宣言</div><div class="privacy">仅个人</div></div>
-					<div class="item"><div class="key">血型</div><div class="val">您的个性宣言</div><div class="privacy">仅个人</div></div>
-					<div class="item"><div class="key">个性宣言</div><div class="val">您的个性宣言</div><div class="privacy">仅个人</div></div>
-					<div class="item"><div class="key">手机</div><div class="val">您的个性宣言</div><div class="privacy">仅个人</div></div>
-					<div class="item"><div class="key">邮箱</div><div class="val">您的个性宣言</div><div class="privacy">仅个人</div></div>
+					<div class="item">
+						<div class="key">头像</div>
+						<div class="val"><img src="{if $member.image}{$member.image}{else}/images/portrait.png{/if}" width="100px" /></div>
+						<div class="privacy"></div>
+					</div>
+					<div class="item">
+						<div class="key">姓名</div>
+						<div class="val">{$member.first_name} {$member.last_name}</div>
+						<div class="privacy">仅个人</div>
+					</div>
+					<div class="item">
+						<div class="key">性别</div>
+						<div class="val">{$member.sex|sex_format}</div>
+						<div class="privacy">仅个人</div>
+					</div>
+					<div class="item">
+						<div class="key">生日</div>
+						<div class="val">{$member.info.birthday|date_format:"%Y年%m月%d日"}</div>
+						<div class="privacy">仅个人</div>
+					</div>
+					<div class="item">
+						<div class="key">血型</div>
+						<div class="val">{$member.info.blood|blood_format}</div>
+						<div class="privacy">仅个人</div>
+					</div>
+					<div class="item">
+						<div class="key">个性宣言</div>
+						<div class="val">{$member.info.sign}</div>
+						<div class="privacy">仅个人</div>
+					</div>
+					<div class="item">
+						<div class="key">手机</div>
+						<div class="val">{$member.mobile}</div>
+						<div class="privacy">仅个人</div>
+					</div>
+					<div class="item">
+						<div class="key">邮箱</div>
+						<div class="val">{$member.email}</div>
+						<div class="privacy">仅个人</div>
+					</div>
 				</div>
 			</div>
 		</div>
