@@ -246,6 +246,7 @@ $.fn.extend({
 		if(typeof(config.locate.x) == "undefined") config.locate.x = 0;
 		if(typeof(config.locate.y) == "undefined") config.locate.y = 0;
 		if(typeof(config.locate.origin) == "undefined") config.locate.origin = "lt";
+		if(typeof(config.onEvent) == "undefined") config.onEvent = {};
 		if(typeof(config.onEvent.open) == "undefined") config.onEvent.open = function(){};
 		if(typeof(config.onEvent.close) == "undefined") config.onEvent.close = function(){};
 		if(typeof(config.onEvent.resize) == "undefined") config.onEvent.resize = function(){};
