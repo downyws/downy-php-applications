@@ -65,4 +65,7 @@ $GLOBALS['SEX'] = array('OTHER' => 0, 'MALE' => 1, 'FEMALE' => 2);
 // 血型
 $GLOBALS['BLOOD'] = array('OTHER' => 0, 'A' => 1, 'B' => 2, 'AB' => 3, 'O' => 4);
 // 隐私
-$GLOBALS['PRIVACY'] = array('ALL' => 0, 'SELF' => 1);
+$GLOBALS['PRIVACY'] = array(
+	'TYPE' => array('ALL' => 1, 'SELF' => 2),
+	'DEFAULT' => array('name' => -1, 'portrait' => -1, 'email' => 2, 'mobile' => 2, 'sex' => 2, 'birthday' => 2, 'blood' => 2, 'sign' => -1)
+);

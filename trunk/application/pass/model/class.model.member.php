@@ -15,6 +15,19 @@ class ModelMember extends ModelCommon
 		return $this->getObject($condition, null, 'member_info');
 	}
 
+	public function getMemberPrivacy($member_id)
+	{
+		$condition = array();
+		$condition[] = array('member_id' => array('eq', $member_id));
+		$privacys = $this->getPairs($condition, array('field', 'type'), 'member_privacy');
+		foreach($GLOBALS['PRIVACY']['DEFAULT'] as $k => $v)
+		{
+			if($v < 0) $privacys[$k] = $v * -1;
+			else if(empty($privacys[$k])) $privacys[$k] = $v;
+		}
+		return $privacys;
+	}
+
 	public function getMemberApps($member_id)
 	{
 		$filecache = new Filecache();

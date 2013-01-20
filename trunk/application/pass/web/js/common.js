@@ -8,7 +8,7 @@ $(function(){
 		$(this).dySelect({name: $(this).attr("name"), text: $(this).data("text"), type: $(this).data("type"), width: $(this).data("width"), height: $(this).data("height"), defval: $(this).data("defval")});
 	});
 	$(".dy-text").each(function(){
-		$(this).dyText({tips: $(this).data("dy_tips")});
+		$(this).dyText({tips: true});
 	});
 	$(".dy_oncemsg").each(function(){
 		$(this).dyOnceMsg({target: $(this).data("target"), event: $(this).data("event")});
@@ -74,6 +74,16 @@ $.fn.extend({
 		}
 		return score;
 	},
+	// 最大z-index
+	dyMaxZindex: function(){
+		var m = 0, z = 0;
+		$("body").find("*").each(function(){
+			z = isNaN(z) ? 0 : $(this).css("z-index") * 1;
+			if(m < z) m = z;
+		});
+		return m;
+	},
+	// 一次性提示
 	dyOnceMsg: function(option){
 		$(option.target).data("dy-oncemsg", this);
 		$(option.target).bind(option.event, function(){
@@ -127,7 +137,7 @@ $.fn.extend({
 		}
 	},
 	dyText: function(option){
-		if(typeof(option.tips) != "undefined"){
+		if(typeof(option.tips) != "undefined" && option.tips){
 			$(this).dyTips();
 		}
 		$(this).focus(function(){
@@ -230,6 +240,7 @@ $.fn.extend({
 		if(typeof(config.content) == "undefined") config.content = "";
 		if(typeof(config.bgStyle) == "undefined") config.bgStyle = {};
 		if(typeof(config.locate.type) == "undefined") config.locate.type = "window";
+		if(typeof(config.locate.target) == "undefined") config.locate.target = {};
 		if(typeof(config.locate.target.object) == "undefined") config.locate.target.object = false;
 		if(typeof(config.locate.target.origin) == "undefined") config.locate.target.origin = "lt";
 		if(typeof(config.locate.x) == "undefined") config.locate.x = 0;
@@ -355,20 +366,23 @@ $.fn.extend({
 		};
 
 		// 创建对象
+		var z_index = $.fn.dyMaxZindex();
 		var id = "dy-dialog-" + parseInt(Math.random() * 1000);
-		$("body").append("<div id='" + id + "-bg'></div>");
-		$("#" + id + "-bg").css({"top":"0", "left":"0", "position":"absolute", "z-index":"999", "background-color":"#DDDDDD", "opacity":"0.6"});
+		$("body").append("<div id='" + id + "'><div id='" + id + "-ft'>" + config.content + "</div><div id='" + id + "-bg'></div></div>");
+		$("#" + id + "-bg").css({"top":"0", "left":"0", "position":"absolute", "z-index":(z_index + 1), "background-color":"#DDDDDD", "opacity":"0.6"});
 		$("#" + id + "-bg").css(config.bgStyle);
 
 		// 定位
-		var c_x = config.locate.x * 1, c_y = config.locate.y * 1, c_o = config.locate.origin;
-		$("body").append("<div id='" + id + "-ft'>" + config.content + "</div>");
+		var c_x = config.locate.x, c_y = config.locate.y, c_o = config.locate.origin;
+		c_x = isNaN(c_x) ? c_x : (c_x * 1);
+		c_y = isNaN(c_y) ? c_y : (c_y * 1);
+		$("body").append();
 		if(config.locate.type == "window"){
-			$("#" + id + "-ft").css({"position":"fixed", "z-index":"1000"});
+			$("#" + id + "-ft").css({"position":"fixed", "z-index":(z_index + 2)});
 		}else if(config.locate.type == "page"){
-			$("#" + id + "-ft").css({"position":"absolute", "z-index":"1000"});
+			$("#" + id + "-ft").css({"position":"absolute", "z-index":(z_index + 2)});
 		}else if(config.locate.type == "tag"){
-			$("#" + id + "-ft").css({"position":"absolute", "z-index":"1000"});
+			$("#" + id + "-ft").css({"position":"absolute", "z-index":(z_index + 2)});
 		}
 
 		// 绑定
