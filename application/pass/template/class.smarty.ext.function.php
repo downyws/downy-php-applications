@@ -25,7 +25,7 @@ function privacy_format($value)
 {
 	switch($value)
 	{
-		case $GLOBALS['SEX']['SELF']: $value = '仅自己'; break;
+		case $GLOBALS['PRIVACY']['TYPE']['SELF']: $value = '仅自己'; break;
 		default: $value = '公开'; break;
 	}
 	echo $value;
