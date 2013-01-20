@@ -265,6 +265,38 @@ class ModelMember extends ModelCommon
 		return $inout_id;
 	}
 
+	public function modifyPortrait($params)
+	{
+	}
+
+	public function modifyName($params)
+	{
+	}
+
+	public function modifySex($params)
+	{
+	}
+
+	public function modifyBirthday($params)
+	{
+	}
+
+	public function modifyBlood($params)
+	{
+	}
+
+	public function modifySign($params)
+	{
+	}
+
+	public function modifyMobile($params)
+	{
+	}
+
+	public function modifyEmail($params)
+	{
+	}
+
 	public function checkErrName($vals, $can_empty = false)
 	{
 		if(empty($vals['first_name'])) return $can_empty ? false : MEMBER_REGISTER_FNAMEEMPTY;

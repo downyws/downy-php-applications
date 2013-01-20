@@ -43,10 +43,10 @@
 		<div class="name">性别</div>
 		<div class="panel">
 			<div class="control"><select name="sex" class="dy_select" data-type="choose" data-width="295" data-height="81">
-				{foreach from=$sexs item=v}<option value="{$v}">{$v|sex_format}</option>{/foreach}
+				{foreach from=$sexs item=v key=k}<option value="{$k}">{$v|sex_format}</option>{/foreach}
 			</select></div>
 			<div class="privacy"><select name="sex_privacy" class="dy_select" data-type="choose" data-width="150" data-height="54">
-				{foreach from=$privacys item=v}<option value="{$v}">{$v|privacy_format}</option>{/foreach}
+				{foreach from=$privacys item=v key=k}<option value="{$k}">{$v|privacy_format}</option>{/foreach}
 			</select></div>
 			<div class="message"></div>
 			<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
@@ -56,24 +56,12 @@
 		<div class="name">生日</div>
 		<div class="panel">
 			<div class="control">
-				<label class="birthday_year"><input type="text" name="birthday_year" class="dy-text year" /></label>年
-				<label class="birthday_month"><select name="birthday_month" class="dy_select" data-type="choose" data-width="80" data-height="162">
-					<option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option>
-					<option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option>
-					<option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
-				</select></label>月
-				<label class="birthday_day"><select name="birthday_day" class="dy_select" data-type="choose" data-width="80" data-height="189">
-					<option value="01">1</option>
-					<option value="02">2</option>
-					<option value="03">3</option>
-					<option value="04">4</option>
-					<option value="05">5</option>
-					<option value="06">6</option>
-					<option value="07">7</option>
-				</select></label>日
+				<label class="birthday_year"><input type="text" name="birthday_year" class="dy-text" /></label>年
+				<label class="birthday_month"><input type="text" name="birthday_month" class="dy-text" /></label>月
+				<label class="birthday_day"><input type="text" name="birthday_day" class="dy-text" /></label>日
 			</div>
 			<div class="privacy"><select name="birthday_privacy" class="dy_select" data-type="choose" data-width="150" data-height="54">
-				{foreach from=$privacys item=v}<option value="{$v}">{$v|privacy_format}</option>{/foreach}
+				{foreach from=$privacys item=v key=k}<option value="{$k}">{$v|privacy_format}</option>{/foreach}
 			</select></div>
 			<div class="message"></div>
 			<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
@@ -83,10 +71,10 @@
 		<div class="name">血型</div>
 		<div class="panel">
 			<div class="control"><select name="blood" class="dy_select" data-type="choose" data-width="295" data-height="108">
-				{foreach from=$bloods item=v}<option value="{$v}">{$v|blood_format}</option>{/foreach}
+				{foreach from=$bloods item=v key=k}<option value="{$k}">{$v|blood_format}</option>{/foreach}
 			</select></div>
 			<div class="privacy"><select name="blood_privacy" class="dy_select" data-type="choose" data-width="150" data-height="54">
-				{foreach from=$privacys item=v}<option value="{$v}">{$v|privacy_format}</option>{/foreach}
+				{foreach from=$privacys item=v key=k}<option value="{$k}">{$v|privacy_format}</option>{/foreach}
 			</select></div>
 			<div class="message"></div>
 			<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
@@ -106,7 +94,7 @@
 		<div class="panel">
 			<div class="control"><div class="readonly">15876543210</div></div>
 			<div class="privacy"><select name="mobile_privacy" class="dy_select" data-type="choose" data-width="150" data-height="54">
-				{foreach from=$privacys item=v}<option value="{$v}">{$v|privacy_format}</option>{/foreach}
+				{foreach from=$privacys item=v key=k}<option value="{$k}">{$v|privacy_format}</option>{/foreach}
 			</select></div>
 			<div class="message"></div>
 			<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
@@ -117,7 +105,7 @@
 		<div class="panel">
 			<div class="control"><div class="readonly">wing075@gmail.com</div></div>
 			<div class="privacy"><select name="email_privacy" class="dy_select" data-type="choose" data-width="150" data-height="54">
-				{foreach from=$privacys item=v}<option value="{$v}">{$v|privacy_format}</option>{/foreach}
+				{foreach from=$privacys item=v key=k}<option value="{$k}">{$v|privacy_format}</option>{/foreach}
 			</select></div>
 			<div class="message"></div>
 			<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
@@ -156,8 +144,8 @@ function F_sex(){
 function F_birthday(){
 	return [
 		{"selector":".dialog-birthday *[name=birthday_year]", "type":"text", "defval":".item-birthday ._year"},
-		{"selector":".dialog-birthday *[name=birthday_month]", "type":"select", "defval":".item-birthday ._month"},
-		{"selector":".dialog-birthday *[name=birthday_day]", "type":"select", "defval":".item-birthday ._day"},
+		{"selector":".dialog-birthday *[name=birthday_month]", "type":"text", "defval":".item-birthday ._month"},
+		{"selector":".dialog-birthday *[name=birthday_day]", "type":"text", "defval":".item-birthday ._day"},
 		{"selector":".dialog-birthday *[name=birthday_privacy]", "type":"select", "defval":".item-birthday .privacy"}
 	];
 }
@@ -206,24 +194,24 @@ function T_main(field, type){
 		if(change){
 			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=member&m=basemodify", data: data, async: true, beforeSend: function(){
 				$.fn.dyDialog({
-					locate: {type: "window", x: "middle", y: "middle", origin: "mm"}, content: "<div class='dy-dialog dialog-loading clearfix'><div class='close hide'></div></div>",
+					locate: {type: "window", x: "middle", y: "middle", origin: "mm"}, content: "<div class='dy-dialog dialog-loading clearfix'><img src='/images/loading.gif' /><div class='close hide'></div></div>",
 					close: {className: "close", bgBtn: false}
 				});
 			}, complete: function(jqXHR, textStatus){
 				$(".dialog-loading .close").click();
 				if(textStatus != "success"){
 					var msg_obj = $(".dialog-" + field + " .message");
-					msg_obj.addClass("error").html("AJAX请求错误[" + textStatus + "]。").show(300);	
-					$("body").one('mousedown', function(){msg_obj.hide(300, function(){msg_obj.removeClass("error");});});
+					msg_obj.html("AJAX请求错误[" + textStatus + "]。").show(300);	
+					$("body").one('mousedown', function(){msg_obj.hide(300);});
 				}
 			}, success: function(result){
 				if(result.state){
-					$(".item-" + field).html(result.html);
+					$(".item-" + field).html(result.message);
 					$(".dialog-" + field + " .close").click();
 				}else{
 					var msg_obj = $(".dialog-" + field + " .message");
-					msg_obj.addClass("error").html(result.message).show(300);	
-					$("body").one('mousedown', function(){msg_obj.hide(300, function(){msg_obj.removeClass("error");});});
+					msg_obj.html(result.message).show(300);
+					$("body").one('mousedown', function(){msg_obj.hide(300);});
 				}
 			}});
 		}else{

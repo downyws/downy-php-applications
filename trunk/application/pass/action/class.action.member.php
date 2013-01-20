@@ -112,7 +112,7 @@ class ActionMember extends ActionCommon
 			'account' => array(array('format', 'trim')),
 			'password' => array(array('format', 'trim')),
 			'passwordcfm' => array(array('format', 'trim')),
-			'sex' => array(array('valid', 'in', '', '', array('FEMALE', 'MALE', 'OTHER'))),
+			'sex' => array(array('valid', 'in', '', '', array_keys($GLOBALS['SEX']))),
 			'email' => array(array('format', 'trim')),
 			'mobile' => array(array('format', 'trim')),
 			'captcha' => array(array('format', 'trim')),
@@ -218,7 +218,94 @@ class ActionMember extends ActionCommon
 		$memberObj = Factory::getModel('member');
 		$member = $memberObj->getSessionMember();
 		$member['info'] = $memberObj->getMemberInfo($member['id']);
+		$member['privacy'] = $memberObj->getMemberPrivacy($member['id']);
 		$this->assign('member', $member);
+
+		$this->assign('bloods', $GLOBALS['BLOOD']);
+		$this->assign('privacys', $GLOBALS['PRIVACY']['TYPE']);
+		$this->assign('sexs', $GLOBALS['SEX']);
+	}
+
+	public function methodBaseModify()
+	{
+		// 获取参数
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'field' => array(array('valid', 'in', '不存在您所要保存的字段。', null, array_keys($GLOBALS['PRIVACY']['DEFAULT'])))
+		));
+
+		// 错误提示
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->jsonout(array('state' => false, 'message' => end($this->_submit->errors)));
+		}
+
+		// 获取参数
+		$fields = array(
+			'portrait' => array(),
+			'name' => array(
+				'first_name' => array(array('format', 'trim')),
+				'last_name' => array(array('format', 'trim'))
+			),
+			'sex' => array(
+				'sex' => array(array('valid', 'in', '您所选的性别选项不存在。', null, array_keys($GLOBALS['SEX']))),
+				'sex_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+			),
+			'birthday' => array(
+				'birthday_year' => array(array('format', 'trim')),
+				'birthday_month' => array(array('format', 'trim')),
+				'birthday_day' => array(array('format', 'trim')),
+				'birthday_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+			),
+			'blood' => array(
+				'blood' => array(array('valid', 'in', '您所选的血型选项不存在。', null, array_keys($GLOBALS['BLOOD']))),
+				'blood_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+			),
+			'sign' => array(
+				'sign' => array(array('format', 'trim'))
+			),
+			'mobile' => array(
+				'mobile_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+			),
+			'email' => array(
+				'email_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+			),
+			'_error_' => array(
+				'_error_' => array(array('valid', 'empty', '缺少编辑项，请联系管理员。', null, null))
+			)
+		);
+		$params = array_merge($params, $this->_submit->obtain($_REQUEST, $fields[$params['field']]));
+
+		// 错误提示
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->jsonout(array('state' => false, 'message' => end($this->_submit->errors)));
+		}
+
+		// 处理
+		$memberObj = Factory::getModel('member');
+		$fun = 'modify' . $params['field'];
+		if($memberObj->$fun($params))
+		{
+			$member = $memberObj->getSessionMember();
+			switch($params['field'])
+			{
+				case 'portrait': break;
+				case 'name': $member = array('first_name' => $params['first_name'], 'last_name' => $params['last_name']); break;
+				case 'sex': $member = array('sex' => $GLOBALS['SEX'][$params['sex']], 'privacy' => array('sex' => $GLOBALS['PRIVACY']['TYPE'][$params['sex_privacy']])); break;
+				case 'birthday': $member = array('info' => array('birthday' => strtotime($params['birthday_year'] . '-' . $params['birthday_month'] . '-' . $params['birthday_day'])), 'privacy' => array('birthday' => $GLOBALS['PRIVACY']['TYPE'][$params['birthday_privacy']])); break;
+				case 'blood': $member = array('info' => array('blood' => $GLOBALS['BLOOD'][$params['blood']]), 'privacy' => array('blood' => $GLOBALS['PRIVACY']['TYPE'][$params['blood_privacy']])); break;
+				case 'sign': $member = array('info' => array('sign' => $params['sign'])); break;
+				case 'mobile': $member = array('mobile' => $member['mobile'], 'privacy' => array('mobile' => $GLOBALS['PRIVACY']['TYPE'][$params['mobile_privacy']])); break;
+				case 'email': $member = array('email' => $member['email'], 'privacy' => array('email' => $GLOBALS['PRIVACY']['TYPE'][$params['email_privacy']])); break;
+			}
+			$this->initTemplate();
+			$this->assign('field', $params['field']);
+			$this->assign('member', $member);
+			$html = $this->_tpl->fetch(APP_DIR_TEMPLATE  . 'member_base_item.html');
+			$this->jsonout(array('state' => true, 'message' => $html));
+		}
+		$code = $memberObj->getError();
+		$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][$code]));
 	}
 
 	public function methodConnect()
