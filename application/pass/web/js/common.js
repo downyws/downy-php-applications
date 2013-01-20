@@ -261,7 +261,7 @@ $.fn.extend({
 			config.close.className && $("#" + id + "-ft ." + config.close.className).unbind('click', H_Close);
 			// 销毁对象
 			$("#" + id + "-bg, #" + id + "-ft").fadeOut(300, function(){
-				$(this).remove();
+				$("#" + id).remove();
 			});
 			// 关闭回调
 			config.onEvent.close();

@@ -214,14 +214,16 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .dy-dialog .panel .privacy{margin-bottom:15px;}
 .dy-dialog .panel .privacy .readonly{background:#F7F7F7;display:inline;padding:6px 10px;border:1px solid #D9D9D9;width:130px;display:block;font-weight:bold;}
 .dy-dialog .panel .button input{margin-right:10px;}
-.dy-dialog .panel .message{margin-bottom:15px;display:none;}
-.dy-dialog .panel .message.error{color:#FF0000;}
+.dy-dialog .panel .message{margin-bottom:15px;display:none;color:#FF0000;}
 
+.dialog-loading{padding:40px;filter:alpha(Opacity=60);opacity:0.6;background:#666666;}
 .dialog-name .control label.first_name input{width:140px;margin-right:7px;}
 .dialog-name .control label.last_name input{width:150px;}
 .dialog-name .control label span{color:#BBBBBB;position:absolute;display:none;top:8px;left:10px;cursor:text;}
 .dialog-birthday .control label{margin-right:5px;}
 .dialog-birthday .control label.birthday_year input{width:60px;height:29px;}
+.dialog-birthday .control label.birthday_month input{width:40px;height:29px;}
+.dialog-birthday .control label.birthday_day input{width:40px;height:29px;}
 .dialog-birthday .control label.birthday_month{margin-left:10px;}
 .dialog-birthday .control label.birthday_day{margin-left:10px;}
 			.dialog-portrait .panel{border:3px dashed #DDDDDD;width:700px;height:450px;margin:0px;float:none;margin:10px;}

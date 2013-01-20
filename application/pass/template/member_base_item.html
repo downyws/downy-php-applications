@@ -1,0 +1,40 @@
+{if $field == "portrait"}
+	<div class="key">头像</div>
+	<div class="val" data-val="{$member.portrait}"><img src="{if $member.portrait}{$member.portrait}{else}/images/portrait.png{/if}" width="100px" /></div>
+	<div class="privacy"></div>
+{else if $field == "name"}
+	<div class="key">姓名</div>
+	<div class="val">
+		<a class="_first" data-val="{$member.first_name}">{$member.first_name}</a>
+		<a class="_last" data-val="{$member.last_name}">{$member.last_name}</a>
+	</div>
+	<div class="privacy">{0|privacy_format}</div>
+{else if $field == "sex"}
+	<div class="key">性别</div>
+	<div class="val" data-val="{$member.sex|sex_key}">{$member.sex|sex_format}</div>
+	<div class="privacy" data-val="{$member.privacy.sex|privacy_key}">{$member.privacy.sex|privacy_format}</div>
+{else if $field == "birthday"}
+	<div class="key">生日</div>
+	<div class="val">
+		<a class="_year" data-val="{$member.info.birthday|date_format:"%Y"}">{$member.info.birthday|date_format:"%Y"}</a>年
+		<a class="_month" data-val="{$member.info.birthday|date_format:"%m"}">{$member.info.birthday|date_format:"%m"}</a>月
+		<a class="_day" data-val="{$member.info.birthday|date_format:"%d"}">{$member.info.birthday|date_format:"%d"}</a>日
+	</div>
+	<div class="privacy" data-val="{$member.privacy.birthday|privacy_key}">{$member.privacy.birthday|privacy_format}</div>
+{else if $field == "blood"}
+	<div class="key">血型</div>
+	<div class="val" data-val="{$member.info.blood|blood_key}">{$member.info.blood|blood_format}</div>
+	<div class="privacy" data-val="{$member.privacy.blood|privacy_key}">{$member.privacy.blood|privacy_format}</div>
+{else if $field == "sign"}
+	<div class="key">个性宣言</div>
+	<div class="val" data-val="{$member.info.sign}">{$member.info.sign}</div>
+	<div class="privacy">{0|privacy_format}</div>
+{else if $field == "mobile"}
+	<div class="key">手机</div>
+	<div class="val" data-val="{$member.mobile}">{$member.mobile}</div>
+	<div class="privacy" data-val="{$member.privacy.mobile|privacy_key}">{$member.privacy.mobile|privacy_format}</div>
+{else if $field == "email"}
+	<div class="key">邮箱</div>
+	<div class="val" data-val="{$member.email}">{$member.email}</div>
+	<div class="privacy" data-val="{$member.privacy.email|privacy_key}">{$member.privacy.email|privacy_format}</div>
+{/if}
