@@ -5,13 +5,13 @@
 $(function(){
 	$(".btn-product").click(function(){
 		if($(this).hasClass("close")){
-			$(this).parent().find(".item").css("display", "block");
 			$(this).removeClass("close").addClass("open").html("收起列表");
-		}else{							
-			$(this).parent().find(".item").each(function(index){
-				$(this).css("display", (index >= 3) ? "none" : "block");
-			});
+			$(this).parent().find(".item").show(300);
+		}else{
 			$(this).removeClass("open").addClass("close").html("展开列表");
+			$(this).parent().find(".item").each(function(index){
+				if(index >= 3) $(this).hide(300);
+			});
 		}
 	});
 	$(".btn-product").click();
