@@ -3,10 +3,13 @@ var method = "{$method}";
 {literal}
 $(function(){
 	$(".block-member .navg .tree .arrow").click(function(){
-		var is_close = $(this).hasClass("close");
-		$(this).removeClass(is_close ? "close" : "open");
-		$(this).addClass(is_close ? "open" : "close");
-		$(this).parent().find(".sub").css("display", is_close ? "block" : "none");
+		if($(this).hasClass("close")){
+			$(this).removeClass("close").addClass("open");
+			$(this).parent().find(".sub").show(300);
+		}else{
+			$(this).removeClass("open").addClass("close");
+			$(this).parent().find(".sub").hide(300);
+		}
 	});
 	var obj = $("#" + method);
 	obj.addClass("current");
