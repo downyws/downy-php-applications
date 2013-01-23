@@ -35,6 +35,11 @@ class Action
 		$this->_tpl->display($template);
 	}
 
+	public function fetch($string)
+	{
+		return $this->_tpl->fetch('string:' . $string);
+	}
+
 	public function redirect($url, $code = 302)
 	{
 		switch($code)
