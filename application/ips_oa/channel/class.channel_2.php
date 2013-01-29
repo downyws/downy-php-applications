@@ -1,11 +1,11 @@
 <?php
-class Channel_1 extends Channel
+class Channel_2 extends Channel
 {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->channel_id = 1;
-		$config = $GLOBALS['CONFIG']['CHANGE']['CHANNEL_' . $this->channel_id];
+		$this->channel_id = 2;
+		$config = $GLOBALS['CONFIG']['CHANGE']['CHANGE_' . $this->channel_id];
 
 		// 参数配置
 		$this->task_count['single'] = $config['single'];
@@ -17,6 +17,7 @@ class Channel_1 extends Channel
 		$this->type_obj = new PHPMailer(true);
 		$this->type_obj->IsSMTP();
 		$this->type_obj->SMTPAuth = $config['SMTPAuth'];
+		$this->type_obj->SMTPSecure = $config['SMTPSecure'];
 		$this->type_obj->Port = $config['Port'];
 		$this->type_obj->Host = $config['Host'];
 		$this->type_obj->Username = $config['Username'];
