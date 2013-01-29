@@ -1,11 +1,11 @@
 <?php
-class Channel_1 extends Channel
+class Channel_3 extends Channel
 {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->channel_id = 1;
-		$config = $GLOBALS['CONFIG']['CHANGE']['CHANNEL_' . $this->channel_id];
+		$this->channel_id = 3;
+		$config = $GLOBALS['CONFIG']['CHANGE']['CHANGE_' . $this->channel_id];
 
 		// 参数配置
 		$this->task_count['single'] = $config['single'];
