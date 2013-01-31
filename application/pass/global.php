@@ -36,7 +36,7 @@ define('INOUT_TPYE_OUT', 2);	// 登出
 define('MAX_COUNT', 3);	// QA最大数量
 
 // 配置
-// - ACTION 设置，是否需要登录，是否需要权限，是否需要长时间执行
+// - ACTION 设置，是否需要登录，是否需要长时间执行
 $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 	'common' => array(
 		'NOT_LOGIN' => array('message'),

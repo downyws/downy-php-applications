@@ -6,6 +6,8 @@ class ModelMember extends ModelCommon
 	public function __construct()
 	{
 		parent::__construct();
+
+		include_once(APP_DIR_MSGCODE . str_replace('Model', 'define.model.', __CLASS__) . '.php');
 	}
 
 	public function getMemberInfo($member_id)
@@ -64,8 +66,8 @@ class ModelMember extends ModelCommon
 		}
 		else
 		{
-			empty($params['account']) && $err[] = MEMBER_LOGIN_ACCOUNTEMPTY;
-			empty($params['password']) && $err[] = MEMBER_LOGIN_PASSWORDEMPTY;
+			empty($params['account']) && $err[] = MCGetC('MMER_PLZ_IN_ACCOUNT');
+			empty($params['password']) && $err[] = MCGetC('MMER_PLZ_IN_PASSWORD');
 
 			if(empty($err))
 			{
@@ -126,14 +128,14 @@ class ModelMember extends ModelCommon
 							$this->update($condition, $data);
 						}
 						return true; 
-					case STATUS_UNACTIVE: $err[] = MEMBER_LOGIN_UNACTIVE; break;
-					case STATUS_DISABEL: $err[] = MEMBER_LOGIN_DISABEL; break;
-					default: $err[] = MEMBER_LOGIN_UNKNOWSTATUS; break;
+					case STATUS_UNACTIVE: $err[] = MCGetC('MMER_ACCOUNT_UNACTIVE'); break;
+					case STATUS_DISABEL: $err[] = MCGetC('MMER_ACCOUNT_DISABLE'); break;
+					default: $err[] = MCGetC('MMER_ACCOUNT_ERRSTA_TELA'); break;
 				}
 			}
 			else
 			{
-				$err[] = ($type == 'id') ? MEMBER_LOGIN_NOTEXIST : MEMBER_LOGIN_MAYBEERROR;
+				$err[] = MCGetC(($type == 'id') ? 'MMER_ACCOUNT_NOEXIST' : 'MMER_ACTORPAD_MAYBEERROR');
 			}
 		}
 		$this->_error[] = $err;
@@ -237,7 +239,7 @@ class ModelMember extends ModelCommon
 			}
 			else
 			{
-				$err[] = COMMON_SYSTEMERROR;
+				$err[] = 'MCON_SYSERR_TELA';
 			}
 		}
 		$this->_error[] = $err;
@@ -299,68 +301,68 @@ class ModelMember extends ModelCommon
 
 	public function checkErrName($vals, $can_empty = false)
 	{
-		if(empty($vals['first_name'])) return $can_empty ? false : MEMBER_REGISTER_FNAMEEMPTY;
-		if(empty($vals['last_name'])) return $can_empty ? false : MEMBER_REGISTER_LNAMEEMPTY;
-		if(strlen($vals['first_name']) > 50) return MEMBER_REGISTER_FNAMELENMAX;
-		if(strlen($vals['last_name']) > 50) return MEMBER_REGISTER_LNAMELENMAX;
-		if(!preg_match('/^[\x{4e00}-\x{9fa5}\w]+$/u', $vals['first_name'])) return MEMBER_REGISTER_FNAMEERROR;
-		if(!preg_match('/^[\x{4e00}-\x{9fa5}\w]+$/u', $vals['last_name'])) return MEMBER_REGISTER_LNAMEERROR;
+		if(empty($vals['first_name'])) return $can_empty ? false : MCGetC('MMER_FNAME_CNT_EMPTY');
+		if(empty($vals['last_name'])) return $can_empty ? false : MCGetC('MMER_LNAME_CNT_EMPTY');
+		if(strlen($vals['first_name']) > 50) return MCGetC('MMER_FNAME_SO_LONG');
+		if(strlen($vals['last_name']) > 50) return MCGetC('MMER_LNAME_SO_LONG');
+		if(!preg_match('/^[\x{4e00}-\x{9fa5}\w]+$/u', $vals['first_name'])) return MCGetC('MMER_FNAME_MAYBE_ERR');
+		if(!preg_match('/^[\x{4e00}-\x{9fa5}\w]+$/u', $vals['last_name'])) return MCGetC('MMER_LNAME_MAYBE_ERR');
 
 		return false;
 	}
 
 	public function checkErrAccount($vals, $can_empty = false)
 	{
-		if(empty($vals['account'])) return $can_empty ? false : MEMBER_REGISTER_ACCOUNTEMPTY;
+		if(empty($vals['account'])) return $can_empty ? false : MCGetC('MMER_ACCOUNT_CNT_EMPTY');
 		$len = strlen($vals['account']);
-		if($len < 6 || $len > 20) return MEMBER_REGISTER_ACCOUNTLENERROR;
-		if($len > 8 && !preg_match('/[^\d+.]/', $vals['account'])) return MEMBER_REGISTER_ACCOUNTLENGTE8ERROR;
-		if(!preg_match('/^[a-z0-9.]+$/i', $vals['account'])) return MEMBER_REGISTER_ACCOUNTCHRERROR;
+		if($len < 6 || $len > 20) return MCGetC('MMER_ACCOUNT_LENBET_6_20');
+		if($len > 8 && !preg_match('/[^\d+.]/', $vals['account'])) return MCGetC('MMER_ACCOUNT_LENGT8_NEED_LER');
+		if(!preg_match('/^[a-z0-9.]+$/i', $vals['account'])) return MCGetC('MMER_ACCOUNT_ONLY_LER_NUM_DOT');
 		$condition = array();
 		$condition[] = array('account' => array('eq', $vals['account']));
-		if($this->getOne($condition, 'id')) return MEMBER_REGISTER_ACCOUNTEXITS;
+		if($this->getOne($condition, 'id')) return MCGetC('MMER_ACCOUNT_EXIST_USE_OTHER');
 
 		return false;
 	}
 
 	public function checkErrPassword($vals, $can_empty = false)
 	{
-		if(empty($vals['password'])) return $can_empty ? false : MEMBER_REGISTER_PASSWORDEMPTY;
+		if(empty($vals['password'])) return $can_empty ? false : MCGetC('MMER_PWD_CNT_EMPTY');
 		$len = strlen($vals['password']);
-		if($len < 6) return MEMBER_REGISTER_PASSWORDLENERROR;
-		if($len > 30) return MEMBER_REGISTER_PASSWORDLENMAX;
-		if(empty($vals['passwordcfm'])) return MEMBER_REGISTER_PASSWORDCFMEMPTY;
-		if($vals['password'] != $vals['passwordcfm']) return MEMBER_REGISTER_PASSWORDCFMNEQ;
+		if($len < 6) return MCGetC('MMER_PWD_SO_SHORT');
+		if($len > 30) return MCGetC('MMER_PWD_SO_LONG');
+		if(empty($vals['passwordcfm'])) return MCGetC('MMER_PWDC_CNT_EMPTY');
+		if($vals['password'] != $vals['passwordcfm']) return MCGetC('MMER_PWDC_NOEQ_PWD');
 
 		return false;
 	}
 
 	public function checkErrEmail($vals, $can_empty = false)
 	{
-		if(empty($vals['email'])) return $can_empty ? false : MEMBER_REGISTER_EMAILEMPTY;
+		if(empty($vals['email'])) return $can_empty ? false : MCGetC('MMER_EMAIL_CNT_EMPTY');
 		$at_count = count(explode('@', $vals['email']));
-		if($at_count > 2) return MEMBER_REGISTER_EMAILMOREAT;
+		if($at_count > 2) return MCGetC('MMER_EMAIL_MORE_AT');
 		Factory::loadLibrary('stringhelper');
 		$stringhelper = new StringHelper();
-		if(!$stringhelper->dataTypeTrue($vals['email'], 'email')) return MEMBER_REGISTER_EMAILERROR;
+		if(!$stringhelper->dataTypeTrue($vals['email'], 'email')) return MCGetC('MMER_EMAIL_ERROR');
 		$condition = array();
 		$condition[] = array('email' => array('eq', $vals['email']));
 		$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_EMAIL));
-		if($this->getOne($condition, 'id')) return MEMBER_REGISTER_EMAILEXITSVERIFY;
+		if($this->getOne($condition, 'id')) return MCGetC('MMER_EMAIL_EXIVEY_USE_OTHER');
 
 		return false;
 	}
 
 	public function checkErrMobile($vals, $can_empty = false)
 	{
-		if(empty($vals['mobile'])) return $can_empty ? false : MEMBER_REGISTER_MOBILEEMPTY;
+		if(empty($vals['mobile'])) return $can_empty ? false : MCGetC('MMER_MOBILE_CNT_EMPTY');
 		Factory::loadLibrary('stringhelper');
 		$stringhelper = new StringHelper();
-		if(!$stringhelper->dataTypeTrue($vals['mobile'], 'mobile')) return MEMBER_REGISTER_MOBILERROR;
+		if(!$stringhelper->dataTypeTrue($vals['mobile'], 'mobile')) return MCGetC('MMER_MOBILE_ERROR');
 		$condition = array();
 		$condition[] = array('mobile' => array('eq', $vals['mobile']));
 		$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_MOBILE));
-		if($this->getOne($condition, 'id')) return MEMBER_REGISTER_MOBILEEXITSVERIFY;
+		if($this->getOne($condition, 'id')) return MCGetC('MMER_MOBILE_EXIVEY_USE_OTHER');
 
 		return false;
 	}

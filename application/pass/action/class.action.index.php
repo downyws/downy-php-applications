@@ -4,6 +4,8 @@ class ActionIndex extends ActionCommon
 	public function __construct()
 	{
 		parent::__construct();
+
+		include_once(APP_DIR_MSGCODE . str_replace('Action', 'define.action.', __CLASS__) . '.php');
 	}
 
 	public function methodIndex()
@@ -15,7 +17,7 @@ class ActionIndex extends ActionCommon
 
 	public function methodCaptcha()
 	{
-		// 获取参数
+		// 鑾峰彇鍙傛暟
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'wh' => array(array('valid', 'regex', '', '200x70', '/^\d+x\d+$/'))
 		));
@@ -36,14 +38,14 @@ class ActionIndex extends ActionCommon
 
 	public function methodIntl()
 	{
-		// 获取参数
+		// 鑾峰彇鍙傛暟
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'article' => array(array('valid', 'isset', '', '', 0), array('format', 'trim')),
 		));
 
 		if(count($this->_submit->errors) > 0 || !file_exists(APP_DIR_TEMPLATE . 'index_intl/' . $params['article'] . '.html'))
 		{
-			$this->message(PAGE_404);
+			$this->message(MCGetC('ACON_PAGE_404'));
 		}
 
 		$this->assign('article', $params['article']);

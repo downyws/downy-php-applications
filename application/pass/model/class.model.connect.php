@@ -6,11 +6,13 @@ class ModelConnect extends ModelCommon
 	public function __construct()
 	{
 		parent::__construct();
+
+		include_once(APP_DIR_MSGCODE . str_replace('Model', 'define.model.', __CLASS__) . '.php');
 	}
 
 	public function getAllPairs($field_key, $field_value, $status, $cache = false)
 	{
-		// »ñÈ¡»º´æ
+		// è·å–ç¼“å­˜
 		if($cache)
 		{
 			$cache_key = 'default/' . md5('connect_get_all_pairs' . $field_key . $field_value . $status);
@@ -22,7 +24,7 @@ class ModelConnect extends ModelCommon
 			}
 		}
 
-		// ²éÑ¯
+		// æŸ¥è¯¢
 		$condition = array();
 		if(isset($status))
 		{
@@ -31,7 +33,7 @@ class ModelConnect extends ModelCommon
 		$sql = 'SELECT `' . $field_key . '`, `' . $field_value . '` FROM ' . $this->table() . $this->getWhere($condition) . ' ORDER BY `sort_order` DESC';
 		$result = $this->fetchPairs($sql);
 
-		// ±£´æ»º´æ
+		// ä¿å­˜ç¼“å­˜
 		if($cache && $result)
 		{
 			$filecache->set($cache_key, $result);
@@ -69,13 +71,13 @@ class ModelConnect extends ModelCommon
 					}
 					$err = $memberObj->getError();
 					break;
-				case STATUS_DISABEL: $err[] = CONNECT_LOGIN_DISABEL; break;
-				default: $err[] = CONNECT_LOGIN_UNKNOWSTATUS; break;
+				case STATUS_DISABEL: $err[] = MCGetC('MCOT_ACCOUNT_DISABLE'); break;
+				default: $err[] = MCGetC('MCOT_ACCOUNT_ERRSTA_TELA'); break;
 			}
 		}
 		else
 		{
-			$err[] = CONNECT_LOGIN_NOTEXISTS;
+			$err[] = MCGetC('MCOT_ACCOUNT_NOEXIST');
 		}
 		$this->_error[] = $err;
 		return false;

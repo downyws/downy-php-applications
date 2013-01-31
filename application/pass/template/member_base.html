@@ -25,6 +25,7 @@
 <div class="dy-dialog">
 	<div class="dy-dialog dialog-portrait clearfix">
 		<div class="panel"><div class="info">将照片拖放到此处</div></div>
+		<div class="message"></div>
 		<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
 	</div>
 	<div class="dy-dialog dialog-name clearfix">
@@ -127,7 +128,7 @@ var dialog = {
 $(".dy-dialog").remove();
 
 function F_portrait(){
-	return [];
+	return [{"selector":".dialog-portrait .panel", "type":"upload-image", "defval":""}];
 }
 function F_name(){
 	return [
@@ -164,6 +165,38 @@ function F_mobile(){
 function F_email(){
 	return [{"selector":".dialog-email *[name=email_privacy]", "type":"select", "defval":".item-email .privacy"}];
 }
+
+function H_Drop(event) {
+	event.stopPropagation();
+	event.preventDefault();
+	$(this).css({"border-color":"#DDDDDD", "background":"#FFFFFF"});
+
+	var filelist = event.dataTransfer.files;
+	if (!filelist || !filelist.length){
+		var msg_obj = $(this).parent().find(".message");
+		msg_obj.html("发生错误。").show(300);	
+		$("body").one('mousedown', function(){msg_obj.hide(300);});
+	}else if(filelist.length > 1){
+		var msg_obj = $(this).parent().find(".message");
+		msg_obj.html("抱歉，您拖动了多张照片。请只拖动您所需的照片。").show(300);	
+		$("body").one('mousedown', function(){msg_obj.hide(300);});
+	}else{
+		var msg_obj = $(this).parent().find(".message");
+		msg_obj.html(filelist[0].name).show(300);	
+		$("body").one('mousedown', function(){msg_obj.hide(300);});
+	}
+}
+function H_DragLeave(event) {
+	event.stopPropagation();
+	event.preventDefault();
+	$(this).css({"border-color":"#DDDDDD", "background":"#FFFFFF"});
+}
+function H_DragOver(event) {
+	event.stopPropagation();
+	event.preventDefault();
+	$(this).css({"border-color":"#4D90FE", "background":"#F6F6F6"});
+}
+
 function T_main(field, type){
 	if(!type) return;
 	
@@ -175,6 +208,10 @@ function T_main(field, type){
 			obj.dySelect({name: obj.attr("name"), text: obj.data("text"), width: obj.data("width"), height: obj.data("height"), type: obj.data("type"), defval: $(ctrls[i].defval).data("val")});
 		}else if(ctrls[i].type == "text"){
 			obj.val($(ctrls[i].defval).data("val"));
+		}else if(ctrls[i].type == "upload-image"){
+			obj.get(0).addEventListener("drop", H_Drop, false);
+			obj.bind("dragleave", H_DragLeave);
+			obj.bind("dragover", H_DragOver);
 		}
 	}
 
