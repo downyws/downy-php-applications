@@ -4,6 +4,8 @@ class ActionConnect extends ActionCommon
 	public function __construct()
 	{
 		parent::__construct();
+
+		include_once(APP_DIR_MSGCODE . str_replace('Action', 'define.action.', __CLASS__) . '.php');
 	}
 
 	public function methodLogin()
@@ -21,7 +23,7 @@ class ActionConnect extends ActionCommon
 		// 检查参数
 		if(count($this->_submit->errors) > 0)
 		{
-			$this->message(PAGE_404);
+			$this->message(MCGetC('ACON_PAGE_404'));
 		}
 		else
 		{

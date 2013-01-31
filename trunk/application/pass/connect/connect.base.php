@@ -29,7 +29,7 @@ class ConnectBase
 		{
 			$this->$routeName();
 		}
-		$this->_action->message(PAGE_404);
+		$this->_action->message(MCGetC('ACON_PAGE_404'));
 	}
 
 	public function login($connect_id, $outer_id, $data)

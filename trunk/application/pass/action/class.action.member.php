@@ -4,6 +4,8 @@ class ActionMember extends ActionCommon
 	public function __construct()
 	{
 		parent::__construct();
+
+		include_once(APP_DIR_MSGCODE . str_replace('Action', 'define.action.', __CLASS__) . '.php');
 	}
 
 	public function methodLogin()
@@ -45,9 +47,9 @@ class ActionMember extends ActionCommon
 		{
 			if($captcha['SHOW'] && !$this->captchaCheck($params['captcha'], 'once'))
 			{
-				$error['captcha'] = array('message' => $GLOBALS['MESSAGE'][COMMON_CAPTCHA_ERROR], 'code' => COMMON_CAPTCHA_ERROR);
-				empty($params['account']) && $error['account'] = array('message' => $GLOBALS['MESSAGE'][COMMON_ACCOUNTEMPTY], 'code' => COMMON_ACCOUNTEMPTY);
-				empty($params['password']) && $error['password'] = array('message' => $GLOBALS['MESSAGE'][COMMON_PASSWORDEMPTY], 'code' => COMMON_PASSWORDEMPTY);
+				$error['captcha'] = array('message' => MCGetM('AMER_CAPTCHA_ERROR'), 'code' => MCGetC('AMER_CAPTCHA_ERROR'));
+				empty($params['account']) && $error['account'] = array('message' => MCGetM('AMER_PLZ_IN_ACCOUNT'), 'code' => MCGetC('AMER_PLZ_IN_ACCOUNT'));
+				empty($params['password']) && $error['password'] = array('message' => MCGetM('AMER_PLZ_IN_PASSWORD'), 'code' => MCGetC('AMER_PLZ_IN_PASSWORD'));
 			}
 			else if($memberObj->login($params))
 			{
@@ -63,12 +65,12 @@ class ActionMember extends ActionCommon
 				{
 					$type = array
 					(
-						substr(MEMBER_LOGIN_ACCOUNTEMPTY, 0, 6) => 'account',
-						substr(MEMBER_LOGIN_PASSWORDEMPTY, 0, 6) => 'password'
+						substr(MCGetC('MMER_PLZ_IN_ACCOUNT'), 0, 6) => 'account',
+						substr(MCGetC('MMER_PLZ_IN_PASSWORD'), 0, 6) => 'password'
 					);
 					foreach($errors as $v)
 					{
-						$error[$type[substr($v, 0, 6)]] = array('message' => $GLOBALS['MESSAGE'][$v], 'code' => $v);
+						$error[$type[substr($v, 0, 6)]] = array('message' => MCGetM($v), 'code' => $v);
 					}
 				}
 			}
@@ -136,13 +138,13 @@ class ActionMember extends ActionCommon
 			// 验证码检查
 			if($captcha['SHOW'] && !$this->captchaCheck($params['captcha'], 'once'))
 			{
-				$error['captcha'] = array('message' => $GLOBALS['MESSAGE'][COMMON_CAPTCHA_ERROR], 'code' => COMMON_CAPTCHA_ERROR);
+				$error['captcha'] = array('message' => MCGetM('AMER_CAPTCHA_ERROR'), 'code' => MCGetC('AMER_CAPTCHA_ERROR'));
 				$type = 'check';
 			}
 			// 同意服务条款
 			if(!$params['agree'])
 			{
-				$error['agree'] = array('message' => $GLOBALS['MESSAGE'][COMMON_AGREE_TERMSOFSERVICE], 'code' => COMMON_AGREE_TERMSOFSERVICE);
+				$error['agree'] = array('message' => MCGetM('AMER_AGREE_TERMSOFSERVICE'), 'code' => MCGetC('AMER_AGREE_TERMSOFSERVICE'));
 				$type = 'check';
 			}
 			// 性别转义
@@ -160,7 +162,7 @@ class ActionMember extends ActionCommon
 			if($member_id)
 			{
 				$data = $params['callback'];
-				$this->message(MEMBER_REGISTER_SUCCESS, $data);
+				$this->message(MCGetC('AMER_REGISTER_SUCCESS'), $data);
 			}
 			else
 			{
@@ -169,18 +171,18 @@ class ActionMember extends ActionCommon
 				{
 					$type = array
 					(
-						substr(MEMBER_REGISTER_FNAMEEMPTY, 0, 6) => 'fname',
-						substr(MEMBER_REGISTER_LNAMEEMPTY, 0, 6) => 'lname',
-						substr(MEMBER_REGISTER_ACCOUNTEMPTY, 0, 6) => 'account',
-						substr(MEMBER_REGISTER_PASSWORDEMPTY, 0, 6) => 'password',
-						substr(MEMBER_REGISTER_PASSWORDCFMEMPTY, 0, 6) => 'passwordcfm',
-						substr(MEMBER_REGISTER_EMAILEMPTY, 0, 6) => 'email',
-						substr(MEMBER_REGISTER_MOBILEEMPTY, 0, 6) => 'mobile',
-						substr(COMMON_SYSTEMERROR, 0, 6) => 'system'
+						substr(MCGetC('MMER_FNAME_CNT_EMPTY'), 0, 6) => 'fname',
+						substr(MCGetC('MMER_LNAME_CNT_EMPTY'), 0, 6) => 'lname',
+						substr(MCGetC('MMER_ACCOUNT_CNT_EMPTY'), 0, 6) => 'account',
+						substr(MCGetC('MMER_PWD_CNT_EMPTY'), 0, 6) => 'password',
+						substr(MCGetC('MMER_PWDC_CNT_EMPTY'), 0, 6) => 'passwordcfm',
+						substr(MCGetC('MMER_EMAIL_CNT_EMPTY'), 0, 6) => 'email',
+						substr(MCGetC('MMER_MOBILE_CNT_EMPTY'), 0, 6) => 'mobile',
+						substr(MCGetC('MCON_SYSERR_TELA'), 0, 6) => 'system'
 					);
 					foreach($errors as $v)
 					{
-						$error[$type[substr($v, 0, 6)]] = array('message' => $GLOBALS['MESSAGE'][$v], 'code' => $v);
+						$error[$type[substr($v, 0, 6)]] = array('message' => MCGetM($v), 'code' => $v);
 					}
 				}
 			}
@@ -204,7 +206,7 @@ class ActionMember extends ActionCommon
 				switch($product[$k]['status'])
 				{
 					case STATUS_DISABEL:
-						$product[$k]['status_msg'] = $GLOBALS['MESSAGE'][MEMBER_APPS_STATUS_DISABEL];
+						$product[$k]['status_msg'] = MCGetM('AMER_APPS_STATUS_DISABEL');
 						break;
 				}
 			}
@@ -230,7 +232,7 @@ class ActionMember extends ActionCommon
 	{
 		// 获取参数
 		$params = $this->_submit->obtain($_REQUEST, array(
-			'field' => array(array('valid', 'in', '不存在您所要保存的字段。', null, array_keys($GLOBALS['PRIVACY']['DEFAULT'])))
+			'field' => array(array('valid', 'in', MCGetM('AMER_ITEM_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['DEFAULT'])))
 		));
 
 		// 错误提示
@@ -247,30 +249,30 @@ class ActionMember extends ActionCommon
 				'last_name' => array(array('format', 'trim'))
 			),
 			'sex' => array(
-				'sex' => array(array('valid', 'in', '您所选的性别选项不存在。', null, array_keys($GLOBALS['SEX']))),
-				'sex_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+				'sex' => array(array('valid', 'in', MCGetM('AMER_SEX_ITEM_NOEXIST'), null, array_keys($GLOBALS['SEX']))),
+				'sex_privacy' => array(array('valid', 'in', MCGetM('AMER_SEX_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
 			),
 			'birthday' => array(
 				'birthday_year' => array(array('format', 'trim')),
 				'birthday_month' => array(array('format', 'trim')),
 				'birthday_day' => array(array('format', 'trim')),
-				'birthday_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+				'birthday_privacy' => array(array('valid', 'in', MCGetM('AMER_BIRTH_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
 			),
 			'blood' => array(
-				'blood' => array(array('valid', 'in', '您所选的血型选项不存在。', null, array_keys($GLOBALS['BLOOD']))),
-				'blood_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+				'blood' => array(array('valid', 'in', MCGetM('AMER_BLOOD_ITEM_NOEXIST'), null, array_keys($GLOBALS['BLOOD']))),
+				'blood_privacy' => array(array('valid', 'in', MCGetM('AMER_BLOOD_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
 			),
 			'sign' => array(
 				'sign' => array(array('format', 'trim'))
 			),
 			'mobile' => array(
-				'mobile_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+				'mobile_privacy' => array(array('valid', 'in', MCGetM('AMER_MOBILE_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
 			),
 			'email' => array(
-				'email_privacy' => array(array('valid', 'in', '您所选的隐私选项不存在。', null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+				'email_privacy' => array(array('valid', 'in', MCGetM('AMER_EMAIL_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
 			),
 			'_error_' => array(
-				'_error_' => array(array('valid', 'empty', '缺少编辑项，请联系管理员。', null, null))
+				'_error_' => array(array('valid', 'empty', MCGetM('AMER_LOSTITEM_TELA'), null, null))
 			)
 		);
 		$params = array_merge($params, $this->_submit->obtain($_REQUEST, $fields[$params['field']]));
@@ -305,7 +307,7 @@ class ActionMember extends ActionCommon
 			$this->jsonout(array('state' => true, 'message' => $html));
 		}
 		$code = $memberObj->getError();
-		$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][$code]));
+		$this->jsonout(array('state' => false, 'message' => MCGetM($code)));
 	}
 
 	public function methodConnect()

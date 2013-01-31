@@ -5,7 +5,7 @@ class ActionCommon extends Action
 	{
 		parent::__construct();
 
-		include_once(APP_DIR_MESSAGE . 'package.message.common.php');
+		include_once(APP_DIR_MSGCODE . str_replace('Action', 'define.action.', __CLASS__) . '.php');
 
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'a' => array(array('format', 'trim')),
@@ -17,23 +17,23 @@ class ActionCommon extends Action
 
 		if(in_array($params['m'], $options['RUN_LONG_TIME']))
 		{
-			set_time_limit(0);
+			set_time_limit(1800);
 			ini_set('memory_limit', '512M');
 		}
 
 		if(!in_array($params['m'], $options['NOT_LOGIN']))
 		{
 			$memberObj = Factory::getModel('member');
-			// Î´µÇÂ½
+			// æœªç™»é™†
 			if(!$memberObj->isLogin())
 			{
 				if($params['t'] == 'ajax')
 				{
-					$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][COMMON_NOLOGIN]));
+					$this->jsonout(array('state' => false, 'message' => MCGetM('ACON_NO_LOGIN')));
 				}
 				else if($params['t'] == 'api')
 				{
-					$this->jsonout(array('state' => false, 'message' => $GLOBALS['MESSAGE'][COMMON_NOLOGIN], 'code' => COMMON_NOLOGIN));
+					$this->jsonout(array('state' => false, 'message' => MCGetM('ACON_NO_LOGIN'), 'code' => MCGetC('ACON_NO_LOGIN')));
 				}
 				else
 				{
@@ -46,16 +46,24 @@ class ActionCommon extends Action
 	public function message($code, $data = null, $tpl = 'common_message.html')
 	{
 		$this->initTemplate(false);
-		$this->assign('code_page', file_exists(APP_DIR_TEMPLATE . 'common_message/' . $code . '.html'));
 		$this->assign('code', $code);
 		$this->assign('data', $data);
-		$this->render($tpl);
-		exit;
+
+		if($tpl == 'string')
+		{
+			return $this->fetch('string: ' . MCGetM($code));
+		}
+		else
+		{
+			$this->assign('code_page', file_exists(APP_DIR_TEMPLATE . 'common_message/' . $code . '.html'));
+			$this->render($tpl);
+			exit;
+		}
 	}
 
 	public function methodMessage()
 	{
-		// »ñÈ¡²ÎÊı
+		// è·å–å‚æ•°
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'code' => array(array('format', 'trim'))
 		));

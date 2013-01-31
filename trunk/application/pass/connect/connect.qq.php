@@ -23,13 +23,13 @@ class ConnectQQ extends ConnectOauth2
 		$token_data = $this->getToken($code);
 		if($token_data === false || !empty($token_data['error']))
 		{
-			$this->_action->message(GET_TOKEN_FAILED, $_COOKIE['CONNECT_CALLBACK']);
+			$this->_action->message(MCGetC('MCOT_GET_TOKEN_FAILED'), $_COOKIE['CONNECT_CALLBACK']);
 		}
 
 		$open_data = $this->getOpenId($token_data['access_token']);
 		if($open_data === false || !empty($open_data['error']))
 		{
-			$this->_action->message(GET_OPENID_FAILED, $_COOKIE['CONNECT_CALLBACK']);
+			$this->_action->message(MCGetC('MCOT_GET_OPENID_FAILED'), $_COOKIE['CONNECT_CALLBACK']);
 		}
 
 		$this->login($this->_id, $open_data["openid"], $token_data);
