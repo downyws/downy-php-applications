@@ -19,7 +19,7 @@ class Model extends Db
 		{
 			$table = $this->_table;
 		}
-		return '`' . $this->_prefix . $table . '`';
+		return (strpos($table, '`') === false) ? ('`' . $this->_prefix . $table . '`') : $table;
 	}
 
 	public function fieldFilter($table, $datas, $fields = array())
@@ -124,7 +124,7 @@ class Model extends Db
 		$data = $this->fieldFilter($table, array($data));
 		$data = $data[0];
 
-		$object = $this->getObject($condition);
+		$object = $this->getObject($condition, array(), $table);
 		if(!!$object)
 		{
 			$sql = 'UPDATE ' . $table .  ' SET ' . implode(', ', $data) . $this->getWhere($condition);
