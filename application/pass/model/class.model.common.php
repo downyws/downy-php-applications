@@ -47,8 +47,36 @@ class ModelCommon extends Model
 		return $result;
 	}
 
-	public function getSessionMember()
+	public function getSessionMember($field = null)
 	{
-		return $_SESSION['MEMBER'];
+		if(empty($_SESSION['MEMBER']))
+		{
+			return null;
+		}
+		else if(empty($field))
+		{
+			return $_SESSION['MEMBER'];
+		}
+		else
+		{
+			return empty($_SESSION['MEMBER'][$field]) ? null : $_SESSION['MEMBER'][$field];
+		}
+	}
+
+	public function setSessionMember($member)
+	{
+		if(empty($_SESSION['MEMBER']))
+		{
+			$_SESSION['MEMBER'] = $member;
+		}
+		else
+		{
+			$_SESSION['MEMBER'] = array_merge($_SESSION['MEMBER'], $member);
+		}
+	}
+
+	public function delSessionMember()
+	{
+		unset($_SESSION['MEMBER']);
 	}
 }

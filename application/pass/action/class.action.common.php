@@ -51,7 +51,7 @@ class ActionCommon extends Action
 
 		if($tpl == 'string')
 		{
-			return $this->fetch('string: ' . MCGetM($code));
+			return $this->fetch(MCGetM($code));
 		}
 		else
 		{

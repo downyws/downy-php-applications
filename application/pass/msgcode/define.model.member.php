@@ -101,3 +101,34 @@ $GLOBALS['MSGCODE']['M']['20309020'] = '该手机号码的格式无法识别。'
 
 $GLOBALS['MSGCODE']['C']['MMER_MOBILE_EXIVEY_USE_OTHER'] = '20309030';
 $GLOBALS['MSGCODE']['M']['20309030'] = '该手机号码已被其他用户激活使用。改用其他手机号吗？';
+
+$GLOBALS['MSGCODE']['C']['MMER_YEAR_CNT_EMPTY'] = '20310010';
+$GLOBALS['MSGCODE']['M']['20310010'] = '年份不能为空。';
+
+$GLOBALS['MSGCODE']['C']['MMER_YEAR_SCOPE_ERROR'] = '20310020';
+$GLOBALS['MSGCODE']['M']['20310020'] = '年份仅限使用 {($smarty.now|date_format:"%Y") - 100} 至 {$smarty.now|date_format:"%Y"} 年。';
+
+$GLOBALS['MSGCODE']['C']['MMER_MONTH_CNT_EMPTY'] = '20311010';
+$GLOBALS['MSGCODE']['M']['20311010'] = '月份不能为空。';
+
+$GLOBALS['MSGCODE']['C']['MMER_MONTH_SCOPE_ERROR'] = '20311020';
+$GLOBALS['MSGCODE']['M']['20311020'] = '有{$data.month}月嘛？';
+
+$GLOBALS['MSGCODE']['C']['MMER_DAY_CNT_EMPTY'] = '20312010';
+$GLOBALS['MSGCODE']['M']['20312010'] = '日期不能为空。';
+
+$GLOBALS['MSGCODE']['C']['MMER_DAY_SCOPE_ERROR'] = '20312020';
+$GLOBALS['MSGCODE']['M']['20312020'] = '哪个月有{$data.day}日？';
+
+$GLOBALS['MSGCODE']['C']['MMER_DAY_NOIN_MONTH'] = '20312030';
+$GLOBALS['MSGCODE']['M']['20312030'] = '{$data.month}月没有{$data.day}日哦。';
+
+$GLOBALS['MSGCODE']['C']['MMER_BLOOD_ERROR'] = '20313010';
+$GLOBALS['MSGCODE']['M']['20313010'] = '血型错误。';
+
+$GLOBALS['MSGCODE']['C']['MMER_SEX_ERROR'] = '20314010';
+$GLOBALS['MSGCODE']['M']['20314010'] = '性别错误。';
+
+$GLOBALS['MSGCODE']['C']['MMER_PRIVACY_ERROR'] = '20315010';
+$GLOBALS['MSGCODE']['M']['20315010'] = '隐私错误。';
+

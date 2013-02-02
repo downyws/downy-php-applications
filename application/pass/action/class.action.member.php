@@ -242,40 +242,51 @@ class ActionMember extends ActionCommon
 		}
 
 		// 获取参数
-		$fields = array(
-			'portrait' => array(),
-			'name' => array(
-				'first_name' => array(array('format', 'trim')),
-				'last_name' => array(array('format', 'trim'))
-			),
-			'sex' => array(
-				'sex' => array(array('valid', 'in', MCGetM('AMER_SEX_ITEM_NOEXIST'), null, array_keys($GLOBALS['SEX']))),
-				'sex_privacy' => array(array('valid', 'in', MCGetM('AMER_SEX_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
-			),
-			'birthday' => array(
-				'birthday_year' => array(array('format', 'trim')),
-				'birthday_month' => array(array('format', 'trim')),
-				'birthday_day' => array(array('format', 'trim')),
-				'birthday_privacy' => array(array('valid', 'in', MCGetM('AMER_BIRTH_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
-			),
-			'blood' => array(
-				'blood' => array(array('valid', 'in', MCGetM('AMER_BLOOD_ITEM_NOEXIST'), null, array_keys($GLOBALS['BLOOD']))),
-				'blood_privacy' => array(array('valid', 'in', MCGetM('AMER_BLOOD_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
-			),
-			'sign' => array(
-				'sign' => array(array('format', 'trim'))
-			),
-			'mobile' => array(
-				'mobile_privacy' => array(array('valid', 'in', MCGetM('AMER_MOBILE_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
-			),
-			'email' => array(
-				'email_privacy' => array(array('valid', 'in', MCGetM('AMER_EMAIL_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
-			),
-			'_error_' => array(
-				'_error_' => array(array('valid', 'empty', MCGetM('AMER_LOSTITEM_TELA'), null, null))
-			)
-		);
-		$params = array_merge($params, $this->_submit->obtain($_REQUEST, $fields[$params['field']]));
+		switch($params['field'])
+		{
+			case 'portrait':
+				$fields = array();
+				break;
+			case 'name':
+				$fields = array(
+					'first_name' => array(array('format', 'trim')),
+					'last_name' => array(array('format', 'trim'))
+				);
+				break;
+			case 'sex':
+				$fields = array(
+					'sex' => array(array('valid', 'in', MCGetM('AMER_SEX_ITEM_NOEXIST'), null, array_keys($GLOBALS['SEX']))),
+					'sex_privacy' => array(array('valid', 'in', MCGetM('AMER_SEX_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+				);
+				break;
+			case 'birthday':
+				$fields = array(
+					'birthday_year' => array(array('format', 'trim')),
+					'birthday_month' => array(array('format', 'trim')),
+					'birthday_day' => array(array('format', 'trim')),
+					'birthday_privacy' => array(array('valid', 'in', MCGetM('AMER_BIRTH_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+				);
+				break;
+			case 'blood':
+				$fields = array(
+					'blood' => array(array('valid', 'in', MCGetM('AMER_BLOOD_ITEM_NOEXIST'), null, array_keys($GLOBALS['BLOOD']))),
+					'blood_privacy' => array(array('valid', 'in', MCGetM('AMER_BLOOD_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])))
+				);
+				break;
+			case 'sign':
+				$fields = array('sign' => array('format', 'trim'));
+				break;
+			case 'mobile':
+				$fields = array('mobile_privacy' => array('valid', 'in', MCGetM('AMER_MOBILE_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])));
+				break;
+			case 'email':
+				$fields = array('email_privacy' => array('valid', 'in', MCGetM('AMER_EMAIL_PRI_NOEXIST'), null, array_keys($GLOBALS['PRIVACY']['TYPE'])));
+				break;
+			default:
+				$this->jsonout(array('state' => false, 'message' => MCGetM('AMER_LOSTITEM_TELA')));
+				break;
+		}
+		$params = array_merge($params, $this->_submit->obtain($_REQUEST, $fields));
 
 		// 错误提示
 		if(count($this->_submit->errors) > 0)
@@ -283,10 +294,24 @@ class ActionMember extends ActionCommon
 			$this->jsonout(array('state' => false, 'message' => end($this->_submit->errors)));
 		}
 
+		// 参数转义
+		switch($params['field'])
+		{
+case 'portrait': break;
+			case 'name': $member = array('first_name' => $params['first_name'], 'last_name' => $params['last_name']); break;
+			case 'sex': $member = array('sex' => $GLOBALS['SEX'][$params['sex']], 'sex_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['sex_privacy']]); break;
+			case 'birthday': $member = array('birthday_year' => $params['birthday_year'], 'birthday_month' => $params['birthday_month'], 'birthday_day' => $params['birthday_day'], 'birthday_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['birthday_privacy']]); break;
+			case 'blood': $member = array('blood' => $GLOBALS['BLOOD'][$params['blood']], 'blood_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['blood_privacy']]); break;
+			case 'sign': $member = array('sign' => $params['sign']); break;
+			case 'mobile': $member = array('mobile_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['mobile_privacy']]); break;
+			case 'email': $member = array('email_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['email_privacy']]); break;
+		}
+
 		// 处理
 		$memberObj = Factory::getModel('member');
+		$member['member_id'] = $memberObj->getSessionMember('id');
 		$fun = 'modify' . $params['field'];
-		if($memberObj->$fun($params))
+		if($memberObj->$fun($member))
 		{
 			$member = $memberObj->getSessionMember();
 			switch($params['field'])
@@ -306,8 +331,27 @@ class ActionMember extends ActionCommon
 			$html = $this->_tpl->fetch(APP_DIR_TEMPLATE  . 'member_base_item.html');
 			$this->jsonout(array('state' => true, 'message' => $html));
 		}
-		$code = $memberObj->getError();
-		$this->jsonout(array('state' => false, 'message' => MCGetM($code)));
+
+		// 错误提示
+		$errors = $memberObj->getError();
+		$message = array();
+		if(!empty($errors) && is_array($errors))
+		{
+			foreach($errors as $c)
+			{
+				if($params['field'] == 'birthday')
+				{
+					$data = array('year' => $params['birthday_year'], 'month' => $params['birthday_month'], 'day' => $params['birthday_day']);
+					$message[] = $this->message($c, $data, 'string');
+				}
+				else
+				{
+					$message[] = MCGetM($c);
+				}
+			}
+		}
+		$message = implode("<br />", $message);
+		$this->jsonout(array('state' => false, 'message' => $message));
 	}
 
 	public function methodConnect()
