@@ -13,4 +13,4 @@
  */
 
 $GLOBALS['MSGCODE']['C']['MCON_SYSERR_TELA'] = '20101010';
-$GLOBALS['MSGCODE']['M']['20301010'] = '系统发生错误，请联系管理员。';
+$GLOBALS['MSGCODE']['M']['20101010'] = '系统发生错误，请联系管理员。';

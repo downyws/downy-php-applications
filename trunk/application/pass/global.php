@@ -21,7 +21,9 @@ define('PROMPT_INFORMATION', 2);	// 信息
 define('PROMPT_WARNING', 3);		// 警告
 
 // 审核分类
-define('CHECK_MEMBER_REGISTER', 1);	// 注册
+define('CHECK_MEMBER_REGISTER', 1);		// 用户注册
+define('CHECK_MEMBER_MODIFY_BASE', 2);	// 用户基础信息修改
+define('CHECK_MEMBER_MODIFY_INFO', 3);	// 用户扩展信息修改
 
 // 已验证信息
 define('MEMBER_VERIFY_EMAIL',	0x1);	// 邮箱

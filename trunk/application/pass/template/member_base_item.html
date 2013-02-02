@@ -27,7 +27,7 @@
 	<div class="privacy" data-val="{$member.privacy.blood|privacy_key}">{$member.privacy.blood|privacy_format}</div>
 {else if $field == "sign"}
 	<div class="key">个性宣言</div>
-	<div class="val" data-val="{$member.info.sign}">{$member.info.sign}</div>
+	<div class="val" data-val="{$member.info.sign}">{$member.info.sign|htmlspecialchars}</div>
 	<div class="privacy">{0|privacy_format}</div>
 {else if $field == "mobile"}
 	<div class="key">手机</div>
