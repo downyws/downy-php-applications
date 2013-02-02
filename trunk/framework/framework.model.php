@@ -127,6 +127,10 @@ class Model extends Db
 		$object = $this->getObject($condition, array(), $table);
 		if(!!$object)
 		{
+			foreach($data as $k => $v)
+			{
+				$data[$k] = '`' . $k . '` = "' . $this->escape($v) . '"';
+			}
 			$sql = 'UPDATE ' . $table .  ' SET ' . implode(', ', $data) . $this->getWhere($condition);
 			if($this->query($sql) !== false)
 			{
