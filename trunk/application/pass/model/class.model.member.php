@@ -473,10 +473,42 @@ class ModelMember extends ModelCommon
 		return false;
 	}
 
-public function modifyPortrait($params)
-{
-	return false;
-}
+	public function modifyPortrait($member)
+	{
+		$err = array();
+
+		if($member['step'] == 'upload')
+		{
+			$res = $this->checkErrPortrait($member, false);
+			$res && $err[] = $res;
+
+			if(empty($err))
+			{
+				$filename = md5_file($member['portrait']['tmp_name']);
+				if(move_uploaded_file($member['portrait']['tmp_name'], APP_DIR_UPLOAD_TEMP . $filename))
+				{
+					return APP_URL_UPLOAD_TEMP . $filename;
+				}
+				else
+				{
+					$err[] = MCGetC('MMER_PORTRAIT_UPLOAD_FAILED');
+				}
+			}
+		}
+		else if($member['step'] == 'scope')
+		{
+
+// coding...
+
+		}
+		else
+		{
+			$err[] = MCGetC('MMER_PORTRAIT_STEP_ERROR');
+		}
+		
+		$this->_error[] = $err;
+		return false;
+	}
 
 	public function modifySex($member)
 	{
@@ -642,6 +674,17 @@ public function modifyPortrait($params)
 		if($len > 30) return MCGetC('MMER_PWD_SO_LONG');
 		if(empty($vals['passwordcfm'])) return MCGetC('MMER_PWDC_CNT_EMPTY');
 		if($vals['password'] != $vals['passwordcfm']) return MCGetC('MMER_PWDC_NOEQ_PWD');
+
+		return false;
+	}
+
+	public function checkErrPortrait($vals, $can_empty = false)
+	{
+		$info = getimagesize($vals['portrait']['tmp_name']);
+
+		if($info === false) return MCGetC('MMER_PORTRAIT_FILE_ERROR');
+		if(!in_array($info[2], array(IMAGETYPE_BMP, IMAGETYPE_JPEG, IMAGETYPE_PNG))) return MCGetC('MMER_PORTRAIT_FILE_ERROR');
+		if($info[0] < 250 || $info[0] > 2500 || $info[1] < 250 || $info[1] > 2500) return MCGetC('MMER_PORTRAIT_SIZE_ERROR');
 
 		return false;
 	}

@@ -181,9 +181,29 @@ function H_Drop(event) {
 		msg_obj.html("抱歉，您拖动了多张照片。请只拖动您所需的照片。").show(300);	
 		$("body").one('mousedown', function(){msg_obj.hide(300);});
 	}else{
-		var msg_obj = $(this).parent().find(".message");
-		msg_obj.html(filelist[0].name).show(300);	
-		$("body").one('mousedown', function(){msg_obj.hide(300);});
+		var that = this, obj = $(this).find(".info");
+		obj.html("请稍后，正在上传……<br /><br /><div class='loading'><div class='bar'></div></div>");
+		$.fn.dyUploadFile(filelist[0], {
+			dataType: "JSON",
+			name: "portrait",
+			url: "/index.php?a=member&m=basemodify&field=portrait&step=upload",
+			onEvent: {success: function(result){
+				if(result.state){
+					$(that).html(result.message);
+				}else{
+					obj.html("将照片拖放到此处");
+					var msg_obj = $(that).parent().find(".message");
+					msg_obj.html(result.message).show(300);	
+					$("body").one('mousedown', function(){msg_obj.hide(300);});
+				}
+			}, error: function(error){
+				var msg_obj = $(this).parent().find(".message");
+				msg_obj.html("AJAX请求错误[" + error + "]。").show(300);	
+				$("body").one('mousedown', function(){msg_obj.hide(300);});
+			}, progress: function(event){
+				obj.find(".loading .bar").animate({"width": (event.loaded / filelist[0].size) * 100 + "%"}, 300);
+			}}
+		});
 	}
 }
 function H_DragLeave(event) {

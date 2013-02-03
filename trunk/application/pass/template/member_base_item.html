@@ -1,8 +1,4 @@
-{if $field == "portrait"}
-	<div class="key">头像</div>
-	<div class="val" data-val="{$member.portrait}"><img src="{if $member.portrait}{$member.portrait}{else}/images/portrait.png{/if}" width="100px" /></div>
-	<div class="privacy"></div>
-{else if $field == "name"}
+{if $field == "name"}
 	<div class="key">姓名</div>
 	<div class="val">
 		<a class="_first" data-val="{$member.first_name}">{$member.first_name}</a>
@@ -37,4 +33,10 @@
 	<div class="key">邮箱</div>
 	<div class="val" data-val="{$member.email}">{$member.email}</div>
 	<div class="privacy" data-val="{$member.privacy.email|privacy_key}">{$member.privacy.email|privacy_format}</div>
+{else if $field == "portrait"}
+	<div class="key">头像</div>
+	<div class="val" data-val="{$member.portrait}"><img src="{if $member.portrait}{$member.portrait}{else}/images/portrait.png{/if}" width="100px" /></div>
+	<div class="privacy"></div>
+{else if $field == "portrait-upload"}
+	{$url}
 {/if}
