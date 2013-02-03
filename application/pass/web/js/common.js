@@ -136,6 +136,7 @@ $.fn.extend({
 			$(this).on("input", option.input);
 		}
 	},
+	// 文本框
 	dyText: function(option){
 		if(typeof(option.tips) != "undefined" && option.tips){
 			$(this).dyTips();
@@ -144,6 +145,7 @@ $.fn.extend({
 			$(this).removeClass("error");
 		});
 	},
+	// 下拉框
 	dySelect: function(option){
 		// 获取配置
 		var id = "dy-select-" + parseInt(Math.random() * 1000);
@@ -396,5 +398,28 @@ $.fn.extend({
 		$("#" + id + "-bg, #" + id + "-ft").css("display", "none").fadeIn(300);
 		// 回调
 		config.onEvent.open();
+	},
+	// 文件上传
+	dyUploadFile: function(file, option){
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', option.url);
+
+		xhr.upload.onprogress = option.onEvent.progress;
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				if(option.dataType.toUpperCase() == "JSON"){
+					try{
+						var r = eval("(" + xhr.responseText + ")");
+						option.onEvent.success(r);
+					}catch(e){
+						option.onEvent.error(e);
+					}
+				}
+			}
+		};
+
+		var formData = new FormData();
+		formData.append(option.name, file);
+		xhr.send(formData);
 	}
 });

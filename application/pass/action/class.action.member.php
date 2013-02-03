@@ -245,7 +245,13 @@ class ActionMember extends ActionCommon
 		switch($params['field'])
 		{
 			case 'portrait':
-				$fields = array();
+				$fields = array(
+					'step' => array(array('valid', 'in', MCGetM('AMER_PORTRAIT_STEP_ERROR'), null, array('upload', 'scope'))),
+					'top' => array(array('format', 'int')),
+					'left' => array(array('format', 'int')),
+					'length' => array(array('format', 'int')),
+					'temp' => array(array('format', 'trim'))
+				);
 				break;
 			case 'name':
 				$fields = array(
@@ -294,10 +300,10 @@ class ActionMember extends ActionCommon
 			$this->jsonout(array('state' => false, 'message' => end($this->_submit->errors)));
 		}
 
-		// 参数转义
+		// 参数转义&处理
 		switch($params['field'])
 		{
-case 'portrait': break;
+			case 'portrait': $member = $params; break;
 			case 'name': $member = array('first_name' => $params['first_name'], 'last_name' => $params['last_name']); break;
 			case 'sex': $member = array('sex' => $GLOBALS['SEX'][$params['sex']], 'sex_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['sex_privacy']]); break;
 			case 'birthday': $member = array('birthday_year' => $params['birthday_year'], 'birthday_month' => $params['birthday_month'], 'birthday_day' => $params['birthday_day'], 'birthday_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['birthday_privacy']]); break;
@@ -311,19 +317,40 @@ case 'portrait': break;
 		$memberObj = Factory::getModel('member');
 		$member['member_id'] = $memberObj->getSessionMember('id');
 		$fun = 'modify' . $params['field'];
-		if($memberObj->$fun($member))
+		if($params['field'] == 'portrait' && $params['step'] == 'upload')
+		{
+			$member['portrait'] = $_FILES['portrait'];
+			$url = $memberObj->modifyPortrait($member);
+			if($url !== false)
+			{
+				$this->initTemplate();
+				$this->assign('field', $params['field'] . '-upload');
+				$this->assign('url', $url);
+				$html = $this->_tpl->fetch(APP_DIR_TEMPLATE  . 'member_base_item.html');
+				$this->jsonout(array('state' => true, 'message' => $html));
+			}
+		}
+		else if($memberObj->$fun($member))
 		{
 			$member = $memberObj->getSessionMember();
 			switch($params['field'])
 			{
 				case 'portrait': break;
-				case 'name': $member = array('first_name' => $params['first_name'], 'last_name' => $params['last_name']); break;
-				case 'sex': $member = array('sex' => $GLOBALS['SEX'][$params['sex']], 'privacy' => array('sex' => $GLOBALS['PRIVACY']['TYPE'][$params['sex_privacy']])); break;
-				case 'birthday': $member = array('info' => array('birthday' => strtotime($params['birthday_year'] . '-' . $params['birthday_month'] . '-' . $params['birthday_day'])), 'privacy' => array('birthday' => $GLOBALS['PRIVACY']['TYPE'][$params['birthday_privacy']])); break;
-				case 'blood': $member = array('info' => array('blood' => $GLOBALS['BLOOD'][$params['blood']]), 'privacy' => array('blood' => $GLOBALS['PRIVACY']['TYPE'][$params['blood_privacy']])); break;
-				case 'sign': $member = array('info' => array('sign' => $params['sign'])); break;
-				case 'mobile': $member = array('mobile' => $member['mobile'], 'privacy' => array('mobile' => $GLOBALS['PRIVACY']['TYPE'][$params['mobile_privacy']])); break;
-				case 'email': $member = array('email' => $member['email'], 'privacy' => array('email' => $GLOBALS['PRIVACY']['TYPE'][$params['email_privacy']])); break;
+				case 'name': break;
+				case 'sex':
+					$member['privacy'] = array('sex' => $GLOBALS['PRIVACY']['TYPE'][$params['sex_privacy']]);
+					break;
+				case 'birthday':
+					$member['info'] = array('birthday' => mktime(0, 0, 0, $params['birthday_month'], $params['birthday_day'], $params['birthday_year']));
+					$member['privacy'] = array('birthday' => $GLOBALS['PRIVACY']['TYPE'][$params['birthday_privacy']]);
+					break;
+				case 'blood':
+					$member['info'] = array('blood' => $GLOBALS['BLOOD'][$params['blood']]);
+					$member['privacy'] = array('blood' => $GLOBALS['PRIVACY']['TYPE'][$params['blood_privacy']]);
+					break;
+				case 'sign': $member['info'] = array('sign' => $params['sign']); break;
+				case 'mobile': $member['privacy'] = array('mobile' => $GLOBALS['PRIVACY']['TYPE'][$params['mobile_privacy']]); break;
+				case 'email': $member['privacy'] = array('email' => $GLOBALS['PRIVACY']['TYPE'][$params['email_privacy']]); break;
 			}
 			$this->initTemplate();
 			$this->assign('field', $params['field']);
@@ -337,17 +364,21 @@ case 'portrait': break;
 		$message = array();
 		if(!empty($errors) && is_array($errors))
 		{
-			foreach($errors as $c)
+			switch($params['field'])
 			{
-				if($params['field'] == 'birthday')
-				{
-					$data = array('year' => $params['birthday_year'], 'month' => $params['birthday_month'], 'day' => $params['birthday_day']);
-					$message[] = $this->message($c, $data, 'string');
-				}
-				else
-				{
-					$message[] = MCGetM($c);
-				}
+				case 'birthday':
+					foreach($errors as $c)
+					{
+						$data = array('year' => $params['birthday_year'], 'month' => $params['birthday_month'], 'day' => $params['birthday_day']);
+						$message[] = $this->message($c, $data, 'string');
+					}
+					break;
+				default:
+					foreach($errors as $c)
+					{
+							$message[] = MCGetM($c);
+					}
+					break;
 			}
 		}
 		$message = implode("<br />", $message);
