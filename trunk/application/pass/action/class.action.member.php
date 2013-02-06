@@ -247,10 +247,12 @@ class ActionMember extends ActionCommon
 			case 'portrait':
 				$fields = array(
 					'step' => array(array('valid', 'in', MCGetM('AMER_PORTRAIT_STEP_ERROR'), null, array('upload', 'scope'))),
+					'width' => array(array('format', 'int')),
+					'height' => array(array('format', 'int')),
 					'top' => array(array('format', 'int')),
 					'left' => array(array('format', 'int')),
 					'length' => array(array('format', 'int')),
-					'temp' => array(array('format', 'trim'))
+					'url' => array(array('format', 'trim'))
 				);
 				break;
 			case 'name':
