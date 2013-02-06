@@ -1,5 +1,7 @@
 {include file="common_top.html"}
 {include file="common_head.html"}
+<link rel="StyleSheet" type="text/css" href="/css/jquery.jcrop.css" />
+<script type="text/javascript" src="/js/jquery.jcrop.js"></script>
 {include file="common_center.html"}
 <div class="app-wrapper">
 	{include file="common_appheader.html"}
@@ -166,7 +168,38 @@ function F_email(){
 	return [{"selector":".dialog-email *[name=email_privacy]", "type":"select", "defval":".item-email .privacy"}];
 }
 
-function H_Drop(event) {
+function F_DropType(obj, option){
+	if(option == "stop"){
+		
+		obj.get(0).removeEventListener("drop", H_Drop, false);
+		obj.unbind("dragleave", H_DragLeave);
+		obj.unbind("dragover", H_DragOver);
+
+		obj.get(0).addEventListener("drop", H_DropWait, false);
+		obj.bind("dragleave", H_DropWait);
+		obj.bind("dragover", H_DropWait);
+
+	}else if(option == "start"){
+
+		obj.get(0).removeEventListener("drop", H_DropWait, false);
+		obj.unbind("dragleave", H_DropWait);
+		obj.unbind("dragover", H_DropWait);
+
+		obj.get(0).addEventListener("drop", H_Drop, false);
+		obj.bind("dragleave", H_DragLeave);
+		obj.bind("dragover", H_DragOver);
+
+	}
+}
+
+function H_DropWait(event){
+	event.stopPropagation();
+	event.preventDefault();
+}
+
+function H_Drop(event){
+	F_DropType($(this), "stop");
+
 	event.stopPropagation();
 	event.preventDefault();
 	$(this).css({"border-color":"#DDDDDD", "background":"#FFFFFF"});
@@ -176,13 +209,15 @@ function H_Drop(event) {
 		var msg_obj = $(this).parent().find(".message");
 		msg_obj.html("发生错误。").show(300);	
 		$("body").one('mousedown', function(){msg_obj.hide(300);});
+		F_DropType($(this), "start");
 	}else if(filelist.length > 1){
 		var msg_obj = $(this).parent().find(".message");
 		msg_obj.html("抱歉，您拖动了多张照片。请只拖动您所需的照片。").show(300);	
 		$("body").one('mousedown', function(){msg_obj.hide(300);});
+		F_DropType($(this), "start");
 	}else{
-		var that = this, obj = $(this).find(".info");
-		obj.html("请稍后，正在上传……<br /><br /><div class='loading'><div class='bar'></div></div>");
+		var that = this, obj = $(this);
+		obj.html("<div class='info'>请稍后，正在上传……<br /><br /><div class='loading'><div class='bar'></div></div></div>");
 		$.fn.dyUploadFile(filelist[0], {
 			dataType: "JSON",
 			name: "portrait",
@@ -191,27 +226,29 @@ function H_Drop(event) {
 				if(result.state){
 					$(that).html(result.message);
 				}else{
-					obj.html("将照片拖放到此处");
+					obj.html("<div class='info'>将照片拖放到此处</div>");
 					var msg_obj = $(that).parent().find(".message");
 					msg_obj.html(result.message).show(300);	
 					$("body").one('mousedown', function(){msg_obj.hide(300);});
 				}
+				F_DropType($(that), "start");
 			}, error: function(error){
 				var msg_obj = $(this).parent().find(".message");
 				msg_obj.html("AJAX请求错误[" + error + "]。").show(300);	
 				$("body").one('mousedown', function(){msg_obj.hide(300);});
+				F_DropType($(that), "start");
 			}, progress: function(event){
 				obj.find(".loading .bar").animate({"width": (event.loaded / filelist[0].size) * 100 + "%"}, 300);
 			}}
 		});
 	}
 }
-function H_DragLeave(event) {
+function H_DragLeave(event){
 	event.stopPropagation();
 	event.preventDefault();
 	$(this).css({"border-color":"#DDDDDD", "background":"#FFFFFF"});
 }
-function H_DragOver(event) {
+function H_DragOver(event){
 	event.stopPropagation();
 	event.preventDefault();
 	$(this).css({"border-color":"#4D90FE", "background":"#F6F6F6"});

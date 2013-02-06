@@ -38,5 +38,55 @@
 	<div class="val" data-val="{$member.portrait}"><img src="{if $member.portrait}{$member.portrait}{else}/images/portrait.png{/if}" width="100px" /></div>
 	<div class="privacy"></div>
 {else if $field == "portrait-upload"}
-	{$url}
+<script type="text/javascript">
+var url = "{$member.image.url}";
+var max_width = 700, max_height = 450;
+var width = {$member.image.width}, height = {$member.image.height};
+var jc_top = 0, jc_left = 0, jc_length = 0;
+var ib_top = 0, ib_left = 0;
+
+{literal}
+
+if(width > max_width){
+	height = height / width * max_width;
+	width = max_width;
+}
+if(height > max_height){
+	width = width / height * max_height;
+	height = max_height;
+}
+
+ib_top = (max_height - height) / 2;
+ib_left = (max_width - width) / 2;
+
+if(width > height){
+	jc_left = (width - height) / 2;
+	jc_length = height;
+}else{
+	jc_top = (height - width) / 2;
+	jc_length = width;
+}
+
+$(".dialog-portrait .panel").append("<div class='imageboard'><img src='" + url + "' width='100%' height='100%' /></div>");
+$(".dialog-portrait .panel .imageboard").css({"position": "relative", "top": ib_top + "px", "left": ib_left + "px", "width": width + "px", "height": height + "px"});
+$(".dialog-portrait .panel img").Jcrop({
+	aspectRatio: 1,
+	allowSelect: false,
+	setSelect: [jc_left, jc_top, jc_length, jc_length],
+	onChange: function(obj){
+		/*$("#xx1").data("x", obj.x);
+		$("#xx1").data("x", obj.y);
+		$("#xx1").data("x", obj.h);
+		$("#xx1").val(obj.x + "][" + obj.y + "][" + obj.h + "][change");*/
+	},
+	onSelect: function(obj){
+		/*$("#xx1").data("x", obj.x);
+		$("#xx1").data("x", obj.y);
+		$("#xx1").data("x", obj.h);
+		$("#xx1").val(obj.x + "][" + obj.y + "][" + obj.h + "][select");*/
+	}
+});
+
+{/literal}
+</script>
 {/if}

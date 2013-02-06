@@ -484,10 +484,12 @@ class ModelMember extends ModelCommon
 
 			if(empty($err))
 			{
+				$info = getimagesize($member['portrait']['tmp_name']);
 				$filename = md5_file($member['portrait']['tmp_name']);
 				if(move_uploaded_file($member['portrait']['tmp_name'], APP_DIR_UPLOAD_TEMP . $filename))
 				{
-					return APP_URL_UPLOAD_TEMP . $filename;
+					$image = array('url' => APP_URL_UPLOAD_TEMP . $filename, 'width' => $info[0], 'height' => $info[1]);
+					return $image;
 				}
 				else
 				{
