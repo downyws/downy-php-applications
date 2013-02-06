@@ -75,9 +75,9 @@ $.fn.extend({
 		return score;
 	},
 	// 最大z-index
-	dyMaxZindex: function(){
+	dyMaxZindex: function(tag){
 		var m = 0, z = 0;
-		$("body").find("*").each(function(){
+		$("body").find(tag).each(function(){
 			z = isNaN(z) ? 0 : $(this).css("z-index") * 1;
 			if(m < z) m = z;
 		});
@@ -369,7 +369,7 @@ $.fn.extend({
 		};
 
 		// 创建对象
-		var z_index = $.fn.dyMaxZindex();
+		var z_index = $.fn.dyMaxZindex("*");
 		var id = "dy-dialog-" + parseInt(Math.random() * 1000);
 		$("body").append("<div id='" + id + "'><div id='" + id + "-ft'>" + config.content + "</div><div id='" + id + "-bg'></div></div>");
 		$("#" + id + "-bg").css({"top":"0", "left":"0", "position":"absolute", "z-index":(z_index + 1), "background-color":"#DDDDDD", "opacity":"0.6"});

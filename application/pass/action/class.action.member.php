@@ -300,10 +300,13 @@ class ActionMember extends ActionCommon
 			$this->jsonout(array('state' => false, 'message' => end($this->_submit->errors)));
 		}
 
-		// 参数转义&处理
+		// 参数转义
 		switch($params['field'])
 		{
-			case 'portrait': $member = $params; break;
+			case 'portrait': 
+				$member = $params;
+				$member['portrait'] = ($params['step'] == 'upload') ? $_FILES['portrait'] : null;
+				break;
 			case 'name': $member = array('first_name' => $params['first_name'], 'last_name' => $params['last_name']); break;
 			case 'sex': $member = array('sex' => $GLOBALS['SEX'][$params['sex']], 'sex_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['sex_privacy']]); break;
 			case 'birthday': $member = array('birthday_year' => $params['birthday_year'], 'birthday_month' => $params['birthday_month'], 'birthday_day' => $params['birthday_day'], 'birthday_privacy' => $GLOBALS['PRIVACY']['TYPE'][$params['birthday_privacy']]); break;
@@ -317,25 +320,19 @@ class ActionMember extends ActionCommon
 		$memberObj = Factory::getModel('member');
 		$member['member_id'] = $memberObj->getSessionMember('id');
 		$fun = 'modify' . $params['field'];
-		if($params['field'] == 'portrait' && $params['step'] == 'upload')
-		{
-			$member['portrait'] = $_FILES['portrait'];
-			$url = $memberObj->modifyPortrait($member);
-			if($url !== false)
-			{
-				$this->initTemplate();
-				$this->assign('field', $params['field'] . '-upload');
-				$this->assign('url', $url);
-				$html = $this->_tpl->fetch(APP_DIR_TEMPLATE  . 'member_base_item.html');
-				$this->jsonout(array('state' => true, 'message' => $html));
-			}
-		}
-		else if($memberObj->$fun($member))
+		$result = $memberObj->$fun($member);
+		if($result)
 		{
 			$member = $memberObj->getSessionMember();
 			switch($params['field'])
 			{
-				case 'portrait': break;
+				case 'portrait': 
+					if($params['step'] == 'upload')
+					{
+						$params['field'] = 'portrait-upload';
+						$member['image'] = $result;
+					}
+					break;
 				case 'name': break;
 				case 'sex':
 					$member['privacy'] = array('sex' => $GLOBALS['PRIVACY']['TYPE'][$params['sex_privacy']]);
