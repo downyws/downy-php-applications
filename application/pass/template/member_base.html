@@ -28,7 +28,17 @@
 	<div class="dy-dialog dialog-portrait clearfix">
 		<div class="panel"><div class="info">将照片拖放到此处</div></div>
 		<div class="message"></div>
-		<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
+		<div class="button">
+			<input type="hidden" name="width" />
+			<input type="hidden" name="height" />
+			<input type="hidden" name="top" />
+			<input type="hidden" name="left" />
+			<input type="hidden" name="length" />
+			<input type="hidden" name="url" />
+			<input type="hidden" name="step" />
+			<input type="button" class="dy-button blue ok" value="确定" />
+			<input type="button" class="dy-button white close" value="取消" />
+		</div>
 	</div>
 	<div class="dy-dialog dialog-name clearfix">
 		<div class="name">姓名</div>
@@ -130,7 +140,16 @@ var dialog = {
 $(".dy-dialog").remove();
 
 function F_portrait(){
-	return [{"selector":".dialog-portrait .panel", "type":"upload-image", "defval":""}];
+	return [
+		{"selector":".dialog-portrait .panel", "type":"upload-image", "defval":""},
+		{"selector":".dialog-portrait *[name=step]", "type":"hidden", "defval":""},
+		{"selector":".dialog-portrait *[name=width]", "type":"hidden", "defval":""},
+		{"selector":".dialog-portrait *[name=height]", "type":"hidden", "defval":""},
+		{"selector":".dialog-portrait *[name=top]", "type":"hidden", "defval":""},
+		{"selector":".dialog-portrait *[name=left]", "type":"hidden", "defval":""},
+		{"selector":".dialog-portrait *[name=length]", "type":"hidden", "defval":""},
+		{"selector":".dialog-portrait *[name=url]", "type":"hidden", "defval":""}
+	];
 }
 function F_name(){
 	return [
@@ -265,6 +284,9 @@ function T_main(field, type){
 			obj.dySelect({name: obj.attr("name"), text: obj.data("text"), width: obj.data("width"), height: obj.data("height"), type: obj.data("type"), defval: $(ctrls[i].defval).data("val")});
 		}else if(ctrls[i].type == "text"){
 			obj.val($(ctrls[i].defval).data("val"));
+			obj.dyText({tips: true});
+		}else if(ctrls[i].type == "hidden"){
+			obj.val($(ctrls[i].defval).data("val"));
 		}else if(ctrls[i].type == "upload-image"){
 			obj.get(0).addEventListener("drop", H_Drop, false);
 			obj.bind("dragleave", H_DragLeave);
@@ -274,12 +296,15 @@ function T_main(field, type){
 
 	// 绑定ok
 	$(".dialog-" + field + " .ok").click(function(){
-		var change = false, data = {field:field}
+		var change = false, data = {field:field};
 
 		// 检查修改
 		for(var i = 0; i < ctrls.length; i++){
 			if(ctrls[i].type == "select" || ctrls[i].type == "text"){
 				change = ($(ctrls[i].selector).val() != $(ctrls[i].defval).data("val")) || change;
+				data[$(ctrls[i].selector).attr("name")] = $(ctrls[i].selector).val();
+			}else if(ctrls[i].type == "hidden"){
+				change = ($(ctrls[i].selector).val() != "") || change;
 				data[$(ctrls[i].selector).attr("name")] = $(ctrls[i].selector).val();
 			}
 		}

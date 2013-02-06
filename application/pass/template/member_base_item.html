@@ -47,6 +47,7 @@ var ib_top = 0, ib_left = 0;
 
 {literal}
 
+// 头像显示大小
 if(width > max_width){
 	height = height / width * max_width;
 	width = max_width;
@@ -56,9 +57,11 @@ if(height > max_height){
 	height = max_height;
 }
 
+// 头像居中
 ib_top = (max_height - height) / 2;
 ib_left = (max_width - width) / 2;
 
+// 选择框最大化
 if(width > height){
 	jc_left = (width - height) / 2;
 	jc_length = height;
@@ -67,6 +70,13 @@ if(width > height){
 	jc_length = width;
 }
 
+// 写入默认参数
+$(".dialog-portrait *[name=step]").val("scope");
+$(".dialog-portrait *[name=width]").val(width);
+$(".dialog-portrait *[name=height]").val(height);
+$(".dialog-portrait *[name=url]").val(url);
+
+// 初始化界面&绑定
 $(".dialog-portrait .panel").append("<div class='imageboard'><img src='" + url + "' width='100%' height='100%' /></div>");
 $(".dialog-portrait .panel .imageboard").css({"position": "relative", "top": ib_top + "px", "left": ib_left + "px", "width": width + "px", "height": height + "px"});
 $(".dialog-portrait .panel img").Jcrop({
@@ -74,16 +84,14 @@ $(".dialog-portrait .panel img").Jcrop({
 	allowSelect: false,
 	setSelect: [jc_left, jc_top, jc_length, jc_length],
 	onChange: function(obj){
-		/*$("#xx1").data("x", obj.x);
-		$("#xx1").data("x", obj.y);
-		$("#xx1").data("x", obj.h);
-		$("#xx1").val(obj.x + "][" + obj.y + "][" + obj.h + "][change");*/
+		$(".dialog-portrait *[name=top]").val(obj.y);
+		$(".dialog-portrait *[name=left]").val(obj.x);
+		$(".dialog-portrait *[name=length]").val(obj.h);
 	},
 	onSelect: function(obj){
-		/*$("#xx1").data("x", obj.x);
-		$("#xx1").data("x", obj.y);
-		$("#xx1").data("x", obj.h);
-		$("#xx1").val(obj.x + "][" + obj.y + "][" + obj.h + "][select");*/
+		$(".dialog-portrait *[name=top]").val(obj.y);
+		$(".dialog-portrait *[name=left]").val(obj.x);
+		$(".dialog-portrait *[name=length]").val(obj.h);
 	}
 });
 
