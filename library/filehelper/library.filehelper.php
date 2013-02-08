@@ -39,4 +39,31 @@ class FileHelper
 		}
 		return 'UNKNOW';
 	}
+
+	public function getExtension($filename)
+	{
+		$handle = fopen($filename, "rb");
+		$info = fread($handle, 2);
+		fclose($handle);
+		$info = @unpack("C2chars", $info);
+		$info = intval($info['chars1'] . $info['chars2']);
+
+		switch ($info)
+		{ 
+			case 6677: $file_type = 'bmp'; break;
+			case 7173: $file_type = 'gif'; break;
+			case 7784: $file_type = 'midi'; break;
+			case 7790: $file_type = 'exe'; break;
+			case 8075: $file_type = 'zip'; break;
+			case 8297: $file_type = 'rar'; break;
+			case 13780: $file_type = 'png'; break;
+			case 255216: $file_type = 'jpg'; break;
+			default: 
+				$file_type = pathinfo($path, PATHINFO_EXTENSION);
+				$file_type = empty($file_type) ? false : $file_type;
+				break;
+		}
+
+		return $file_type;
+	}
 }

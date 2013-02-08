@@ -115,4 +115,41 @@ class ImageHelper
 
 		return $image;
 	}
+
+	public function clipping($filename, $destination, $top, $left, $width, $height)
+	{
+		// 获取图像信息
+		$info = getimagesize($filename);
+		
+		// 检查图像&参数
+		if($info === false)
+		{
+			return false;
+		}
+		if($top < 0 || $left < 0 || $width < 0 || $height < 0)
+		{
+			return false;
+		}
+
+		// 绘图
+		switch($info[2])
+		{
+			case IMAGETYPE_GIF: $src_im = imagecreatefromgif($filename); break;
+			case IMAGETYPE_JPEG: $src_im = imagecreatefromjpeg($filename); break;
+			case IMAGETYPE_PNG: $src_im = imagecreatefrompng($filename); break;
+			default: throw new Exception('This file type is not supported.'); break;
+		}
+		$dst_im = imagecreatetruecolor($width, $height);
+		$color = imagecolorallocatealpha($dst_im, 255, 255, 255, 0);
+		imagefill($dst_im, 0, 0, $color);
+		imagecopy($dst_im, $src_im, 0, 0, $left, $top, $width, $height);
+		switch($info[2])
+		{
+			case IMAGETYPE_JPEG: imagejpeg($dst_im, $destination, 100); break;
+			case IMAGETYPE_PNG: imagepng($dst_im, $destination); break;
+			case IMAGETYPE_GIF: imagegif($dst_im, $destination); break;
+		}
+
+		return true;
+	}
 }
