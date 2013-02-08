@@ -61,7 +61,7 @@ if(height > max_height){
 ib_top = (max_height - height) / 2;
 ib_left = (max_width - width) / 2;
 
-// 选择框最大化
+// 选择框处理
 if(width > height){
 	jc_left = (width - height) / 2;
 	jc_length = height;
@@ -69,6 +69,7 @@ if(width > height){
 	jc_top = (height - width) / 2;
 	jc_length = width;
 }
+jc_size = width / max_width * 250;
 
 // 写入默认参数
 $(".dialog-portrait *[name=step]").val("scope");
@@ -82,6 +83,7 @@ $(".dialog-portrait .panel .imageboard").css({"position": "relative", "top": ib_
 $(".dialog-portrait .panel img").Jcrop({
 	aspectRatio: 1,
 	allowSelect: false,
+	minSize: [jc_size, jc_size],
 	setSelect: [jc_left, jc_top, jc_length, jc_length],
 	onChange: function(obj){
 		$(".dialog-portrait *[name=top]").val(obj.y);

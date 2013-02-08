@@ -479,7 +479,7 @@ class ModelMember extends ModelCommon
 
 		if($member['step'] == 'upload')
 		{
-			$res = $this->checkErrPortrait($member, false);
+			$res = $this->checkErrPortraitUpload($member, false);
 			$res && $err[] = $res;
 
 			if(empty($err))
@@ -499,9 +499,56 @@ class ModelMember extends ModelCommon
 		}
 		else if($member['step'] == 'scope')
 		{
+			$member['portrait']['tmp_name'] = str_replace(APP_URL_UPLOAD, APP_DIR_UPLOAD, $member['url']);
+			$res = $this->checkErrPortraitScope($member, false);
+			$res && $err[] = $res;
+			if(empty($err))
+			{
+				Factory::loadLibrary('imagehelper');
+				$imagehelper = new ImageHelper();
+				Factory::loadLibrary('filehelper');
+				$filehelper = new FileHelper();
 
-// coding...
+				$filename = $member['member_id'] . '_' . time() . '.' . $filehelper->getExtension($member['portrait']['tmp_name']);
+				$info = getimagesize($member['portrait']['tmp_name']);
+				$scale = $member['height'] / $info[1];
+				$top = intval($member['top'] / $scale);
+				$left = intval($member['left'] / $scale);
+				$length = intval($member['length'] / $scale);
 
+				$res = $imagehelper->clipping($member['portrait']['tmp_name'], APP_DIR_UPLOAD_PORTRAIT . $filename, $top, $left, $length, $length);
+				$res = $res && file_exists(APP_DIR_UPLOAD_PORTRAIT . $filename);
+				if($res)
+				{
+					$this->transStart();
+
+					// update
+					$condition = array();
+					$condition[] = array('id' => array('eq', $member['member_id']));
+					$data = array('portrait' => APP_URL_UPLOAD_PORTRAIT . $filename);
+					$this->update($condition, $data);
+
+					// logs && check
+					$this->operateLog();
+					$this->operateCheck($member['member_id'], CHECK_MEMBER_MODIFY_BASE);
+
+					$res = $this->transCommit();
+
+					if($res)
+					{
+						$this->setSessionMember($data);
+						return true;
+					}
+					else
+					{
+						$err[] = MCGetC('MCON_SYSERR_TELA');
+					}
+				}
+				else
+				{
+					$err[] = MCGetC('MMER_PORTRAIT_CLIPPING_ERROR');
+				}
+			}
 		}
 		else
 		{
@@ -680,7 +727,26 @@ class ModelMember extends ModelCommon
 		return false;
 	}
 
-	public function checkErrPortrait($vals, $can_empty = false)
+	public function checkErrPortraitScope($vals, $can_empty = false)
+	{
+		$res = file_exists($vals['portrait']['tmp_name']);
+		if(!$res) return MCGetC('MMER_PORTRAIT_FILE_NO_FOUND');
+
+		$res = $this->checkErrPortraitUpload($vals, $can_empty);
+		if($res !== false) return $res;
+
+		$info = getimagesize($vals['portrait']['tmp_name']);
+		if($vals['width'] <= 0 || $vals['height'] <= 0 || $vals['length'] <= 0) return MCGetC('MMER_PORTRAIT_SCALE_ERROR');
+		if($vals['width'] > $info[0]) return MCGetC('MMER_PORTRAIT_SCALE_ERROR');
+		if($vals['height'] > $info[1]) return MCGetC('MMER_PORTRAIT_SCALE_ERROR');
+		if(abs($vals['height'] / $info[1] - $vals['width'] / $info[0]) > 0.02) return MCGetC('MMER_PORTRAIT_SCALE_ERROR');
+		if($vals['height'] < $vals['top'] + $vals['length']) return MCGetC('MMER_PORTRAIT_SCOPE_ERROR');
+		if($vals['width'] < $vals['left'] + $vals['length']) return MCGetC('MMER_PORTRAIT_SCOPE_ERROR');
+
+		return $res;
+	}
+
+	public function checkErrPortraitUpload($vals, $can_empty = false)
 	{
 		$info = getimagesize($vals['portrait']['tmp_name']);
 
