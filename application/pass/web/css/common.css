@@ -154,6 +154,11 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .block-homepage .broswer li .detail p{font-weight:bold;background:#F4F9FF;padding:10px;font-size:14px;margin:0px;}
 .block-homepage .broswer li .detail img{margin:10px 10px 15px 10px;}
 
+.block-safe{margin-bottom:35px;}
+.block-safe .name{color:#606060;border-bottom:1px solid #EBEBEB;font-size:20px;padding-bottom:5px;margin-bottom:10px;}
+.block-safe .title{color:#606060;font-size:17px;margin-bottom:5px;}
+.block-safe .description{margin-bottom:15px;}
+
 .link-round{background:#DD4B39;padding:0 5px;color:#FFFFFF;font-weight:bold;display:inline-block;text-decoration:none;position:relative;top:0px;border-radius:9px;}
 .link-round:hover{background:#C03523;text-decoration:none;}
 .link-round:active{background:#AE2817;}

@@ -24,7 +24,7 @@ class ActionCommon extends Action
 		if(!in_array($params['m'], $options['NOT_LOGIN']))
 		{
 			$memberObj = Factory::getModel('member');
-			// 未登陆
+			// 未登录
 			if(!$memberObj->isLogin())
 			{
 				if($params['t'] == 'ajax')
