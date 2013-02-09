@@ -405,11 +405,11 @@ class ActionMember extends ActionCommon
 	{
 	}
 
-	public function methodBindMobile()
+	public function methodMyMobile()
 	{
 	}
 
-	public function methodBindEmail()
+	public function methodMyEmail()
 	{
 	}
 }
