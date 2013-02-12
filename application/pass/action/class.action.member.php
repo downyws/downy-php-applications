@@ -390,9 +390,10 @@ class ActionMember extends ActionCommon
 
 	public function methodSafe()
 	{
+
 	}
 
-	public function methodPassword()
+	public function methodMyPassword()
 	{
 		// 获取参数
 		$params = $this->_submit->obtain($_REQUEST, array(
@@ -401,15 +402,45 @@ class ActionMember extends ActionCommon
 		$this->assign('params', $params);
 	}
 
-	public function methodQandA()
+	public function methodMyQandA()
 	{
+
 	}
 
 	public function methodMyMobile()
 	{
+
 	}
 
 	public function methodMyEmail()
 	{
+
+	}
+
+	public function methodMyActivity()
+	{
+		$memberObj = Factory::getModel('member');
+		$member_id = $memberObj->getSessionMember('id');
+		$report = $memberObj->getMemberReport($member_id, 1, $GLOBALS['CONFIG']['ACTION_OPTIONS']['member']['MYACTIVITY']['PAGE_SIZE']);
+		$this->assign('report', $report);
+		$this->assign('limit_day', floor($GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT']['SCOPE'] / 86400));
+	}
+
+	public function methodMyActivityAjax()
+	{
+		// 获取参数
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'page' => array(array('vaild', 'gte', '', 1, 1))
+		));
+
+		$memberObj = Factory::getModel('member');
+		$member_id = $memberObj->getSessionMember('id');
+		$report = $memberObj->getMemberReport($member_id, $params['page'], $GLOBALS['CONFIG']['ACTION_OPTIONS']['member']['MYACTIVITY']['PAGE_SIZE']);
+
+		$this->initTemplate();
+		$this->assign('report', $report);
+		$this->assign('limit_day', floor($GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT']['SCOPE'] / 86400));
+		$html = $this->_tpl->fetch(APP_DIR_TEMPLATE  . 'member_myactivity_report.html');
+		$this->jsonout(array('state' => true, 'message' => $html));
 	}
 }

@@ -25,7 +25,7 @@ $(function(){
 	{include file="common_appheader.html"}
 	<div class="app-body">
 		<div class="content clearfix">
-			<div class="block-member">
+			<div class="action-member">
 				{include file="member_common_navg.html"}
 				<div class="detail page-member_home">
 					<div class="product">
@@ -60,11 +60,11 @@ $(function(){
 						<div class="login_info">
 							<h1>帐户活动报告</h1>
 							<ul>
-								<li><p class="key">上次登录日期</p><p class="val">{$member.last.inout_time|date_format:"%Y/%m/%d %H:%M"}</p></li>
+								<li><p class="key">上次登录日期</p><p class="val">{$member.last.create_time|date_format:"%Y/%m/%d %H:%M"}</p></li>
 								<li><p class="key">上次登录时所用的IP地址</p><p class="val">{$member.last.ip|long2ip}</p></li>
 							</ul>
 						</div>
-						<div class="account_log"><a href="#">了解更多详情，请查看您的账户活动报告。</a></div>
+						<div class="account_log"><a href="/index.php?a=member&m=myactivity">了解更多详情，请查看您的账户活动报告。</a></div>
 					</div>
 				</div>
 			</div>

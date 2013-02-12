@@ -1,0 +1,58 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+<link rel="StyleSheet" type="text/css" href="/css/jquery.jcrop.css" />
+<script type="text/javascript" src="/js/jquery.jcrop.js"></script>
+{include file="common_center.html"}
+<div class="app-wrapper">
+	{include file="common_appheader.html"}
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="action-member">
+				{include file="member_common_navg.html"}
+				<div class="detail page-member_myactivity">
+					{include file="member_myactivity_report.html"}
+				</div>
+			</div>
+		</div>
+	</div>
+	{include file="common_appfooter.html"}
+</div>
+<script type="text/javascript">
+{literal}
+$(".page-member_myactivity .item").live("click", function(){
+	if($(this).find(".arrow").length < 0){
+	}else if($(this).find(".arrow").hasClass("close")){
+		$(this).find(".arrow").addClass("open").removeClass("close");
+		$(this).find(".ext_info").show(300);
+	}else if($(this).find(".arrow").hasClass("open")){
+		$(this).find(".arrow").addClass("close").removeClass("open");
+		$(this).find(".ext_info").hide(300);
+	}
+});
+$(".page-member_myactivity .pagebar input").live("click", function(){
+	var page = $(this).data("page");
+	$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=member&m=myactivity&t=ajax&page=" + page, async: true, beforeSend: function(){
+		$(".page-member_myactivity .loading").show(200);
+	}, complete: function(jqXHR, textStatus){
+		if(textStatus != "success"){
+			$(".page-member_myactivity .message").html("AJAX请求错误[" + textStatus + "]。").show(300);
+			$("body").one('mousedown', function(){
+				$(".page-member_myactivity .message").hide(300);
+				$(".page-member_myactivity .loading").hide(200);
+			});
+		}
+	}, success: function(result){
+		if(result.state){
+			$(".page-member_myactivity").html(result.message);
+		}else{
+			$(".page-member_myactivity .message").html(result.message).show(300);
+			$("body").one('mousedown', function(){
+				$(".page-member_myactivity .message").hide(300);
+				$(".page-member_myactivity .loading").hide(200);
+			});
+		}
+	}});
+});
+{/literal}
+</script>
+{include file="common_bottom.html"}
