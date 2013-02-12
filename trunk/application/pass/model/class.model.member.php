@@ -61,7 +61,7 @@ class ModelMember extends ModelCommon
 		$config = $GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT'];
 		$filecache = new Filecache();
 		$cache = array('key' => strtolower($config['CATCH_KEY'] . '/' . $member_id . '_' . $page_size . '_' . REMOTE_IP_ADDRESS), 'time' => $config['CATCH_TIME']);
-		$reports = null;// $filecache->get($cache['key']);
+		$reports = $filecache->get($cache['key']);
 
 		// 新建缓存
 		if(!$reports)
