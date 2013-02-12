@@ -18,9 +18,9 @@
 		<div class="time">{$v.create_time|date_format:"%Y/%m/%d %H:%M:%S"}</div>
 		<div class="ip">{$v.ip|long2ip}</div>
 	</div>
-	<div class="ext_info">{$v.ext}</div>
+	<div class="ext_info"><pre>{$v.ext}</pre></div>
 </div>
 {/foreach}
 <div class="pagebar bottom">
-	系统只显示 {$limit_day} 天内的活动报告。如需历史活动报告，请联系管理员。
+	系统只显示 {$rule.day} 天内最新的 {$rule.limit} 条活动报告。如需历史活动报告，请联系管理员。
 </div>

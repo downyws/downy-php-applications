@@ -19,14 +19,13 @@
 </div>
 <script type="text/javascript">
 {literal}
-$(".page-member_myactivity .item").live("click", function(){
-	if($(this).find(".arrow").length < 0){
-	}else if($(this).find(".arrow").hasClass("close")){
-		$(this).find(".arrow").addClass("open").removeClass("close");
-		$(this).find(".ext_info").show(300);
-	}else if($(this).find(".arrow").hasClass("open")){
-		$(this).find(".arrow").addClass("close").removeClass("open");
-		$(this).find(".ext_info").hide(300);
+$(".page-member_myactivity .item .arrow").live("click", function(){
+	if($(this).hasClass("close")){
+		$(this).addClass("open").removeClass("close");
+		$(this).parent().parent().parent().find(".ext_info").show(300);
+	}else if($(this).hasClass("open")){
+		$(this).addClass("close").removeClass("open");
+		$(this).parent().parent().parent().find(".ext_info").hide(300);
 	}
 });
 $(".page-member_myactivity .pagebar input").live("click", function(){

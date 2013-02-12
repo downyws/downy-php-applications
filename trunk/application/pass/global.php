@@ -64,7 +64,7 @@ $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 // - MODEL 设置
 $GLOBALS['CONFIG']['MODEL_OPTIONS'] = array(
 	'member' => array(
-		'REPORT' => array('CATCH_KEY' => 'member_report', 'CATCH_TIME' => 1800, 'SCOPE' => 8640000)
+		'REPORT' => array('CATCH_KEY' => 'member_report', 'CATCH_TIME' => 1800, 'SCOPE' => 8640000, 'LIMIT' => 1000)
 	)
 );
 // - 登录验证码配置
