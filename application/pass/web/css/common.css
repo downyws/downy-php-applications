@@ -271,7 +271,7 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-member_myactivity .pagebar.bottom{padding:5px;margin-top:10px;border-top:1px solid #EBEBEB;}
 .page-member_myactivity .pagebar input{margin-left:5px;}
 .page-member_myactivity .pagebar .space{display:inline-block;width:20px;}
-.page-member_myactivity .item{padding:10px;background:#FFFFFF;cursor:pointer;}
+.page-member_myactivity .item{padding:10px;background:#FFFFFF;}
 .page-member_myactivity .item:hover{background:#EBEFFA;}
 .page-member_myactivity .item .info *{line-height:16px;height:16px;}
 .page-member_myactivity .item .info .cont{width:60%;float:left;overflow:hidden;}
@@ -279,9 +279,10 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-member_myactivity .item .info .cont span{display:inline-block;overflow:hidden;}
 .page-member_myactivity .item .info .cont .cate{color:#1155CC;width:20%;}
 .page-member_myactivity .item .info .cont .text{max-width:70%;color:#000000;}
-.page-member_myactivity .item .info .cont .arrow{width:5%;}
+.page-member_myactivity .item .info .cont .arrow{width:5%;cursor:pointer;}
 .page-member_myactivity .item .info .cont .arrow.open{background:url("/images/arrow_d.png") no-repeat right center;}
 .page-member_myactivity .item .info .cont .arrow.close{background:url("/images/arrow_l.png") no-repeat right center;}
 .page-member_myactivity .item .info .time{width:20%;float:right;color:#1155CC;text-align:right;}
 .page-member_myactivity .item .info .ip{width:20%;float:right;color:#1155CC;text-align:center;}
 .page-member_myactivity .item .ext_info{margin-top:5px;color:#999999;display:none;overflow:hidden;}
+.page-member_myactivity .item .ext_info pre{margin:0px;line-height:20px;}

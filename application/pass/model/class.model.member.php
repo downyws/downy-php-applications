@@ -71,17 +71,17 @@ class ModelMember extends ModelCommon
 			$condition = array();
 			$condition[] = array('member_id' => array('eq', $member_id));
 			$condition[] = array('create_time' => array('between', array($start_time, $end_time)));
-			$sql = ' SELECT * FROM ( ' .
-					'	SELECT id, ip, create_time, "" AS request_url, "" AS request_data, type FROM ' . $this->table('inout') . $this->getWhere($condition) .
-					'	UNION ALL ' .
+			$sql = ' SELECT * FROM (( ' .
+					'	SELECT id, ip, create_time, "" AS request_url, "" AS request_data, type FROM ' . $this->table('inout') . $this->getWhere($condition) . 
+					'		ORDER BY create_time DESC ' . $this->getLimit(1, $config['LIMIT']) .
+					'	)UNION ALL( ' .
 					'	SELECT id, ip, create_time, request_url, request_data, 0 AS type FROM ' . $this->table('logs') . $this->getWhere($condition) .
-					') AS reports ORDER BY create_time DESC ';
+					'		ORDER BY create_time DESC ' . $this->getLimit(1, $config['LIMIT']) .
+					')) AS reports ORDER BY create_time DESC ' . $this->getLimit(1, $config['LIMIT']);
 			$reports = $this->fetchRows($sql);
 			foreach($reports as $k => $v)
 			{
-				$reports[$k]['cate'] = 'c' . $reports[$k]['type'];
-				$reports[$k]['text'] = 't' . $reports[$k]['id'];
-				$reports[$k]['ext'] = 'e';
+				$reports[$k] = array_merge($reports[$k], report_format($reports[$k]));
 			}
 			$filecache->set($cache['key'], $reports, $cache['time']);
 		}

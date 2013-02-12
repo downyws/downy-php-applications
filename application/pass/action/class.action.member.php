@@ -423,7 +423,8 @@ class ActionMember extends ActionCommon
 		$member_id = $memberObj->getSessionMember('id');
 		$report = $memberObj->getMemberReport($member_id, 1, $GLOBALS['CONFIG']['ACTION_OPTIONS']['member']['MYACTIVITY']['PAGE_SIZE']);
 		$this->assign('report', $report);
-		$this->assign('limit_day', floor($GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT']['SCOPE'] / 86400));
+		$rule = $GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT'];
+		$this->assign('rule', array('day' => floor($rule['SCOPE'] / 86400), 'limit' => $rule['LIMIT']));
 	}
 
 	public function methodMyActivityAjax()
@@ -439,7 +440,8 @@ class ActionMember extends ActionCommon
 
 		$this->initTemplate();
 		$this->assign('report', $report);
-		$this->assign('limit_day', floor($GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT']['SCOPE'] / 86400));
+		$rule = $GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT'];
+		$this->assign('rule', array('day' => floor($rule['SCOPE'] / 86400), 'limit' => $rule['LIMIT']));
 		$html = $this->_tpl->fetch(APP_DIR_TEMPLATE  . 'member_myactivity_report.html');
 		$this->jsonout(array('state' => true, 'message' => $html));
 	}
