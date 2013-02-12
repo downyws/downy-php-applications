@@ -1,0 +1,26 @@
+<div class="loading"></div>
+<div class="message"></div>
+<div class="pagebar top">
+	{if $report.pager.current != $report.pager.first}<input type="button" value="最新" class="dy-button white" data-page="{$report.pager.first}">{/if}
+	{if $report.pager.current != $report.pager.prev}<input type="button" value="较新" class="dy-button white" data-page="{$report.pager.prev}">{/if}
+	{if $report.pager.current != $report.pager.next && $report.pager.current != $report.pager.last}<div class="space"></div>{/if}
+	{if $report.pager.current != $report.pager.next}<input type="button" value="较早" class="dy-button white" data-page="{$report.pager.next}">{/if}
+	{if $report.pager.current != $report.pager.last}<input type="button" value="最早" class="dy-button white" data-page="{$report.pager.last}">{/if}
+</div>
+{foreach from=$report.data item=v}
+<div class="item">
+	<div class="info">
+		<div class="cont">
+			<span class="cate">{$v.cate}</span>
+			<span class="text">{$v.text}</span>
+			{if $v.ext}<span class="arrow close"></span>{/if}
+		</div>
+		<div class="time">{$v.create_time|date_format:"%Y/%m/%d %H:%M:%S"}</div>
+		<div class="ip">{$v.ip|long2ip}</div>
+	</div>
+	<div class="ext_info">{$v.ext}</div>
+</div>
+{/foreach}
+<div class="pagebar bottom">
+	系统只显示 {$limit_day} 天内的活动报告。如需历史活动报告，请联系管理员。
+</div>

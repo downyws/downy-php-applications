@@ -56,6 +56,43 @@ class ModelMember extends ModelCommon
 		return $privacys;
 	}
 
+	public function getMemberReport($member_id, $page, $page_size)
+	{
+		$config = $GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT'];
+		$filecache = new Filecache();
+		$cache = array('key' => strtolower($config['CATCH_KEY'] . '/' . $member_id . '_' . $page_size . '_' . REMOTE_IP_ADDRESS), 'time' => $config['CATCH_TIME']);
+		$reports = null;// $filecache->get($cache['key']);
+
+		// 新建缓存
+		if(!$reports)
+		{
+			$end_time = time();
+			$start_time = mktime(0, 0, 0, date("m", $end_time), 1, date("Y", $end_time)) - $config['SCOPE'];
+			$condition = array();
+			$condition[] = array('member_id' => array('eq', $member_id));
+			$condition[] = array('create_time' => array('between', array($start_time, $end_time)));
+			$sql = ' SELECT * FROM ( ' .
+					'	SELECT id, ip, create_time, "" AS request_url, "" AS request_data, type FROM ' . $this->table('inout') . $this->getWhere($condition) .
+					'	UNION ALL ' .
+					'	SELECT id, ip, create_time, request_url, request_data, 0 AS type FROM ' . $this->table('logs') . $this->getWhere($condition) .
+					') AS reports ORDER BY create_time DESC ';
+			$reports = $this->fetchRows($sql);
+			foreach($reports as $k => $v)
+			{
+				$reports[$k]['cate'] = 'c' . $reports[$k]['type'];
+				$reports[$k]['text'] = 't' . $reports[$k]['id'];
+				$reports[$k]['ext'] = 'e';
+			}
+			$filecache->set($cache['key'], $reports, $cache['time']);
+		}
+
+		// 返回指定索引
+		$count = count($reports);
+		$pager = $this->getPager($page, $count, $page_size);
+		$reports = array('count' => $count, 'data' => array_splice($reports, ($page - 1) * $page_size, $page_size), 'pager' => $pager);
+		return $reports;
+	}
+
 	public function login($params, $type = '', $is_md5 = false, $log_inout = true)
 	{
 		$err = array();
@@ -261,7 +298,7 @@ class ModelMember extends ModelCommon
 
 		$this->transStart();
 
-		$data = array('member_id' => $member_id, 'ip' => ip2long(REMOTE_IP_ADDRESS), 'type' => $type, 'session_key' => session_id(), 'inout_time' => time());
+		$data = array('member_id' => $member_id, 'ip' => ip2long(REMOTE_IP_ADDRESS), 'type' => $type, 'session_key' => session_id(), 'create_time' => time());
 		$inout_id = $this->insert($data, 'inout');
 		if($type == INOUT_TPYE_IN)
 		{

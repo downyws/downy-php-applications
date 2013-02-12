@@ -8,6 +8,9 @@ define('APP_TIMEZONE', 'Asia/Shanghai');
 
 session_start();
 
+define('APP_PAGEE_SIZE', 15);
+define('APP_PAGER_COUNT', 10);
+
 // 状态
 define('STATUS_DEFAULT', 1);		// 正常
 define('STATUS_DISABEL', 2);		// 禁用（被动）
@@ -38,7 +41,7 @@ define('INOUT_TPYE_OUT', 2);	// 登出
 define('MAX_COUNT', 3);	// QA最大数量
 
 // 配置
-// - ACTION 设置，是否需要登录，是否需要长时间执行
+// - ACTION 设置
 $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 	'common' => array(
 		'NOT_LOGIN' => array('message'),
@@ -50,11 +53,18 @@ $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 	),
 	'member' => array(
 		'NOT_LOGIN' => array('login', 'logout', 'register', 'recover', 'active'),
-		'RUN_LONG_TIME' => array()
+		'RUN_LONG_TIME' => array(),
+		'MYACTIVITY' => array('PAGE_SIZE' => 10)
 	),
 	'connect' => array(
 		'NOT_LOGIN' => array('login'),
 		'RUN_LONG_TIME' => array()
+	)
+);
+// - MODEL 设置
+$GLOBALS['CONFIG']['MODEL_OPTIONS'] = array(
+	'member' => array(
+		'REPORT' => array('CATCH_KEY' => 'member_report', 'CATCH_TIME' => 1800, 'SCOPE' => 8640000)
 	)
 );
 // - 登录验证码配置
