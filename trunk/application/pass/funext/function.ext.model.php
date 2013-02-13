@@ -42,6 +42,10 @@ function report_log($value)
 			$value['cate'] = '注册';
 			$value['text'] = '注册成为会员';
 			break;
+		case 'membermypassword':
+			$value['cate'] = '编辑';
+			$value['text'] = '修改密码';
+			break;
 		case 'memberbasemodify':
 			switch($data['field'])
 			{

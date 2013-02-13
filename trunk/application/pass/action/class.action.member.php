@@ -65,12 +65,12 @@ class ActionMember extends ActionCommon
 				{
 					$type = array
 					(
-						substr(MCGetC('MMER_PLZ_IN_ACCOUNT'), 0, 6) => 'account',
-						substr(MCGetC('MMER_PLZ_IN_PASSWORD'), 0, 6) => 'password'
+						substr(MCGetC('MMER_PLZ_IN_ACCOUNT'), 0, 5) => 'account',
+						substr(MCGetC('MMER_PLZ_IN_PASSWORD'), 0, 5) => 'password'
 					);
 					foreach($errors as $v)
 					{
-						$error[$type[substr($v, 0, 6)]] = array('message' => MCGetM($v), 'code' => $v);
+						$error[$type[substr($v, 0, 5)]] = array('message' => MCGetM($v), 'code' => $v);
 					}
 				}
 			}
@@ -171,18 +171,18 @@ class ActionMember extends ActionCommon
 				{
 					$type = array
 					(
-						substr(MCGetC('MMER_FNAME_CNT_EMPTY'), 0, 6) => 'fname',
-						substr(MCGetC('MMER_LNAME_CNT_EMPTY'), 0, 6) => 'lname',
-						substr(MCGetC('MMER_ACCOUNT_CNT_EMPTY'), 0, 6) => 'account',
-						substr(MCGetC('MMER_PWD_CNT_EMPTY'), 0, 6) => 'password',
-						substr(MCGetC('MMER_PWDC_CNT_EMPTY'), 0, 6) => 'passwordcfm',
-						substr(MCGetC('MMER_EMAIL_CNT_EMPTY'), 0, 6) => 'email',
-						substr(MCGetC('MMER_MOBILE_CNT_EMPTY'), 0, 6) => 'mobile',
-						substr(MCGetC('MCON_SYSERR_TELA'), 0, 6) => 'system'
+						substr(MCGetC('MMER_FNAME_CNT_EMPTY'), 0, 5) => 'fname',
+						substr(MCGetC('MMER_LNAME_CNT_EMPTY'), 0, 5) => 'lname',
+						substr(MCGetC('MMER_ACCOUNT_CNT_EMPTY'), 0, 5) => 'account',
+						substr(MCGetC('MMER_PWD_CNT_EMPTY'), 0, 5) => 'password',
+						substr(MCGetC('MMER_PWDC_CNT_EMPTY'), 0, 5) => 'passwordcfm',
+						substr(MCGetC('MMER_EMAIL_CNT_EMPTY'), 0, 5) => 'email',
+						substr(MCGetC('MMER_MOBILE_CNT_EMPTY'), 0, 5) => 'mobile',
+						substr(MCGetC('MCON_SYSERR_TELA'), 0, 5) => 'system'
 					);
 					foreach($errors as $v)
 					{
-						$error[$type[substr($v, 0, 6)]] = array('message' => MCGetM($v), 'code' => $v);
+						$error[$type[substr($v, 0, 5)]] = array('message' => MCGetM($v), 'code' => $v);
 					}
 				}
 			}
@@ -395,11 +395,58 @@ class ActionMember extends ActionCommon
 
 	public function methodMyPassword()
 	{
+
+	}
+
+	public function methodMyPasswordAjax()
+	{
+		$memberObj = Factory::getModel('member');
+
 		// 获取参数
 		$params = $this->_submit->obtain($_REQUEST, array(
-			'submit' => array(array('format', 'int'))
+			'passwordold' => array(array('format', 'trim')),
+			'passwordnew' => array(array('format', 'trim')),
+			'passwordcfm' => array(array('format', 'trim'))
 		));
-		$this->assign('params', $params);
+
+		// 错误提示
+		if(md5($params['passwordold']) != $memberObj->getSessionMember('password'))
+		{
+			$this->jsonout(array('state' => false, 'message' => array('passwordold' => MCGetM('AMER_PASSWORD_OLD_ERROR'))));
+		}
+
+		// 处理
+		$member['member_id'] = $memberObj->getSessionMember('id');
+		$member['password'] = $params['passwordnew'];
+		$member['passwordcfm'] = $params['passwordcfm'];
+		$result = $memberObj->modifyPassword($member);
+		if($result)
+		{
+			$this->jsonout(array('state' => true));
+		}
+		else
+		{
+			$errors = $memberObj->getError();
+			$message = array();
+			if(!empty($errors) && is_array($errors))
+			{
+				$type = array
+				(
+					substr(MCGetC('MMER_PWD_CNT_EMPTY'), 0, 5) => 'passwordnew',
+					substr(MCGetC('MMER_PWDC_CNT_EMPTY'), 0, 5) => 'passwordcfm'
+				);
+				foreach($errors as $v)
+				{
+					$t = empty($type[substr($v, 0, 5)]) ? 'passwordsubmit' : $type[substr($v, 0, 5)];
+					$message[$t][] = MCGetM($v);
+				}
+				foreach($message as $k => $v)
+				{
+					$message[$k] = implode("\t", $message[$k]);					
+				}
+			}
+		}
+		$this->jsonout(array('state' => false, 'message' => $message));
 	}
 
 	public function methodMyQandA()

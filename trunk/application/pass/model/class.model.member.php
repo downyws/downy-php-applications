@@ -510,6 +510,43 @@ class ModelMember extends ModelCommon
 		return false;
 	}
 
+	public function modifyPassword($member)
+	{
+		$err = array();
+		$res = $this->checkErrPassword($member, false);
+		$res && $err[] = $res;
+
+		if(empty($err))
+		{
+			$this->transStart();
+
+			// update
+			$member['password'] = md5($member['password']);
+			$condition = array();
+			$condition[] = array('id' => array('eq', $member['member_id']));
+			$data = array('password' => $member['password']);
+			$this->update($condition, $data);
+
+			// logs
+			$this->operateLog();
+
+			$res = $this->transCommit();
+
+			if($res)
+			{
+				$this->setSessionMember($data);
+				return true;
+			}
+			else
+			{
+				$err[] = MCGetC('MCON_SYSERR_TELA');
+			}
+		}
+
+		$this->_error[] = $err;
+		return false;
+	}
+
 	public function modifyPortrait($member)
 	{
 		$err = array();

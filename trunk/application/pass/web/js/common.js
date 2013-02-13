@@ -236,53 +236,82 @@ $.fn.extend({
 			$(this).removeClass("error");
 		});
 	},
+	// AJAX表单提交
+	dyAjaxForm: function(form, option){
+		if(typeof(option.dataType) == "undefined") option.dataType = "HTML";
+		if(typeof(option.onEvent) == "undefined") option.onEvent = {};
+		if(typeof(option.onEvent.success) == "undefined") option.onEvent.success = function(){};
+		if(typeof(option.onEvent.error) == "undefined") option.onEvent.error = function(){};
+
+		var data = {};
+		var list = $(form).serializeArray();
+		var method = $(form).attr('method');
+		var action = $(form).attr('action');
+
+		$.each(list, function(){
+			if(typeof(data[this.name]) !== "undefined"){
+				if(!data[this.name].push){
+					data[this.name] = [data[this.name]];
+				}
+				data[this.name].push(this.value || "");
+			}else{
+				data[this.name] = this.value || "";
+			}
+		});
+		option.onEvent.beforeSend();
+		$.ajax({type: method, dataType: option.dataType, url: action, data: data, async: true, success: function(result){
+			option.onEvent.success(result);
+		}, error: function(jqXHR, textStatus, errorThrown){
+			option.onEvent.error(jqXHR, textStatus, errorThrown);
+		}});
+	},
 	// 对话框
-	dyDialog: function(config){
+	dyDialog: function(option){
 		// 参数格式化
-		if(typeof(config.content) == "undefined") config.content = "";
-		if(typeof(config.bgStyle) == "undefined") config.bgStyle = {};
-		if(typeof(config.locate.type) == "undefined") config.locate.type = "window";
-		if(typeof(config.locate.target) == "undefined") config.locate.target = {};
-		if(typeof(config.locate.target.object) == "undefined") config.locate.target.object = false;
-		if(typeof(config.locate.target.origin) == "undefined") config.locate.target.origin = "lt";
-		if(typeof(config.locate.x) == "undefined") config.locate.x = 0;
-		if(typeof(config.locate.y) == "undefined") config.locate.y = 0;
-		if(typeof(config.locate.origin) == "undefined") config.locate.origin = "lt";
-		if(typeof(config.onEvent) == "undefined") config.onEvent = {};
-		if(typeof(config.onEvent.open) == "undefined") config.onEvent.open = function(){};
-		if(typeof(config.onEvent.close) == "undefined") config.onEvent.close = function(){};
-		if(typeof(config.onEvent.resize) == "undefined") config.onEvent.resize = function(){};
-		if(typeof(config.close.bgBtn) == "undefined") config.close.bgBtn = false;
-		if(typeof(config.close.className) == "undefined") config.close.className = false;
+		if(typeof(option.content) == "undefined") option.content = "";
+		if(typeof(option.bgStyle) == "undefined") option.bgStyle = {};
+		if(typeof(option.locate.type) == "undefined") option.locate.type = "window";
+		if(typeof(option.locate.target) == "undefined") option.locate.target = {};
+		if(typeof(option.locate.target.object) == "undefined") option.locate.target.object = false;
+		if(typeof(option.locate.target.origin) == "undefined") option.locate.target.origin = "lt";
+		if(typeof(option.locate.x) == "undefined") option.locate.x = 0;
+		if(typeof(option.locate.y) == "undefined") option.locate.y = 0;
+		if(typeof(option.locate.origin) == "undefined") option.locate.origin = "lt";
+		if(typeof(option.onEvent) == "undefined") option.onEvent = {};
+		if(typeof(option.onEvent.open) == "undefined") option.onEvent.open = function(){};
+		if(typeof(option.onEvent.close) == "undefined") option.onEvent.close = function(){};
+		if(typeof(option.onEvent.resize) == "undefined") option.onEvent.resize = function(){};
+		if(typeof(option.close.bgBtn) == "undefined") option.close.bgBtn = false;
+		if(typeof(option.close.className) == "undefined") option.close.className = false;
 
 		// 事件
 		var H_Close = function(){
 			// 解绑
 			$(window).unbind('resize', H_WindowResize);
-			config.close.bgBtn && $("#" + id + "-bg").unbind('click', H_Close);
-			config.close.className && $("#" + id + "-ft ." + config.close.className).unbind('click', H_Close);
+			option.close.bgBtn && $("#" + id + "-bg").unbind('click', H_Close);
+			option.close.className && $("#" + id + "-ft ." + option.close.className).unbind('click', H_Close);
 			// 销毁对象
 			$("#" + id + "-bg, #" + id + "-ft").fadeOut(300, function(){
 				$("#" + id).remove();
 			});
 			// 关闭回调
-			config.onEvent.close();
+			option.onEvent.close();
 		}
 		var H_WindowResize = function(){
 			$("#" + id + "-bg").css({"width": "0px", "height": "0px"});
 			$("#" + id + "-ft").css({"top": 0, "left": 0});
 
-			if(config.locate.type == "window"){
+			if(option.locate.type == "window"){
 				F_LocateWindow();
-			}else if(config.locate.type == "page"){
+			}else if(option.locate.type == "page"){
 				F_LocatePage();
-			}else if(config.locate.type == "tag"){
+			}else if(option.locate.type == "tag"){
 				F_LocateTag();
 			}
 			var w = $(document).width(), h = $(document).height();
 			$("#" + id + "-bg").css({"width": w + "px", "height": h + "px"});
 
-			config.onEvent.resize();
+			option.onEvent.resize();
 		};
 		// 窗口类型定位
 		var F_LocateWindow = function(){
@@ -327,14 +356,14 @@ $.fn.extend({
 		// 元素类型定位
 		var F_LocateTag = function(){
 			var ft_w = $("#" + id + "-ft").innerWidth(), ft_h = $("#" + id + "-ft").innerHeight();
-			var t_w = config.locate.target.object.innerWidth(), t_h = config.locate.target.object.innerHeight();
-			var t_x = config.locate.target.object.offset().left, t_y = config.locate.target.object.offset().top;
+			var t_w = option.locate.target.object.innerWidth(), t_h = option.locate.target.object.innerHeight();
+			var t_x = option.locate.target.object.offset().left, t_y = option.locate.target.object.offset().top;
 			var x = 0, y = 0;
 
 			if(c_x == "left") x = t_x;
 			else if(c_x == "middle") x = t_x + t_w / 2;
 			else if(c_x == "right") x = t_x + t_w;
-			else switch(config.locate.target.origin){
+			else switch(option.locate.target.origin){
 				case "mt": case "mm": case "mb": x = t_x + t_w / 2 + c_x; break;
 				case "rt": case "rm": case "rb": x = t_x + t_w + c_x; break;
 				case "lt": case "lm": case "lb": default: x = t_x + c_x; break;
@@ -343,7 +372,7 @@ $.fn.extend({
 			if(c_y == "top") y = t_y;
 			else if(c_y == "middle") y = t_y + t_h / 2;
 			else if(c_y == "bottom") y = t_y + t_h;
-			else switch(config.locate.target.origin){
+			else switch(option.locate.target.origin){
 				case "lm": case "mm": case "rm": y = t_y + t_h / 2 + c_y; break;
 				case "lb": case "mb": case "rb": y = t_y + t_h + c_y; break;
 				case "lt": case "mt": case "rt": default: y = t_y + c_y; break;
@@ -371,33 +400,33 @@ $.fn.extend({
 		// 创建对象
 		var z_index = $.fn.dyMaxZindex("*");
 		var id = "dy-dialog-" + parseInt(Math.random() * 1000);
-		$("body").append("<div id='" + id + "'><div id='" + id + "-ft'>" + config.content + "</div><div id='" + id + "-bg'></div></div>");
+		$("body").append("<div id='" + id + "'><div id='" + id + "-ft'>" + option.content + "</div><div id='" + id + "-bg'></div></div>");
 		$("#" + id + "-bg").css({"top":"0", "left":"0", "position":"absolute", "z-index":(z_index + 1), "background-color":"#DDDDDD", "opacity":"0.6"});
-		$("#" + id + "-bg").css(config.bgStyle);
+		$("#" + id + "-bg").css(option.bgStyle);
 
 		// 定位
-		var c_x = config.locate.x, c_y = config.locate.y, c_o = config.locate.origin;
+		var c_x = option.locate.x, c_y = option.locate.y, c_o = option.locate.origin;
 		c_x = isNaN(c_x) ? c_x : (c_x * 1);
 		c_y = isNaN(c_y) ? c_y : (c_y * 1);
 		$("body").append();
-		if(config.locate.type == "window"){
+		if(option.locate.type == "window"){
 			$("#" + id + "-ft").css({"position":"fixed", "z-index":(z_index + 2)});
-		}else if(config.locate.type == "page"){
+		}else if(option.locate.type == "page"){
 			$("#" + id + "-ft").css({"position":"absolute", "z-index":(z_index + 2)});
-		}else if(config.locate.type == "tag"){
+		}else if(option.locate.type == "tag"){
 			$("#" + id + "-ft").css({"position":"absolute", "z-index":(z_index + 2)});
 		}
 
 		// 绑定
-		config.close.bgBtn && $("#" + id + "-bg").bind('click', H_Close);
-		config.close.className && $("#" + id + "-ft ." + config.close.className).bind('click', H_Close);
+		option.close.bgBtn && $("#" + id + "-bg").bind('click', H_Close);
+		option.close.className && $("#" + id + "-ft ." + option.close.className).bind('click', H_Close);
 		$(window).bind('resize', H_WindowResize);
 
 		// 展现
 		H_WindowResize();
 		$("#" + id + "-bg, #" + id + "-ft").css("display", "none").fadeIn(300);
 		// 回调
-		config.onEvent.open();
+		option.onEvent.open();
 	},
 	// 文件上传
 	dyUploadFile: function(file, option){
