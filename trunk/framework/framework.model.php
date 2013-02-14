@@ -186,13 +186,13 @@ class Model extends Db
 		return $this->fetchRows($sql);
 	}
 
-	public function getCol($condition, $field, $table ='')
+	public function getCol($condition, $field, $table = '')
 	{
 		$sql = 'SELECT ' . $field . ' FROM ' . $this->table($table) . $this->getWhere($condition);
 		return $this->fetchCol($sql);
 	}
 
-	public function getPairs($condition, $fields, $table ='')
+	public function getPairs($condition, $fields, $table = '')
 	{
 		$sql = 'SELECT ' . $fields[0] . ', ' . $fields[1] . ' FROM ' . $this->table($table) . $this->getWhere($condition);
 		return $this->fetchPairs($sql);
