@@ -1,0 +1,122 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="app-wrapper">
+	{include file="common_appheader.html"}
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="action-member">
+				{include file="member_common_navg.html"}
+				<div class="detail page-member_mypage page-member_myqanda">
+					<div class="info">
+						<h1>保密问题</h1>
+						<h2>为了避免遗忘，请您填写真实信息，这将帮助您以后通过回答问题快速找回密码</h2>
+					</div>
+					<div class="panel">
+						<div class="loading"></div>
+						<div class="block-page-common_message success"><div class="message">保密问题保存成功。</div></div>
+						<form action="/index.php?a=member&m=myqanda&t=ajax" method="post" name="form_qanda">
+							<input type="hidden" name="step" value="1" />
+							<table class="step1">
+								{section name="loop" loop=$count}
+									<tr class="qanda_{$smarty.section.loop.index}"><td class="title">问题{($smarty.section.loop.index + 1)|int_to_word}：</td><td class="control" colspan="2">{$qanda[$smarty.section.loop.index].question|htmlspecialchars}</td></tr>
+									<tr class="qanda_{$smarty.section.loop.index}">
+										<td class="title">答案：</td>
+										<td class="control"><input type="text" name="answer{$smarty.section.loop.index}" class="dy-text" /></td>
+										<td class="message"><span></span></td>
+									</tr>
+									<tr class="qanda_{$smarty.section.loop.index}"><td></td><td colspan="2" class="notice"></td></tr>
+								{/section}
+								<tr class="pagesubmit">
+									<td class="title"></td>
+									<td class="control" colspan="2">
+										<input type="submit" value="修改保密问题" class="dy-button blue" />
+										<span class="message"><span></span></span>
+									</td>
+								</tr>
+							</table>
+						</form>
+						<form action="/index.php?a=member&m=myqanda&t=ajax" method="post" name="form_qanda">
+							<input type="hidden" name="step" value="2" />
+							<input type="hidden" name="key" />
+							<table class="step2 hide">
+								{section name="loop" loop=$count}
+									<tr class="question_{$smarty.section.loop.index}">
+										<td class="title">问题{($smarty.section.loop.index + 1)|int_to_word}：</td>
+										<td class="control"><input type="text" name="question{$smarty.section.loop.index}" class="dy-text" /></td>
+										<td class="message"><span></span></td>
+									</tr>
+									<tr class="answer_{$smarty.section.loop.index}">
+										<td class="title">答案：</td>
+										<td class="control"><input type="text" name="answer{$smarty.section.loop.index}" class="dy-text" /></td>
+										<td class="message"><span></span></td>
+									</tr>
+									<tr class="qanda_{$smarty.section.loop.index}"><td></td><td colspan="2" class="notice"></td></tr>
+								{/section}
+								<tr class="pagesubmit">
+									<td class="title"></td>
+									<td class="control" colspan="2">
+										<input type="submit" value="保存保密问题" class="dy-button blue" />
+										<span class="message"><span></span></span>
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{include file="common_appfooter.html"}
+</div>
+<script type="text/javascript">
+{literal}
+$(function(){
+	$("form[name=form_qanda]").submit(function(){
+		var step = $(this).find("input[name=step]").val();
+
+		$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {beforeSend:function(){
+			$(".page-member_mypage .loading").show(300);
+		}, success: function(result){
+			if(result.state){
+				if(step == 1){
+					$(".page-member_mypage input[name=key]").val(result.message.key);
+					for(var k in result.message.qanda){
+						$(".page-member_mypage .step2 input[name=question" + k + "]").val(result.message.qanda[k].question);
+						$(".page-member_mypage .step2 input[name=answer" + k + "]").val(result.message.qanda[k].answer);
+					}
+					$(".page-member_mypage .step1").hide();
+					$(".page-member_mypage .step2").show(300);
+				}else if(step == 2){
+					$(".block-page-common_message").show(300);
+				}
+			}else{
+				for(var k in result.message){
+					if($(".page-member_mypage .step" + step + " ." + k + " .message span").length){
+						$(".page-member_mypage .step" + step + " ." + k + " .message span").html(result.message[k]).show(300);
+						$("body").one('mousedown', function(){
+							$(".page-member_mypage .step" + step + " ." + k + " .message span").hide(300);
+						});
+					}else{
+						$(".page-member_mypage .step" + step + " .pagesubmit .message span").html(result.message[k]).show(300);
+						$("body").one('mousedown', function(){
+							$(".page-member_mypage .step" + step + " .pagesubmit .message span").hide(300);
+						});
+					}
+				}
+			}
+			$(".page-member_mypage .loading").hide(300);
+		}, error: function(jqXHR, textStatus, errorThrown){
+			$(".page-member_mypage .step" + step + " .pagesubmit .message span").show(300).html("AJAX请求错误[" + errorThrown + "]。");
+			$("body").one('mousedown', function(){
+				$(".page-member_mypage .step" + step + " .pagesubmit .message span").hide(300);
+			});
+			$(".page-member_mypage .loading").hide(300);
+		}}});
+
+		return false;
+	});
+});
+{/literal}
+</script>
+{include file="common_bottom.html"}

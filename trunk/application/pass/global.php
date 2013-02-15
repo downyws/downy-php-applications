@@ -81,3 +81,5 @@ $GLOBALS['PRIVACY'] = array(
 	'TYPE' => array('ALL' => 1, 'SELF' => 2),
 	'DEFAULT' => array('name' => -1, 'portrait' => -1, 'email' => 2, 'mobile' => 2, 'sex' => 2, 'birthday' => 2, 'blood' => 2, 'sign' => -1)
 );
+// 保密问题
+$GLOBALS['QANDA'] = array('COUNT' => 3);
