@@ -17,6 +17,9 @@ $(function(){
 	$(".product .item").each(function(index){
 		if(index >= 3) $(this).hide();
 	});
+	if($(".product .item").length <= 3){
+		$(".btn-product").css("display", "none");
+	}
 });
 {/literal}
 </script>
