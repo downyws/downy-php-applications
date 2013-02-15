@@ -47,6 +47,7 @@
 								<option value="OTHER">其他</option>
 							</select>
 						</div>
+						<!--
 						<div class="element default">
 							<label><strong>邮箱</strong></label>
 							<input type="text" class="dy-text {if $error.email}error{/if}" name="email" value="{$params.email}" />
@@ -57,6 +58,7 @@
 							<input type="text" class="dy-text {if $error.mobile}error{/if}" name="mobile" value="{$params.mobile}" />
 							{if $error.mobile}<span class="msgerr dy_oncemsg" data-event="focus" data-target="input[name=mobile]">{$error.mobile.message}</span>{/if}
 						</div>
+						-->
 						{if $show_captcha}
 						<div class="element dy_captcha" data-url="/index.php?a=index&m=captcha&wh=300x60" data-width="230" {if $error.captcha}data-msgerr="{$error.captcha.message}"{/if}></div>
 						{/if}
@@ -86,10 +88,6 @@
 						<h2>分享多少，自己决定。</h2>
 						<p>在 Downy+ 上有选择地和您的朋友、家人（甚至老板）分享各种内容。和朋友进行环聊、群发消息或者仅关注您感兴趣的人的帖子。一切由您决定。</p>
 					</div></li>
-					<li><img src="/images/r4.jpg" /><div>
-						<h2>提前享用未来的工作方式。</h2>
-						<p>工作方式随即跃入新时代，一切更出色。即使身在千里之外，也能实时看到同事或合作伙伴上传照片、更新电子表格或润色文章段落。只要注册 Downy 帐户，还能免费获得“Downy 文档”哦。</p>
-					</div></li>
 				</ul>
 			</div>
 		</div>
@@ -115,8 +113,8 @@ $(function(){
 		$(obj + " .passwordlv p span").html(vals[lv].txt);
 		$(obj + " .passwordlv div span").css({"background": vals[lv].color, "width": (width / vals.length * (lv + 1)) + "px"});
 	}});
-	$("input[name=email]").dyBubble('我们会将此地址用于维持您的帐户安全之类的事宜。例如，如果我们发现您的帐户活动异常，就会向您发送一封提醒邮件。', {});
-	$("input[name=mobile]").dyBubble('您的手机号码可以帮助我们保护您的帐户安全。例如，当您忘记自己的密码时，我们可以向您发送一条短信，从而帮您找回自己的帐户。', {});
+	//$("input[name=email]").dyBubble('我们会将此地址用于维持您的帐户安全之类的事宜。例如，如果我们发现您的帐户活动异常，就会向您发送一封提醒邮件。', {});
+	//$("input[name=mobile]").dyBubble('您的手机号码可以帮助我们保护您的帐户安全。例如，当您忘记自己的密码时，我们可以向您发送一条短信，从而帮您找回自己的帐户。', {});
 });
 {/literal}
 </script>

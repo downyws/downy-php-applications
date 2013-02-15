@@ -121,6 +121,8 @@ class ActionMember extends ActionCommon
 			'agree' => array(array('format', 'int')),
 			'callback' => array(array('valid', 'url', '', APP_URL, 0))
 		));
+		$params['email'] = '';
+		$params['mobile'] = '';
 		$this->assign('params', $params);
 
 		// 是否展示验证码
