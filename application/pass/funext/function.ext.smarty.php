@@ -73,5 +73,5 @@ function int_to_word($value)
 {
 	Factory::loadLibrary('stringhelper');
 	$stringhelper = new StringHelper();
-	return $stringhelper->intToWord($value);
+	echo $stringhelper->intToWord($value, 'cn');
 }
