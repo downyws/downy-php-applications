@@ -46,6 +46,10 @@ function report_log($value)
 			$value['cate'] = '编辑';
 			$value['text'] = '修改密码';
 			break;
+		case 'membermyqanda':
+			$value['cate'] = '编辑';
+			$value['text'] = '编辑保密问题';
+			break;
 		case 'memberbasemodify':
 			switch($data['field'])
 			{
@@ -99,4 +103,29 @@ function report_unknow($value, $ext_cate)
 	$value['text'] = '未知日志类型。';
 	$value['ext'] = "解析日志发生错误。\n编号：" . $value['id'] . "\t\t分类：" . $ext_cate . "\t\t校验码：" . md5($value['request_data']);
 	return $value;
+}
+
+function rand_qanda()
+{
+	$result = array();
+	switch(mt_rand(0, 2))
+	{
+		case 1:
+			$num = array(mt_rand(200, 999), mt_rand(0, 99), mt_rand(0, 99));
+			$result['question'] = $num[0] . ' - ' . $num[1] . ' - ' . $num[2] . ' = ?';
+			$result['answer'] = $num[0] - $num[1] - $num[2];
+			break;
+		case 2:
+			$num = array(mt_rand(0, 9), mt_rand(0, 9), mt_rand(0, 9));
+			$result['question'] = $num[0] . ' * ' . $num[1] . ' * ' . $num[2] . ' = ?';
+			$result['answer'] = $num[0] * $num[1] * $num[2];
+			break;
+		case 0:
+		default:
+			$num = array(mt_rand(0, 99), mt_rand(0, 99), mt_rand(0, 99));
+			$result['question'] = $num[0] . ' + ' . $num[1] . ' + ' . $num[2] . ' = ?';
+			$result['answer'] = $num[0] + $num[1] + $num[2];
+			break;
+	}
+	return $result;
 }

@@ -68,3 +68,10 @@ function privacy_key($value)
 	$keys = array_flip($GLOBALS['PRIVACY']['TYPE']);
 	echo array_key_exists($value, $keys) ? $keys[$value] : '';
 }
+
+function int_to_word($value)
+{
+	Factory::loadLibrary('stringhelper');
+	$stringhelper = new StringHelper();
+	return $stringhelper->intToWord($value);
+}

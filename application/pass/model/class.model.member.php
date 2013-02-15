@@ -56,6 +56,14 @@ class ModelMember extends ModelCommon
 		return $privacys;
 	}
 
+	public function getMemberQandA($member_id)
+	{
+		$condition = array();
+		$condition[] = array('member_id' => array('eq', $member_id));
+		$sql = 'SELECT * FROM ' . $this->table('member_qanda') . $this->getWhere($condition) . ' ORDER BY id ASC ';
+		return $this->fetchRows($sql);
+	}
+
 	public function getMemberReport($member_id, $page, $page_size)
 	{
 		$config = $GLOBALS['CONFIG']['MODEL_OPTIONS']['member']['REPORT'];
@@ -261,7 +269,7 @@ class ModelMember extends ModelCommon
 
 			// member
 			$member['password'] = md5($member['password']);
-			$data = array('image' => '', 'status' => STATUS_DEFAULT, 'point_coin' => 0, 'point_level' => 0, 'online_long' => 0, 'verify_info' => 0, 'auto_login_ip' => 0, 'auto_login_key' => '', 'first_inout_id' => 0, 'last_inout_id' => 0, 'create_time' => time(), 'update_time' => time());
+			$data = array('portrait' => '', 'status' => STATUS_DEFAULT, 'point_coin' => 0, 'point_level' => 0, 'online_long' => 0, 'verify_info' => 0, 'auto_login_ip' => 0, 'auto_login_key' => '', 'first_inout_id' => 0, 'last_inout_id' => 0, 'create_time' => time(), 'update_time' => time());
 			$member_id = $this->insert(array_merge($data, $member));
 
 			// member_info
@@ -269,12 +277,19 @@ class ModelMember extends ModelCommon
 			!empty($member['ext_info']) && $data = array_merge($data, $member['ext_info']);
 			$this->insert($data, 'member_info');
 
+			// member_qanda
+			for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
+			{
+				$data = rand_qanda();
+				$data['member_id'] = $member_id;
+				$this->insert($data, 'member_qanda');
+			}
+
 			// logs && check
 			$this->operateLog($member_id);
 			$this->operateCheck($member_id, CHECK_MEMBER_REGISTER, $member_id);
 
 			$res = $this->transCommit();
-
 			if($res)
 			{
 				return $member_id;
@@ -342,7 +357,6 @@ class ModelMember extends ModelCommon
 			$this->operateLog();
 
 			$res = $this->transCommit();
-
 			if($res)
 			{
 				return true;
@@ -386,7 +400,6 @@ class ModelMember extends ModelCommon
 			$this->operateLog();
 
 			$res = $this->transCommit();
-
 			if($res)
 			{
 				return true;
@@ -422,7 +435,6 @@ class ModelMember extends ModelCommon
 			$this->operateLog();
 
 			$res = $this->transCommit();
-
 			if($res)
 			{
 				return true;
@@ -458,7 +470,6 @@ class ModelMember extends ModelCommon
 			$this->operateLog();
 
 			$res = $this->transCommit();
-
 			if($res)
 			{
 				return true;
@@ -494,7 +505,6 @@ class ModelMember extends ModelCommon
 			$this->operateCheck($member['member_id'], CHECK_MEMBER_MODIFY_BASE);
 
 			$res = $this->transCommit();
-
 			if($res)
 			{
 				$this->setSessionMember($data);
@@ -531,7 +541,6 @@ class ModelMember extends ModelCommon
 			$this->operateLog();
 
 			$res = $this->transCommit();
-
 			if($res)
 			{
 				$this->setSessionMember($data);
@@ -607,7 +616,6 @@ class ModelMember extends ModelCommon
 					$this->operateCheck($member['member_id'], CHECK_MEMBER_MODIFY_BASE);
 
 					$res = $this->transCommit();
-
 					if($res)
 					{
 						$this->setSessionMember($data);
@@ -629,6 +637,48 @@ class ModelMember extends ModelCommon
 			$err[] = MCGetC('MMER_PORTRAIT_STEP_ERROR');
 		}
 		
+		$this->_error[] = $err;
+		return false;
+	}
+
+	public function modifyQandA($member)
+	{
+		$err = array();
+		$res = $this->checkErrQAndA($member, false);
+		$res && $err[] = $res;
+
+		if(empty($err))
+		{
+			$this->transStart();
+
+			// update
+			$condition = array();
+			$condition[] = array('member_id' => array('eq', $member['member_id']));
+			$sql = 'SELECT id FROM ' . $this->table('member_qanda') . $this->getWhere($condition) . ' ORDER BY id ASC ' . $this->getLimit(1, $GLOBALS['QANDA']['COUNT']);
+			$ids = $this->fetchCol($sql);
+			for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
+			{
+				$condition = array();
+				$condition[] = array('id' => array('eq', $ids[$i]));
+				$data = array('question' => $member['qanda']['question' . $i], 'answer' => $member['qanda']['answer' . $i]);
+				$this->update($condition, $data, 'member_qanda');
+			}
+
+			// log
+			$this->operateLog();
+
+			$res = $this->transCommit();
+			if($res)
+			{
+				$this->setSessionMember($data);
+				return true;
+			}
+			else
+			{
+				$err[] = MCGetC('MCON_SYSERR_TELA');
+			}
+		}
+
 		$this->_error[] = $err;
 		return false;
 	}
@@ -662,7 +712,6 @@ class ModelMember extends ModelCommon
 			$this->operateLog();
 
 			$res = $this->transCommit();
-
 			if($res)
 			{
 				$this->setSessionMember($data);
@@ -693,7 +742,6 @@ class ModelMember extends ModelCommon
 		$this->operateCheck($member['member_id'], CHECK_MEMBER_MODIFY_INFO);
 
 		$res = $this->transCommit();
-
 		if($res)
 		{
 			return true;
@@ -834,6 +882,19 @@ class ModelMember extends ModelCommon
 	public function checkErrPrivacy($field, $vals, $can_empty = false)
 	{
 		if(!in_array($vals[$field . '_privacy'], $GLOBALS['PRIVACY']['TYPE'])) return MCGetC('MMER_PRIVACY_ERROR');
+
+		return false;
+	}
+
+	public function checkErrQAndA($vals, $can_empty = false)
+	{
+		for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
+		{
+			$q = strlen($vals['qanda']['question' . $i]);
+			$a = strlen($vals['qanda']['answer' . $i]);
+			if($q < 2 || $q > 30) return MCGetC('MMER_QANDA' . $i . '_Q_LEN_ERROR');
+			if($a < 2 || $a > 30) return MCGetC('MMER_QANDA' . $i . '_A_LEN_ERROR');
+		}
 
 		return false;
 	}

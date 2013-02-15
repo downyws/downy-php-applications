@@ -437,7 +437,7 @@ class ActionMember extends ActionCommon
 				);
 				foreach($errors as $v)
 				{
-					$t = empty($type[substr($v, 0, 5)]) ? 'passwordsubmit' : $type[substr($v, 0, 5)];
+					$t = empty($type[substr($v, 0, 5)]) ? 'other' : $type[substr($v, 0, 5)];
 					$message[$t][] = MCGetM($v);
 				}
 				foreach($message as $k => $v)
@@ -451,7 +451,99 @@ class ActionMember extends ActionCommon
 
 	public function methodMyQandA()
 	{
+		$memberObj = Factory::getModel('member');
+		$member_id = $memberObj->getSessionMember('id');
+		$qanda = $memberObj->getMemberQandA($member_id);
+		$this->assign('qanda', $qanda);
+		$this->assign('count', $GLOBALS['QANDA']['COUNT']);
+	}
 
+	public function methodMyQandAAjax()
+	{
+		// 获取参数
+		$fields = array(
+			'step' => array(array('valid', 'in', MCGetM('AMER_QANDA_STEP_ERROR'), null, array('1', '2'))),
+			'key' => array(array('format', 'trim'))
+		);
+		for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
+		{
+			$fields['question' . $i] = array(array('format', 'trim'));
+			$fields['answer' . $i] = array(array('format', 'trim'));
+		}
+		$params = $this->_submit->obtain($_REQUEST, $fields);
+
+		// 错误提示
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->jsonout(array('state' => false, 'message' => end($this->_submit->errors)));
+		}
+
+		// 处理
+		$memberObj = Factory::getModel('member');
+		$member = array('qanda' => $params, 'member_id' => $memberObj->getSessionMember('id'));
+		$qanda = $memberObj->getMemberQandA($member['member_id']);
+
+		// 处理一
+		if($params['step'] == '1')
+		{
+			$qanda_old = array();
+			$key = '';
+			for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
+			{
+				if($qanda[$i]['answer'] != $member['qanda']['answer' . $i])
+				{
+					$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('AMER_QANDA_ANSWER_ERROR'))));
+				}
+				$qanda_old[$i] = array('question' => $qanda[$i]['question'], 'answer' => $qanda[$i]['answer']);
+				$key .= $qanda[$i]['question'] . $qanda[$i]['answer'];
+			}
+			$key = md5($key);
+			$this->jsonout(array('state' => true, 'message' => array('key' => $key, 'qanda' => $qanda_old)));
+		}
+		// 处理二
+		else if($params['step'] == '2')
+		{
+			// 校验是否知道答案
+			$key = '';
+			for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
+			{
+				$key .= $qanda[$i]['question'] . $qanda[$i]['answer'];
+			}
+			if($params['key'] != md5($key))
+			{
+				$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('AMER_QANDA_ANSWER_HACK'))));
+			}
+
+			$result = $memberObj->modifyQandA($member);
+			if($result)
+			{
+				$this->jsonout(array('state' => true));
+			}
+			else
+			{
+				$errors = $memberObj->getError();
+				$message = array();
+				if(!empty($errors) && is_array($errors))
+				{
+					$type = array();
+					for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
+					{
+						$type[substr(MCGetC('MMER_QANDA' . $i . '_Q_LEN_ERROR'), 0, 5)] = 'question_' . $i;
+						$type[substr(MCGetC('MMER_QANDA' . $i . '_A_LEN_ERROR'), 0, 5)] = 'answer_' . $i;
+					}
+					foreach($errors as $v)
+					{
+						$t = empty($type[substr($v, 0, 5)]) ? 'other' : $type[substr($v, 0, 5)];
+						$message[$t][] = MCGetM($v);
+					}
+					foreach($message as $k => $v)
+					{
+						$message[$k] = implode("\t", $message[$k]);					
+					}
+				}
+			}
+			$this->jsonout(array('state' => false, 'message' => $message));
+		}
 	}
 
 	public function methodMyMobile()
