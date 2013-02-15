@@ -1,29 +1,5 @@
 {include file="common_top.html"}
 {include file="common_head.html"}
-<script type="text/javascript">
-{literal}
-$(function(){
-	$("input[name=account]").dyBubble('您可以使用字母、数字和英文据点。', {});
-	$("input[name=password]").dyBubble('<div class="passwordlv"><p style="margin-bottom:0px;"><strong>密码强度：<span style="font-weight:normal;"></span></strong></p><div style="background:#F5F5F5;height:5px;margin:4px 0px;"><span style="display:block;height:100%;"></span></div><div>请至少使用 6 个字符。请勿使用您用于登录其他网站的密码或容易被猜到的密码。</div>', {input:function(){
-		var obj = $(this).data("dy-bubble");
-		var password = $(this).val();
-		var width = $(obj + " .passwordlv div").innerWidth();
-		var vals = [
-			{color:'#AA0033',txt:'不合格'},
-			{color:'#AA0033',txt:'差'},
-			{color:'#FFCC33',txt:'中'},
-			{color:'#2D98F3',txt:'良'},
-			{color:'#76C261',txt:'优'}
-		];
-		var lv = password.length >= 6 ? (Math.ceil($.fn.assessPassword(password) / 20) - 1) : 0;
-		$(obj + " .passwordlv p span").html(vals[lv].txt);
-		$(obj + " .passwordlv div span").css({"background": vals[lv].color, "width": (width / vals.length * (lv + 1)) + "px"});
-	}});
-	$("input[name=email]").dyBubble('我们会将此地址用于维持您的帐户安全之类的事宜。例如，如果我们发现您的帐户活动异常，就会向您发送一封提醒邮件。', {});
-	$("input[name=mobile]").dyBubble('您的手机号码可以帮助我们保护您的帐户安全。例如，当您忘记自己的密码时，我们可以向您发送一条短信，从而帮您找回自己的帐户。', {});
-});
-{/literal}
-</script>
 {include file="common_center.html"}
 <div class="app-wrapper">
 	{include file="common_appheader.html"}
@@ -120,4 +96,28 @@ $(function(){
 	</div>
 	{include file="common_appfooter.html"}
 </div>
+<script type="text/javascript">
+{literal}
+$(function(){
+	$("input[name=account]").dyBubble('您可以使用字母、数字和英文据点。', {});
+	$("input[name=password]").dyBubble('<div class="passwordlv"><p style="margin-bottom:0px;"><strong>密码强度：<span style="font-weight:normal;"></span></strong></p><div style="background:#F5F5F5;height:5px;margin:4px 0px;"><span style="display:block;height:100%;"></span></div><div>请至少使用 6 个字符。请勿使用您用于登录其他网站的密码或容易被猜到的密码。</div>', {input:function(){
+		var obj = $(this).data("dy-bubble");
+		var password = $(this).val();
+		var width = $(obj + " .passwordlv div").innerWidth();
+		var vals = [
+			{color:'#AA0033',txt:'不合格'},
+			{color:'#AA0033',txt:'差'},
+			{color:'#FFCC33',txt:'中'},
+			{color:'#2D98F3',txt:'良'},
+			{color:'#76C261',txt:'优'}
+		];
+		var lv = password.length >= 6 ? (Math.ceil($.fn.assessPassword(password) / 20) - 1) : 0;
+		$(obj + " .passwordlv p span").html(vals[lv].txt);
+		$(obj + " .passwordlv div span").css({"background": vals[lv].color, "width": (width / vals.length * (lv + 1)) + "px"});
+	}});
+	$("input[name=email]").dyBubble('我们会将此地址用于维持您的帐户安全之类的事宜。例如，如果我们发现您的帐户活动异常，就会向您发送一封提醒邮件。', {});
+	$("input[name=mobile]").dyBubble('您的手机号码可以帮助我们保护您的帐户安全。例如，当您忘记自己的密码时，我们可以向您发送一条短信，从而帮您找回自己的帐户。', {});
+});
+{/literal}
+</script>
 {include file="common_bottom.html"}

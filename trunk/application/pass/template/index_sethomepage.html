@@ -1,24 +1,5 @@
 {include file="common_top.html"}
 {include file="common_head.html"}
-<script type="text/javascript">
-{literal}
-$(function(){
-	var broswer = $.fn.broswerName();
-	var obj = $("#" + broswer);
-	obj.clone().prependTo(".broswer");
-	obj.remove();
-	$(".broswer li .name").click(function(){
-		var b = $(this).parent();
-		var open = !b.hasClass("open");
-		b.parent().find("li").removeClass("open");
-		if(open){
-			b.addClass("open");
-		}
-	});
-	$("#" + broswer + " .name").click();
-});
-{/literal}
-</script>
 {include file="common_center.html"}
 <div class="app-wrapper">
 	{include file="common_appheader.html"}
@@ -49,4 +30,23 @@ $(function(){
 	</div>
 	{include file="common_appfooter.html"}
 </div>
+<script type="text/javascript">
+{literal}
+$(function(){
+	var broswer = $.fn.broswerName();
+	var obj = $("#" + broswer);
+	obj.clone().prependTo(".broswer");
+	obj.remove();
+	$(".broswer li .name").click(function(){
+		var b = $(this).parent();
+		var open = !b.hasClass("open");
+		b.parent().find("li").removeClass("open");
+		if(open){
+			b.addClass("open");
+		}
+	});
+	$("#" + broswer + " .name").click();
+});
+{/literal}
+</script>
 {include file="common_bottom.html"}

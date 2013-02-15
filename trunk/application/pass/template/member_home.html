@@ -1,28 +1,5 @@
 {include file="common_top.html"}
 {include file="common_head.html"}
-<script type="text/javascript">
-{literal}
-$(function(){
-	$(".btn-product").click(function(){
-		if($(this).hasClass("close")){
-			$(this).removeClass("close").addClass("open").html("收起列表");
-			$(this).parent().find(".item").show(300);
-		}else{
-			$(this).removeClass("open").addClass("close").html("展开列表");
-			$(this).parent().find(".item").each(function(index){
-				if(index >= 3) $(this).hide(300);
-			});
-		}
-	});
-	$(".product .item").each(function(index){
-		if(index >= 3) $(this).hide();
-	});
-	if($(".product .item").length <= 3){
-		$(".btn-product").css("display", "none");
-	}
-});
-{/literal}
-</script>
 {include file="common_center.html"}
 <div class="app-wrapper">
 	{include file="common_appheader.html"}
@@ -75,4 +52,27 @@ $(function(){
 	</div>
 	{include file="common_appfooter.html"}
 </div>
+<script type="text/javascript">
+{literal}
+$(function(){
+	$(".btn-product").click(function(){
+		if($(this).hasClass("close")){
+			$(this).removeClass("close").addClass("open").html("收起列表");
+			$(this).parent().find(".item").show(300);
+		}else{
+			$(this).removeClass("open").addClass("close").html("展开列表");
+			$(this).parent().find(".item").each(function(index){
+				if(index >= 3) $(this).hide(300);
+			});
+		}
+	});
+	$(".product .item").each(function(index){
+		if(index >= 3) $(this).hide();
+	});
+	if($(".product .item").length <= 3){
+		$(".btn-product").css("display", "none");
+	}
+});
+{/literal}
+</script>
 {include file="common_bottom.html"}
