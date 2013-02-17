@@ -71,3 +71,6 @@ $GLOBALS['MSGCODE']['M']['10416020'] = '您回答的保密问题有错误答案�
 
 $GLOBALS['MSGCODE']['C']['AMER_QANDA_ANSWER_HACK'] = '10416030';
 $GLOBALS['MSGCODE']['M']['10416030'] = '校验保密问题失败，请稍后重新尝试。';
+
+$GLOBALS['MSGCODE']['C']['AMER_MOBILE_STEP_ERROR'] = '10417010';
+$GLOBALS['MSGCODE']['M']['10417010'] = '表单错误，请刷新页面。';

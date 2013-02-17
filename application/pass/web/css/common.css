@@ -58,6 +58,9 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .dy-select .list .item{color:#333333;cursor:pointer;list-style:none outside none;padding:6px 7px 6px 30px;position:relative;white-space:nowrap;}
 .dy-select .list .item:hover{background-color:#EEEEEE;}
 
+.dy-label{display:inline-block;font-family:inherit;border:1px solid #D9D9D9;border-top:1px solid #C0C0C0;padding:6px 8px;font-size:15px;height:16px;box-sizing:border-box;background:#F7F7F7;height:32px;}
+.dy-label{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;}	/* 总有一天这行代码会被砍掉 */
+
 .dy-captcha{background:#FFFFFF;border:1px solid #E5E5E5;}
 .dy-captcha .img{border-bottom:1px solid #E5E5E5;overflow:hidden;padding:5px;text-align:center;}
 .dy-captcha .text{padding:10px;position:relative;}
@@ -81,13 +84,17 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .dy-dialog .name{font-weight:bold;font-size:14px;width:110px;text-align:right;margin-right:15px;float:left;margin:16px 10px 10px 10px;}
 .dy-dialog .panel{float:right;margin:10px 15px 10px 10px;}
 .dy-dialog .panel .control{margin-bottom:15px;min-width:300px;}
-.dy-dialog .panel .control .readonly{padding:5px 6px;font-size:15px;width:285px;background:#F7F7F7;border:1px solid #D9D9D9;}
 .dy-dialog .panel .control input{width:300px;font-size:12px;}
 .dy-dialog .panel .control label{display:inline-block;position:relative;}
+.dy-dialog .panel .control .dy-label{font-size:15px;width:285px;}
 .dy-dialog .panel .privacy{margin-bottom:15px;}
-.dy-dialog .panel .privacy .readonly{background:#F7F7F7;display:inline;padding:6px 10px;border:1px solid #D9D9D9;width:130px;display:block;font-weight:bold;}
+.dy-dialog .panel .privacy .dy-label{font-size:12px;font-weight:bold;width:140px;}
 .dy-dialog .panel .button input{margin-right:10px;}
 .dy-dialog .panel .message{margin-bottom:15px;display:none;color:#FF0000;}
+.dy-dialog.confirm{width:300px;padding:10px;}
+.dy-dialog.confirm .message{text-align:center;margin:10px 0px 25px 0px;font-size:15px;font-weight:bold;}
+.dy-dialog.confirm .button{text-align:right;}
+.dy-dialog.confirm .button input{margin-right:10px;}
 
 .dialog-loading{padding:40px;filter:alpha(Opacity=60);opacity:0.6;background:#666666;}
 .dialog-name .control label.first_name input{width:140px;margin-right:7px;}
@@ -178,7 +185,6 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 
 .action-member .detail{width:78%;float:right;}
 
-.page-index_sethomepage{}
 .page-index_sethomepage .title{font-weight:bold;font-size:18px;}
 .page-index_sethomepage .description{margin:10px 0px 15px;font-size:14px;}
 .page-index_sethomepage .broswer li{margin-bottom:10px;border:1px solid #E5E5E5;}
@@ -302,6 +308,7 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-member_mypage .panel table td.message, .page-member_mypage .panel table td .message{width:200px;overflow:hidden;padding-left:10px;color:#DD4B39;}
 .page-member_mypage .panel table td.message span, .page-member_mypage .panel table td .message span{display:none;}
 
-.page-member_mypassword{}
-
-.page-member_myqanda{}
+.page-member_mymobile .panel{height:220px;}
+.page-member_mymobile .panel table td.control{width:auto;}
+.page-member_mymobile .dy-text{width:150px;}
+.page-member_mymobile .dy-label{width:150px;}

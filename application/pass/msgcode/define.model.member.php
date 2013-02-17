@@ -102,6 +102,9 @@ $GLOBALS['MSGCODE']['M']['20309020'] = '该手机号码的格式无法识别。'
 $GLOBALS['MSGCODE']['C']['MMER_MOBILE_EXIVEY_USE_OTHER'] = '20309030';
 $GLOBALS['MSGCODE']['M']['20309030'] = '该手机号码已被其他用户激活使用。改用其他手机号吗？';
 
+$GLOBALS['MSGCODE']['C']['MMER_MOBILE_NULL'] = '20309040';
+$GLOBALS['MSGCODE']['M']['20309040'] = '操作错误，没有序要更新的内容。';
+
 $GLOBALS['MSGCODE']['C']['MMER_YEAR_CNT_EMPTY'] = '20310010';
 $GLOBALS['MSGCODE']['M']['20310010'] = '年份不能为空。';
 

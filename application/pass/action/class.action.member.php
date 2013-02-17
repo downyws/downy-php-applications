@@ -550,7 +550,53 @@ class ActionMember extends ActionCommon
 
 	public function methodMyMobile()
 	{
+		$memberObj = Factory::getModel('member');
+		$mobile = $memberObj->getSessionMember('mobile');
+		$this->assign('mobile', $mobile);
+	}
 
+	public function methodMyMobileAjax()
+	{
+		// 获取参数
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'step' => array(array('valid', 'in', MCGetM('AMER_MOBILE_STEP_ERROR'), null, array('1', '2')))
+		));
+
+		// 错误提示
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->jsonout(array('state' => false, 'message' => $this->_submit->errors));
+		}
+
+		$memberObj = Factory::getModel('member');
+		// 处理一
+		if($params['step'] == '1')
+		{
+		}
+		// 处理二
+		else if($params['step'] == '2')
+		{
+			$member = array('member_id' => $memberObj->getSessionMember('id'), 'mobile' => '', 'unbind' => true);
+			$result = $memberObj->modifyMobile($member);
+			if($result)
+			{
+				$this->jsonout(array('state' => true));
+			}
+			else
+			{
+				$errors = $memberObj->getError();
+				if(!empty($errors) && is_array($errors))
+				{
+					foreach($errors as $k => $v)
+					{
+						$errors[$k] = MCGetM($v);
+					}
+				}
+				$message = array();
+				$message['other'] = implode("\t", $errors);
+			}
+			$this->jsonout(array('state' => false, 'message' => $message));
+		}
 	}
 
 	public function methodMyEmail()
