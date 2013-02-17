@@ -50,6 +50,22 @@ function report_log($value)
 			$value['cate'] = '编辑';
 			$value['text'] = '编辑保密问题';
 			break;
+		case 'membermymobile':
+			if($data['step'] == 1)
+			{
+				$value['cate'] = '编辑';
+				$value['text'] = '绑定手机号码';
+			}
+			else if($data['step'] == 2)
+			{
+				$value['cate'] = '编辑';
+				$value['text'] = '解除手机号码绑定';
+			}
+			else
+			{
+				$value = report_unknow($value, 'log');
+			}
+			break;
 		case 'memberbasemodify':
 			switch($data['field'])
 			{

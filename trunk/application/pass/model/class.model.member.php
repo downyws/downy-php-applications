@@ -122,12 +122,10 @@ class ModelMember extends ModelCommon
 				if($stringhelper->dataTypeTrue($params['account'], 'email'))
 				{
 					$condition[] = array('email' => array('eq', $params['account']));
-					$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_EMAIL));
 				}
 				else if($stringhelper->dataTypeTrue($params['account'], 'mobile'))
 				{
 					$condition[] = array('mobile' => array('eq', $params['account']));
-					$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_MOBILE));
 				}
 				else
 				{
@@ -269,7 +267,7 @@ class ModelMember extends ModelCommon
 
 			// member
 			$member['password'] = md5($member['password']);
-			$data = array('portrait' => '', 'status' => STATUS_DEFAULT, 'point_coin' => 0, 'point_level' => 0, 'online_long' => 0, 'verify_info' => 0, 'auto_login_ip' => 0, 'auto_login_key' => '', 'first_inout_id' => 0, 'last_inout_id' => 0, 'create_time' => time(), 'update_time' => time());
+			$data = array('portrait' => '', 'status' => STATUS_DEFAULT, 'point_coin' => 0, 'point_level' => 0, 'online_long' => 0, 'auto_login_ip' => 0, 'auto_login_key' => '', 'first_inout_id' => 0, 'last_inout_id' => 0, 'create_time' => time(), 'update_time' => time());
 			$member_id = $this->insert(array_merge($data, $member));
 
 			// member_info
@@ -452,19 +450,46 @@ class ModelMember extends ModelCommon
 	public function modifyMobile($member)
 	{
 		$err = array();
-		$res = $this->checkErrPrivacy('mobile', $member, false);
-		$res && $err[] = $res;
+		$exists_change = false;
+		if(isset($member['mobile_privacy']))
+		{
+			$exists_change = true;
+			$res = $this->checkErrPrivacy('mobile', $member, false);
+			$res && $err[] = $res;
+		}
+		if(isset($member['mobile']))
+		{
+			$exists_change = true;
+			$res = $this->checkErrMobile($member, $member['unbind']);
+			$res && $err[] = $res;
+		}
+		if(!$exists_change)
+		{
+			$err[] = MCGetC('MMER_MOBILE_NULL');
+		}
 
 		if(empty($err))
 		{
 			$this->transStart();
 
 			// update privacy
-			$condition = array();
-			$condition[] = array('member_id' => array('eq', $member['member_id']));
-			$condition[] = array('field' => array('eq', 'mobile'));
-			$data = array('member_id' => $member['member_id'], 'field' => 'mobile', 'type' => $member['mobile_privacy']);
-			$this->insertOrUpdate($condition, $data, 'member_privacy');
+			if(isset($member['mobile_privacy']))
+			{
+				$condition = array();
+				$condition[] = array('member_id' => array('eq', $member['member_id']));
+				$condition[] = array('field' => array('eq', 'mobile'));
+				$data = array('member_id' => $member['member_id'], 'field' => 'mobile', 'type' => $member['mobile_privacy']);
+				$this->insertOrUpdate($condition, $data, 'member_privacy');
+			}
+
+			// update field
+			if(isset($member['mobile']))
+			{
+				$condition = array();
+				$condition[] = array('id' => array('eq', $member['member_id']));
+				$data = array('mobile' => $member['mobile']);
+				$this->update($condition, $data, 'member');
+			}
 
 			// logs
 			$this->operateLog();
@@ -472,6 +497,11 @@ class ModelMember extends ModelCommon
 			$res = $this->transCommit();
 			if($res)
 			{
+				if(isset($member['mobile']))
+				{
+					$this->setSessionMember($data);
+					return true;
+				}
 				return true;
 			}
 			else
@@ -805,7 +835,6 @@ class ModelMember extends ModelCommon
 		if(!$stringhelper->dataTypeTrue($vals['email'], 'email')) return MCGetC('MMER_EMAIL_ERROR');
 		$condition = array();
 		$condition[] = array('email' => array('eq', $vals['email']));
-		$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_EMAIL));
 		if($this->getOne($condition, 'id')) return MCGetC('MMER_EMAIL_EXIVEY_USE_OTHER');
 
 		return false;
@@ -819,7 +848,6 @@ class ModelMember extends ModelCommon
 		if(!$stringhelper->dataTypeTrue($vals['mobile'], 'mobile')) return MCGetC('MMER_MOBILE_ERROR');
 		$condition = array();
 		$condition[] = array('mobile' => array('eq', $vals['mobile']));
-		$condition[] = array('verify_info' => array('and', MEMBER_VERIFY_MOBILE));
 		if($this->getOne($condition, 'id')) return MCGetC('MMER_MOBILE_EXIVEY_USE_OTHER');
 
 		return false;

@@ -47,7 +47,7 @@
 				<label class="first_name"><input type="text" class="dy-text" name="first_name" data-dy_tips="#dy-tips-first_name" /><span id="dy-tips-first_name">姓氏</span></label>
 				<label class="last_name"><input type="text" class="dy-text" name="last_name" data-dy_tips="#dy-tips-last_name" /><span id="dy-tips-last_name">名字</span></label>
 			</div>
-			<div class="privacy"><div class="readonly">公开</div></div>
+			<div class="privacy"><span class="dy-label">公开</span></div>
 			<div class="message"></div>
 			<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
 		</div>
@@ -97,7 +97,7 @@
 		<div class="name">个性宣言</div>
 		<div class="panel">
 			<div class="control"><input type="text" class="dy-text" name="sign" /></div>
-			<div class="privacy"><div class="readonly">公开</div></div>
+			<div class="privacy"><span class="dy-label">公开</span></div>
 			<div class="message"></div>
 			<div class="button"><input type="button" class="dy-button blue ok" value="确定" /><input type="button" class="dy-button white close" value="取消" /></div>
 		</div>
@@ -105,7 +105,7 @@
 	<div class="dy-dialog dialog-mobile clearfix">
 		<div class="name">手机</div>
 		<div class="panel">
-			<div class="control"><div class="readonly">15876543210</div></div>
+			<div class="control"><span class="dy-label">15876543210</span></div>
 			<div class="privacy"><select name="mobile_privacy" class="dy_select" data-type="choose" data-width="150" data-height="54">
 				{foreach from=$privacys item=v key=k}<option value="{$k}">{$v|privacy_format}</option>{/foreach}
 			</select></div>
@@ -116,7 +116,7 @@
 	<div class="dy-dialog dialog-email clearfix">
 		<div class="name">邮箱</div>
 		<div class="panel">
-			<div class="control"><div class="readonly">wing075@gmail.com</div></div>
+			<div class="control"><span class="dy-label">wing075@gmail.com</span></div>
 			<div class="privacy"><select name="email_privacy" class="dy_select" data-type="choose" data-width="150" data-height="54">
 				{foreach from=$privacys item=v key=k}<option value="{$k}">{$v|privacy_format}</option>{/foreach}
 			</select></div>
