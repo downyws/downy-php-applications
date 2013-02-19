@@ -305,7 +305,7 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-member_mypage .panel .loading{z-index:10;position:absolute;top:0;left:0;width:100%;height:100%;background:url("/images/loading.gif") no-repeat center center;background-color:#EFEFEF;filter:alpha(Opacity=60);opacity:0.6;display:none;}
 .page-member_mypage .panel table td.control{width:300px;}
 .page-member_mypage .panel table td.notice{padding-bottom:20px;}
-.page-member_mypage .panel table td.message, .page-member_mypage .panel table td .message{width:200px;overflow:hidden;padding-left:10px;color:#DD4B39;}
+.page-member_mypage .panel table td.message, .page-member_mypage .panel table td .message{width:220px;overflow:hidden;padding-left:10px;color:#DD4B39;}
 .page-member_mypage .panel table td.message span, .page-member_mypage .panel table td .message span{display:none;}
 
 .page-member_mymobile .panel{height:220px;}

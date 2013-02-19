@@ -311,7 +311,7 @@ function T_main(field, type){
 
 		// 提交
 		if(change){
-			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=member&m=basemodify", data: data, async: true, beforeSend: function(){
+			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=member&m=basemodify", data: data, async: false, beforeSend: function(){
 				$.fn.dyDialog({
 					locate: {type: "window", x: "middle", y: "middle", origin: "mm"}, content: "<div class='dy-dialog dialog-loading clearfix'><img src='/images/loading.gif' /><div class='close hide'></div></div>",
 					close: {className: "close", bgBtn: false}
