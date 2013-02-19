@@ -259,7 +259,7 @@ $.fn.extend({
 			}
 		});
 		option.onEvent.beforeSend();
-		$.ajax({type: method, dataType: option.dataType, url: action, data: data, async: true, success: function(result){
+		$.ajax({type: method, dataType: option.dataType, url: action, data: data, async: false, success: function(result){
 			option.onEvent.success(result);
 		}, error: function(jqXHR, textStatus, errorThrown){
 			option.onEvent.error(jqXHR, textStatus, errorThrown);

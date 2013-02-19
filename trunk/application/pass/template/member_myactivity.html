@@ -30,7 +30,7 @@ $(".page-member_myactivity .item .arrow").live("click", function(){
 });
 $(".page-member_myactivity .pagebar input").live("click", function(){
 	var page = $(this).data("page");
-	$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=member&m=myactivity&t=ajax&page=" + page, async: true, beforeSend: function(){
+	$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=member&m=myactivity&t=ajax&page=" + page, async: false, beforeSend: function(){
 		$(".page-member_myactivity .loading").show(200);
 	}, complete: function(jqXHR, textStatus){
 		if(textStatus != "success"){
