@@ -1,0 +1,201 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="app-wrapper">
+	{include file="common_appheader.html"}
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="action-member">
+				{include file="member_common_navg.html"}
+				<div class="detail page-member_mypage page-member_myemail">
+					<div class="info">
+						<h1>我的邮箱</h1>
+						<h2>可用邮箱代替账号使用。同时当您的账号被盗或遗失密码时，您可以通过邮箱取得帮助。</h2>
+					</div>
+					<div class="panel">
+						<div class="loading"></div>
+						<div class="block-page-common_message success"><div class="message"></div></div>
+						<form action="/index.php?a=member&m=myemail&t=ajax" method="post" name="form_email">
+							<input type="hidden" name="step" value="1" />
+							<table class="step1">
+								<tr class="email">
+									<td class="title">电子邮箱：</td>
+									<td class="control">
+										<input type="text" name="email" class="dy-text" />
+										<span class="count_down mgl10 hide"></span>
+									</td>
+									<td class="message"><span></span></td>
+								</tr>
+								<tr><td></td><td colspan="2" class="notice">邮件可能存在延迟，如果您在{$minute_interval}分钟内依然没有收到邮件，请点击重新发送。</td></tr>
+								<tr class="pagesubmit btn_send">
+									<td class="title"></td>
+									<td class="control" colspan="2">
+										<input type="button" value="点击获取验证码" class="dy-button white" />
+									</td>
+								</tr>
+								<tr class="key">
+									<td class="title">验证码：</td>
+									<td class="control"><input type="text" name="key" class="dy-text" /></td>
+									<td class="message"><span></span></td>
+								</tr>
+								<tr><td></td><td colspan="2" class="notice">验证码只能使用一次，{$minute_expiry}分钟内有效</td></tr>
+								<tr class="pagesubmit btn_bind">
+									<td class="title"></td>
+									<td class="control" colspan="2">
+										<input type="submit" value="提交验证码" class="dy-button blue" />
+										<span class="message"><span></span></span>
+									</td>
+								</tr>
+							</table>
+						</form>
+						<form action="/index.php?a=member&m=myemail&t=ajax" method="post" name="form_email">
+							<input type="hidden" name="step" value="2" />
+							<table class="step2">
+								<tr class="pagesubmit">
+									<td class="title">电子邮箱：</td>
+									<td class="control btn_unbind">
+										<span class="dy-label">{$email}</span>
+										<input type="button" value="解除绑定" class="dy-button blue mgl10" />
+										<input type="submit" class="hide" />
+									</td>
+									<td class="message"><span></span></td>
+								</tr>
+								<tr><td></td><td colspan="2" class="notice">解除绑定后您将不能再使用该手机号码登录</td></tr>
+							</table>
+							<div class="confirm-dialog">
+								<div class="dy-dialog confirm clearfix">
+									<div class="message">确定要解除绑定吗？</div>
+									<div class="button">
+										<input type="button" class="dy-button blue ok" value="确定" />
+										<input type="button" class="dy-button white close" value="取消" />
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{include file="common_appfooter.html"}
+</div>
+<script type="text/javascript">
+var step = {if $email}2{else}1{/if};
+{literal}
+var template = new Array("发送成功，%s秒后可以重新发送。", "%s秒后，您可以再次发送短信。");
+var dialog = $(".confirm-dialog").html();
+$(".confirm-dialog").remove();
+
+// 倒计时
+function F_CountDown(second, tpl){
+	if(second == 0){
+		$(".step1 .email .count_down").hide(300);
+		$(".step1 .email input[type=button]").show(300);
+	}else{
+		$(".step1 .email .count_down").html(tpl.replace("%s", second));
+		setTimeout(function(){
+			F_CountDown(second - 1, tpl);
+		}, 1000);
+	}
+}
+
+$(function(){
+	// 是否已经发送过
+	if(step == 1){
+		$(".step2").addClass("hide");
+		var email = $.fn.cookieGet("BIND_EMAIL");
+		if(email != "" && typeof(email) != "undefined"){
+			$(".step1 .email input[name=email]").val(email);
+		}
+		var interval = $.fn.cookieGet("SEND_EMAIL_INTERVAL");
+		if(interval != "" && typeof(interval) != "undefined" && !isNaN(interval)){
+			interval = interval - Math.floor(Date.parse(new Date()) / 1000);
+			F_CountDown(interval, template[1]);
+			$(".step1 .email input[type=button]").hide(0);
+			$(".step1 .email .count_down").show(0);
+		}
+	}else{
+		$(".step1").addClass("hide");
+	}
+
+	// 发送验证码
+	$(".step1 .btn_send input[type=button]").click(function(){
+		var action = "/index.php?a=member&m=myemail&t=ajax";
+		var data = {step: 3, email: $(".step1 .email input[name=email]").val()};
+		$.ajax({type: "POST", dataType: "JSON", url: action, data: data, async: false, beforeSend: function(){
+			$(".page-member_mypage .loading").show(300);
+		}, success: function(result){
+			if(result.state){
+				F_CountDown(300, template[0]);
+				$(".step1 .email input[type=button]").hide(300);
+				$(".step1 .email .count_down").show(300);
+			}else{
+				$(".step1 .email .message span").html(result.message).show(300);
+				$("body").one('mousedown', function(){
+					$(".step1 .email .message span").hide(300);
+				});
+			}
+			$(".page-member_mypage .loading").hide(300);
+		}, error: function(jqXHR, textStatus, errorThrown){
+			$(".step1 .email .message span").html("AJAX请求错误[" + errorThrown + "]。").show(300);
+			$("body").one('mousedown', function(){
+				$(".step1 .email .message span").hide(300);
+			});
+			$(".page-member_mypage .loading").hide(300);
+		}});
+	});
+
+	// 确认解除绑定
+	$(".step2 .btn_unbind input[type=button]").click(function(){
+		var locate = {type: "tag", x: "middle", y: "top", origin: "mt", target:{object: $(this), origin: "mt"}};
+		$.fn.dyDialog({
+			locate: locate, content: dialog, close: {className: "close", bgBtn: false},
+			onEvent: {open: function(){
+				$(".dy-dialog.confirm .ok").click(function(){
+					$(".dy-dialog.confirm .close").click();
+					$(".step2 input[type=submit]").click();
+				});
+			}}
+		});
+	});
+
+	// 提交表单
+	$("form[name=form_email]").submit(function(){
+		var step = $(this).find("input[name=step]").val();
+		$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {beforeSend:function(){
+			$(".page-member_mypage .loading").show(300);
+		}, success: function(result){
+			if(result.state){
+				var message = (step == 1) ? "电子邮箱绑定成功。" : "电子邮箱解除绑定成功。";
+				$(".block-page-common_message .message").html(message);
+				$(".block-page-common_message").show(300);
+			}else{
+				for(var k in result.message){
+					if($(".page-member_mypage .step" + step + " ." + k + " .message span").length){
+						$(".page-member_mypage .step" + step + " ." + k + " .message span").html(result.message[k]).show(300);
+						$("body").one('mousedown', function(){
+							$(".page-member_mypage .step" + step + " ." + k + " .message span").hide(300);
+						});
+					}else{
+						$(".page-member_mypage .step" + step + " .pagesubmit .message span").html(result.message[k]).show(300);
+						$("body").one('mousedown', function(){
+							$(".page-member_mypage .step" + step + " .pagesubmit .message span").hide(300);
+						});
+					}
+				}
+			}
+			$(".page-member_mypage .loading").hide(300);
+		}, error: function(jqXHR, textStatus, errorThrown){
+			$(".page-member_mypage .step" + step + " .pagesubmit .message span").show(300).html("AJAX请求错误[" + errorThrown + "]。");
+			$("body").one('mousedown', function(){
+				$(".page-member_mypage .step" + step + " .pagesubmit .message span").hide(300);
+			});
+			$(".page-member_mypage .loading").hide(300);
+		}}});
+
+		return false;
+	});
+});
+{/literal}
+</script>
+{include file="common_bottom.html"}

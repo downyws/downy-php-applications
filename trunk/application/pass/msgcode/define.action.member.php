@@ -74,3 +74,6 @@ $GLOBALS['MSGCODE']['M']['10416030'] = '校验保密问题失败，请稍后重�
 
 $GLOBALS['MSGCODE']['C']['AMER_MOBILE_STEP_ERROR'] = '10417010';
 $GLOBALS['MSGCODE']['M']['10417010'] = '表单错误，请刷新页面。';
+
+$GLOBALS['MSGCODE']['C']['AMER_EMAIL_STEP_ERROR'] = '10418010';
+$GLOBALS['MSGCODE']['M']['10418010'] = '表单错误，请刷新页面。';
