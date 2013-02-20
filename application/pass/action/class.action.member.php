@@ -550,6 +550,104 @@ class ActionMember extends ActionCommon
 		}
 	}
 
+	public function methodMyEmail()
+	{
+		$memberObj = Factory::getModel('member');
+		$email = $memberObj->getSessionMember('email');
+		$minute_expiry = intval($GLOBALS['CONFIG']['BIND_EMAIL_OPTIONS']['EXPIRY'] / 60);
+		$minute_interval = intval($GLOBALS['CONFIG']['BIND_EMAIL_OPTIONS']['INTERVAL'] / 60);
+		$this->assign('email', $email);
+		$this->assign('minute_interval', $minute_interval);
+		$this->assign('minute_expiry', $minute_expiry);
+	}
+
+	public function methodMyEmailAjax()
+	{
+		// 获取参数
+		$params = $this->_submit->obtain($_REQUEST, array(
+			'step' => array(array('valid', 'in', MCGetM('AMER_EMAIL_STEP_ERROR'), null, array('1', '2', '3'))),
+			'email' => array(array('format', 'trim')),
+			'key' => array(array('format', 'trim'))
+		));
+
+		// 错误提示
+		if(count($this->_submit->errors) > 0)
+		{
+			$this->jsonout(array('state' => false, 'message' => $this->_submit->errors));
+		}
+
+		$memberObj = Factory::getModel('member');
+		// 处理一
+		if($params['step'] == '1')
+		{
+			$member = array('member_id' => $memberObj->getSessionMember('id'), 'email' => $params['email']);
+			$result = $memberObj->emailBind($member, $params['key']);
+			if($result)
+			{
+				$this->jsonout(array('state' => true));
+			}
+
+			// 错误
+			$errors = $memberObj->getError();
+			if(!empty($errors) && is_array($errors))
+			{
+				foreach($errors as $k => $v)
+				{
+					$errors[$k] = MCGetM($v);
+				}
+			}
+			$message = array();
+			$message['other'] = implode("\t", $errors);
+			$this->jsonout(array('state' => false, 'message' => $message));
+		}
+		// 处理二
+		else if($params['step'] == '2')
+		{
+			$member = array('member_id' => $memberObj->getSessionMember('id'), 'email' => '', 'unbind' => true);
+			$result = $memberObj->modifyEmail($member);
+			if($result)
+			{
+				$this->jsonout(array('state' => true));
+			}
+
+			$errors = $memberObj->getError();
+			if(!empty($errors) && is_array($errors))
+			{
+				foreach($errors as $k => $v)
+				{
+					$errors[$k] = MCGetM($v);
+				}
+			}
+			$message = array();
+			$message['other'] = implode("\t", $errors);
+			$this->jsonout(array('state' => false, 'message' => $message));
+		}
+		// 处理三
+		else if($params['step'] == '3')
+		{
+			$result = $memberObj->sendEmailKey($params['email']);
+			if($result)
+			{
+				$this->jsonout(array('state' => true));
+			}
+
+			// 错误
+			$errors = $memberObj->getError();
+			if(!empty($errors) && is_array($errors))
+			{
+				foreach($errors as $k => $v)
+				{
+					$errors[$k] = MCGetM($v);
+				}
+			}
+			$this->jsonout(array('state' => false, 'message' => implode("\t", $errors)));
+		}
+		else
+		{
+			$this->jsonout(array('state' => false, 'message' => MCGetM('AMER_EMAIL_STEP_ERROR')));
+		}
+	}
+
 	public function methodMyMobile()
 	{
 		$memberObj = Factory::getModel('member');
@@ -646,11 +744,6 @@ class ActionMember extends ActionCommon
 		{
 			$this->jsonout(array('state' => false, 'message' => MCGetM('AMER_MOBILE_STEP_ERROR')));
 		}
-	}
-
-	public function methodMyEmail()
-	{
-
 	}
 
 	public function methodMyActivity()

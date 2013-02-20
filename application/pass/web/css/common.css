@@ -312,3 +312,10 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-member_mymobile .panel table td.control{width:auto;}
 .page-member_mymobile .dy-text{width:150px;}
 .page-member_mymobile .dy-label{width:150px;}
+
+.page-member_myemail .panel{height:230px;}
+.page-member_myemail .panel table td.control{width:auto;}
+.page-member_myemail .dy-text{width:150px;}
+.page-member_myemail input[name=email]{width:250px;}
+.page-member_myemail .panel table td.notice{padding-bottom:5px;}
+.page-member_myemail .pagesubmit td{padding-bottom:20px;}

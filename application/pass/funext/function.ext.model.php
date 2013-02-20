@@ -66,6 +66,22 @@ function report_log($value)
 				$value = report_unknow($value, 'log');
 			}
 			break;
+		case 'membermyemail':
+			if($data['step'] == 1)
+			{
+				$value['cate'] = '编辑';
+				$value['text'] = '绑定电子邮箱';
+			}
+			else if($data['step'] == 2)
+			{
+				$value['cate'] = '编辑';
+				$value['text'] = '解除电子邮箱绑定';
+			}
+			else
+			{
+				$value = report_unknow($value, 'log');
+			}
+			break;
 		case 'memberbasemodify':
 			switch($data['field'])
 			{
