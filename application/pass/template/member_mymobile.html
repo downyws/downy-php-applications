@@ -14,37 +14,38 @@
 					</div>
 					<div class="panel">
 						<div class="loading"></div>
-						<div class="block-page-common_message success"><div class="message">绑定手机成功。</div></div>
-		<form action="/index.php?a=member&m=mymobile&t=ajax" method="post" name="form_mobile">
-			<input type="hidden" name="step" value="1" />
-			<table class="step1 {if $mobile}hide{/if}">
-				<tr class="mobile">
-					<td class="title">手机号码：</td>
-					<td class="control">
-						<input type="text" name="mobile" class="dy-text" />
-						<input type="submit" value="点击获取验证码" class="dy-button white mgl10" />
-					</td>
-					<td class="message"><span></span></td>
-				</tr>
-				<tr><td></td><td colspan="2" class="notice">短信可能存在延迟，如果您在5分钟内依然没有收到短信，请点击重新发送。</td></tr>
-				<tr class="key">
-					<td class="title">验证码：</td>
-					<td class="control"><input type="text" name="key" class="dy-text" /></td>
-					<td class="message"><span></span></td>
-				</tr>
-				<tr><td></td><td colspan="2" class="notice">验证码只能使用一次30分钟内有效</td></tr>
-				<tr class="pagesubmit">
-					<td class="title"></td>
-					<td class="control" colspan="2">
-						<input type="submit" value="提交验证码" class="dy-button blue" />
-						<span class="message"><span></span></span>
-					</td>
-				</tr>
-			</table>
-		</form>
+						<div class="block-page-common_message success"><div class="message"></div></div>
+						<form action="/index.php?a=member&m=mymobile&t=ajax" method="post" name="form_mobile">
+							<input type="hidden" name="step" value="1" />
+							<table class="step1">
+								<tr class="mobile">
+									<td class="title">手机号码：</td>
+									<td class="control">
+										<input type="text" name="mobile" class="dy-text" />
+										<input type="button" value="点击获取验证码" class="dy-button white mgl10" />
+										<span class="count_down mgl10 hide"></span>
+									</td>
+									<td class="message"><span></span></td>
+								</tr>
+								<tr><td></td><td colspan="2" class="notice">短信可能存在延迟，如果您在{$minute_interval}分钟内依然没有收到短信，请点击重新发送。</td></tr>
+								<tr class="key">
+									<td class="title">验证码：</td>
+									<td class="control"><input type="text" name="key" class="dy-text" /></td>
+									<td class="message"><span></span></td>
+								</tr>
+								<tr><td></td><td colspan="2" class="notice">验证码只能使用一次，{$minute_expiry}分钟内有效</td></tr>
+								<tr class="pagesubmit">
+									<td class="title"></td>
+									<td class="control" colspan="2">
+										<input type="submit" value="提交验证码" class="dy-button blue" />
+										<span class="message"><span></span></span>
+									</td>
+								</tr>
+							</table>
+						</form>
 						<form action="/index.php?a=member&m=mymobile&t=ajax" method="post" name="form_mobile">
 							<input type="hidden" name="step" value="2" />
-							<table class="step2 {if !$mobile}hide{/if}">
+							<table class="step2">
 								<tr class="pagesubmit">
 									<td class="title">手机号码：</td>
 									<td class="control">
@@ -74,11 +75,72 @@
 	{include file="common_appfooter.html"}
 </div>
 <script type="text/javascript">
+var step = {if $mobile}2{else}1{/if};
 {literal}
+var template = new Array("发送成功，%s秒后可以重新发送。", "%s秒后，您可以再次发送短信。");
 var dialog = $(".confirm-dialog").html();
 $(".confirm-dialog").remove();
 
+// 倒计时
+function F_CountDown(second, tpl){
+	if(second == 0){
+		$(".step1 .mobile .count_down").hide(300);
+		$(".step1 .mobile input[type=button]").show(300);
+	}else{
+		$(".step1 .mobile .count_down").html(tpl.replace("%s", second));
+		setTimeout(function(){
+			F_CountDown(second - 1, tpl);
+		}, 1000);
+	}
+}
+
 $(function(){
+	// 是否已经发送过
+	if(step == 1){
+		$(".step2").addClass("hide");
+		var mobile = $.fn.cookieGet("BIND_MOBILE");
+		if(mobile != "" && typeof(mobile) != "undefined"){
+			$(".step1 .mobile input[name=mobile]").val(mobile);
+		}
+		var interval = $.fn.cookieGet("SEND_MOBILE_INTERVAL");
+		if(interval != "" && typeof(interval) != "undefined" && !isNaN(interval)){
+			interval = interval - Math.floor(Date.parse(new Date()) / 1000);
+			F_CountDown(interval, template[1]);
+			$(".step1 .mobile input[type=button]").hide(0);
+			$(".step1 .mobile .count_down").show(0);
+		}
+	}else{
+		$(".step1").addClass("hide");
+	}
+
+	// 发送验证码
+	$(".step1 .mobile input[type=button]").click(function(){
+		var action = "/index.php?a=member&m=mymobile&t=ajax";
+		var data = {step: 3, mobile: $(".step1 .mobile input[name=mobile]").val()};
+		$.ajax({type: "POST", dataType: "JSON", url: action, data: data, async: false, beforeSend: function(){
+			$(".page-member_mypage .loading").show(300);
+		}, success: function(result){
+			if(result.state){
+				F_CountDown(300, template[0]);
+				$(".step1 .mobile input[type=button]").hide(300);
+				$(".step1 .mobile .count_down").show(300);
+			}else{
+				$(".step1 .mobile .message span").html(result.message).show(300);
+				$("body").one('mousedown', function(){
+					$(".step1 .mobile .message span").hide(300);
+				});
+			}
+			$(".page-member_mypage .loading").hide(300);
+		}, error: function(jqXHR, textStatus, errorThrown){
+			$(".step1 .mobile .message span").html("AJAX请求错误[" + errorThrown + "]。").show(300);
+			$("body").one('mousedown', function(){
+				$(".step1 .mobile .message span").hide(300);
+			});
+			$(".page-member_mypage .loading").hide(300);
+		}});
+	});
+
+	// 确认解除绑定
 	$(".step2 input[type=button]").click(function(){
 		var locate = {type: "tag", x: "middle", y: "top", origin: "mt", target:{object: $(this), origin: "mt"}};
 		$.fn.dyDialog({
@@ -91,6 +153,8 @@ $(function(){
 			}}
 		});
 	});
+
+	// 提交表单
 	$("form[name=form_mobile]").submit(function(){
 		var step = $(this).find("input[name=step]").val();
 		$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {beforeSend:function(){

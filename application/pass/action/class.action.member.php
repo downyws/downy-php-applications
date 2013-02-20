@@ -426,26 +426,25 @@ class ActionMember extends ActionCommon
 		{
 			$this->jsonout(array('state' => true));
 		}
-		else
+
+		// 错误
+		$errors = $memberObj->getError();
+		$message = array();
+		if(!empty($errors) && is_array($errors))
 		{
-			$errors = $memberObj->getError();
-			$message = array();
-			if(!empty($errors) && is_array($errors))
+			$type = array
+			(
+				substr(MCGetC('MMER_PWD_CNT_EMPTY'), 0, 5) => 'passwordnew',
+				substr(MCGetC('MMER_PWDC_CNT_EMPTY'), 0, 5) => 'passwordcfm'
+			);
+			foreach($errors as $v)
 			{
-				$type = array
-				(
-					substr(MCGetC('MMER_PWD_CNT_EMPTY'), 0, 5) => 'passwordnew',
-					substr(MCGetC('MMER_PWDC_CNT_EMPTY'), 0, 5) => 'passwordcfm'
-				);
-				foreach($errors as $v)
-				{
-					$t = empty($type[substr($v, 0, 5)]) ? 'other' : $type[substr($v, 0, 5)];
-					$message[$t][] = MCGetM($v);
-				}
-				foreach($message as $k => $v)
-				{
-					$message[$k] = implode("\t", $message[$k]);					
-				}
+				$t = empty($type[substr($v, 0, 5)]) ? 'other' : $type[substr($v, 0, 5)];
+				$message[$t][] = MCGetM($v);
+			}
+			foreach($message as $k => $v)
+			{
+				$message[$k] = implode("\t", $message[$k]);					
 			}
 		}
 		$this->jsonout(array('state' => false, 'message' => $message));
@@ -521,30 +520,33 @@ class ActionMember extends ActionCommon
 			{
 				$this->jsonout(array('state' => true));
 			}
-			else
+
+			// 错误
+			$errors = $memberObj->getError();
+			$message = array();
+			if(!empty($errors) && is_array($errors))
 			{
-				$errors = $memberObj->getError();
-				$message = array();
-				if(!empty($errors) && is_array($errors))
+				$type = array();
+				for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
 				{
-					$type = array();
-					for($i = 0; $i < $GLOBALS['QANDA']['COUNT']; $i++)
-					{
-						$type[substr(MCGetC('MMER_QANDA' . $i . '_Q_LEN_ERROR'), 0, 5)] = 'question_' . $i;
-						$type[substr(MCGetC('MMER_QANDA' . $i . '_A_LEN_ERROR'), 0, 5)] = 'answer_' . $i;
-					}
-					foreach($errors as $v)
-					{
-						$t = empty($type[substr($v, 0, 5)]) ? 'other' : $type[substr($v, 0, 5)];
-						$message[$t][] = MCGetM($v);
-					}
-					foreach($message as $k => $v)
-					{
-						$message[$k] = implode("\t", $message[$k]);					
-					}
+					$type[substr(MCGetC('MMER_QANDA' . $i . '_Q_LEN_ERROR'), 0, 5)] = 'question_' . $i;
+					$type[substr(MCGetC('MMER_QANDA' . $i . '_A_LEN_ERROR'), 0, 5)] = 'answer_' . $i;
+				}
+				foreach($errors as $v)
+				{
+					$t = empty($type[substr($v, 0, 5)]) ? 'other' : $type[substr($v, 0, 5)];
+					$message[$t][] = MCGetM($v);
+				}
+				foreach($message as $k => $v)
+				{
+					$message[$k] = implode("\t", $message[$k]);					
 				}
 			}
 			$this->jsonout(array('state' => false, 'message' => $message));
+		}
+		else
+		{
+			$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('AMER_QANDA_STEP_ERROR'))));
 		}
 	}
 
@@ -552,14 +554,20 @@ class ActionMember extends ActionCommon
 	{
 		$memberObj = Factory::getModel('member');
 		$mobile = $memberObj->getSessionMember('mobile');
+		$minute_expiry = intval($GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS']['EXPIRY'] / 60);
+		$minute_interval = intval($GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS']['INTERVAL'] / 60);
 		$this->assign('mobile', $mobile);
+		$this->assign('minute_interval', $minute_interval);
+		$this->assign('minute_expiry', $minute_expiry);
 	}
 
 	public function methodMyMobileAjax()
 	{
 		// 获取参数
 		$params = $this->_submit->obtain($_REQUEST, array(
-			'step' => array(array('valid', 'in', MCGetM('AMER_MOBILE_STEP_ERROR'), null, array('1', '2')))
+			'step' => array(array('valid', 'in', MCGetM('AMER_MOBILE_STEP_ERROR'), null, array('1', '2', '3'))),
+			'mobile' => array(array('format', 'trim')),
+			'key' => array(array('format', 'trim'))
 		));
 
 		// 错误提示
@@ -572,6 +580,25 @@ class ActionMember extends ActionCommon
 		// 处理一
 		if($params['step'] == '1')
 		{
+			$member = array('member_id' => $memberObj->getSessionMember('id'), 'mobile' => $params['mobile']);
+			$result = $memberObj->mobileBind($member, $params['key']);
+			if($result)
+			{
+				$this->jsonout(array('state' => true));
+			}
+
+			// 错误
+			$errors = $memberObj->getError();
+			if(!empty($errors) && is_array($errors))
+			{
+				foreach($errors as $k => $v)
+				{
+					$errors[$k] = MCGetM($v);
+				}
+			}
+			$message = array();
+			$message['other'] = implode("\t", $errors);
+			$this->jsonout(array('state' => false, 'message' => $message));
 		}
 		// 处理二
 		else if($params['step'] == '2')
@@ -582,20 +609,42 @@ class ActionMember extends ActionCommon
 			{
 				$this->jsonout(array('state' => true));
 			}
-			else
+
+			$errors = $memberObj->getError();
+			if(!empty($errors) && is_array($errors))
 			{
-				$errors = $memberObj->getError();
-				if(!empty($errors) && is_array($errors))
+				foreach($errors as $k => $v)
 				{
-					foreach($errors as $k => $v)
-					{
-						$errors[$k] = MCGetM($v);
-					}
+					$errors[$k] = MCGetM($v);
 				}
-				$message = array();
-				$message['other'] = implode("\t", $errors);
 			}
+			$message = array();
+			$message['other'] = implode("\t", $errors);
 			$this->jsonout(array('state' => false, 'message' => $message));
+		}
+		// 处理三
+		else if($params['step'] == '3')
+		{
+			$result = $memberObj->sendMobileKey($params['mobile']);
+			if($result)
+			{
+				$this->jsonout(array('state' => true));
+			}
+
+			// 错误
+			$errors = $memberObj->getError();
+			if(!empty($errors) && is_array($errors))
+			{
+				foreach($errors as $k => $v)
+				{
+					$errors[$k] = MCGetM($v);
+				}
+			}
+			$this->jsonout(array('state' => false, 'message' => implode("\t", $errors)));
+		}
+		else
+		{
+			$this->jsonout(array('state' => false, 'message' => MCGetM('AMER_MOBILE_STEP_ERROR')));
 		}
 	}
 

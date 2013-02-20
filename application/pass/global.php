@@ -71,6 +71,8 @@ $GLOBALS['CONFIG']['MODEL_OPTIONS'] = array(
 $GLOBALS['CONFIG']['LOGIN_CAPTCHA_OPTIONS'] = array('COUNT' => 3, 'TIME' => 300, 'KEY' => 'captcha_login/');
 // - 注册验证码配置
 $GLOBALS['CONFIG']['REGISTER_CAPTCHA_OPTIONS'] = array('COUNT' => 0, 'TIME' => 300, 'KEY' => 'captcha_register/');
+// - 手机绑定验证码
+$GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'] = array('KEY' => 'bind_mobile/', 'INTERVAL' => 300, 'EXPIRY' => 1800, 'TRY_COUNT' => 10, 'TRY_TIME' => 600);
 
 // 性别
 $GLOBALS['SEX'] = array('OTHER' => 0, 'MALE' => 1, 'FEMALE' => 2);

@@ -326,6 +326,111 @@ class ModelMember extends ModelCommon
 		return $inout_id;
 	}
 
+	public function mobileBind($member, $key)
+	{
+		$err = array();
+		$res = $this->checkErrMobile($member, false);
+		$res && $err[] = $res;
+
+		if(empty($err))
+		{
+			$filecache = new Filecache();
+			$config = $GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'];
+			$try_count = $filecache->get($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
+			if($try_count > $config['TRY_COUNT'])
+			{
+				$err[] = MCGetC('MMER_BIND_MOB_KEY_ATK');
+			}
+			else 
+			{
+				$k = $filecache->get($config['KEY'] . $member['mobile']);
+				if($k !== false && $key == $k)
+				{
+					// 删除相关信息
+					$filecache->delete($config['KEY'] . $member['mobile']);
+					$filecache->delete($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
+					setcookie('SEND_MOBILE_INTERVAL', '', -1);
+					setcookie('BIND_MOBILE', '', -1);
+
+					$this->transStart();
+
+					// update
+					$condition = array();
+					$condition[] = array('id' => array('eq', $member['member_id']));
+					$data = array('mobile' => $member['mobile']);
+					$this->update($condition, $data);
+
+					// logs
+					$this->operateLog();
+
+					$res = $this->transCommit();
+					if($res)
+					{
+						$this->setSessionMember($data);
+						return true;
+					}
+					else
+					{
+						$err[] = MCGetC('MCON_SYSERR_TELA');
+					}
+				}
+				else
+				{
+					$err[] = MCGetC('MMER_BIND_MOB_KEY_ERROR');
+					$filecache->set($config['KEY'] . 'try' . REMOTE_IP_ADDRESS, $try_count + 1, $config['TRY_TIME']);
+				}
+			}
+		}
+
+		$this->_error[] = $err;
+		return false;
+	}
+
+	public function sendMobileKey($mobile)
+	{
+		$err = array();
+		$res = $this->checkErrMobile(array('mobile' => $mobile), false);
+		$res && $err[] = $res;
+
+		if(empty($err))
+		{
+			$filecache = new Filecache();
+			$config = $GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'];
+			$key = $filecache->get($config['KEY'] . REMOTE_IP_ADDRESS);
+			if(!$key)
+			{
+				$key = mt_rand(0, 999999);
+// 发送短信 coding...
+				if(true)
+// 发送短信 coding...
+				{
+					$now = time();
+
+					// 文件缓存
+					$filecache->set($config['KEY'] . REMOTE_IP_ADDRESS, $mobile, $config['INTERVAL']);
+					$filecache->set($config['KEY'] . $mobile, $key, $config['EXPIRY']);
+					
+					// Cookie记录
+					setcookie('SEND_MOBILE_INTERVAL', $now + $config['INTERVAL'], $now + $config['INTERVAL']);
+					setcookie('BIND_MOBILE', $mobile, $now + $config['EXPIRY']);
+					
+					return true;
+				}
+				else
+				{
+					$err[] = MCGetC('MMER_BIND_MOB_SEND_ERROR');
+				}
+			}
+			else
+			{
+				$err[] = MCGetC('MMER_BIND_MOB_IP_LIMIT');
+			}
+		}
+
+		$this->_error[] = $err;
+		return false;
+	}
+
 	public function modifyBirthday($member)
 	{
 		$err = array();
