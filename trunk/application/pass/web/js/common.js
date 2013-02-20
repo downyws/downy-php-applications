@@ -16,6 +16,35 @@ $(function(){
 });
 
 $.fn.extend({
+	// COOKIE获取
+	cookieGet: function(key){
+		var b = key + "=";
+		if(document.cookie.length > 0){
+			offset = document.cookie.indexOf(b);
+			if(offset != -1){
+				offset += b.length;
+				end = document.cookie.indexOf(";", offset);
+				if(end == -1){
+					end = document.cookie.length;
+				}
+				return decodeURIComponent(document.cookie.substring(offset, end))
+			}else{
+				return "";
+			}
+		}
+	},
+	// COOKIE写入
+	cookieSet: function(params){
+		params.key = (typeof(params.key) == "undefined") ? "" : params.key;
+		params.value = (typeof(params.value) == "undefined") ? "" : encodeURIComponent(params.value);
+		params.time = (typeof(params.time) == "undefined") ? -1 : params.time;
+		params.path = (typeof(params.path) == "undefined") ? "" : (";path=" + params.path);
+		params.domain = (typeof(params.domain) == "undefined") ? "" : (";domain=" + params.domain);
+
+		var e = new Date();
+		e.setTime(e.getTime() + params.time);
+		document.cookie = params.key + "=" + params.value + ";expires=" + e.toGMTString() + params.path + params.domain;
+	},
 	// 浏览器
 	broswerName: function(){
 		if(/firefox/gi.test(navigator.userAgent)){
