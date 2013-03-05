@@ -37,6 +37,12 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .dy-text:hover{border:1px solid #B9B9B9;border-top:1px solid #A0A0A0;box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);}
 .dy-text:focus{outline:none;border:1px solid #4D90FE;box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);}
 
+.dy-textarea{font-family:inherit;font-size:15px;width:100%;padding:8px;border:1px solid #D9D9D9;border-top:1px solid #C0C0C0;box-sizing:border-box;}
+.dy-textarea{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;}	/* 总有一天这行代码会被砍掉 */
+.dy-textarea.error{border:1px solid #DD4B39;}
+.dy-textarea:hover{border:1px solid #B9B9B9;border-top:1px solid #A0A0A0;box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);}
+.dy-textarea:focus{outline:none;border:1px solid #4D90FE;box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);}
+
 .dy-button{font-size:12px;font-weight:bold;height:32px;padding:0 8px;border-radius:2px;cursor:pointer;}
 .dy-button.disabled, .dy-button.disabled:hover, .dy-button.disabled:active{background-color:none;opacity:.5;filter:alpha(opacity=50);cursor:default;pointer-events:none;}
 .dy-button.blue{border:1px solid #3079ED;color:#FFFFFF;background-color:#4D90FE;background-image:linear-gradient(top,#4D90FE,#4787ED);}
@@ -110,7 +116,7 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .dialog-portrait .panel .info{color:#DDDDDD;font-size:26px;height:100px;margin:auto;bottom:0;left:0;right:0;top:0;position:absolute;text-align:center;}
 .dialog-portrait .button{border-top:1px solid #DDDDDD;padding:10px;text-align:right;}
 .dialog-portrait .button input{margin-left:10px;}
-.dialog-portrait .message{background:#000000;color:#FFFFFF;padding:5px 10px;margin:5px;top:0;left:0;position:absolute;display:none;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);}
+.dialog-portrait .message{background:#000000;color:#FFFFFF;padding:5px 10px;margin:5px;top:0;left:0;position:absolute;display:none;box-shadow:0 2px 4px rgba(0, 0, 0, 0.2);}
 .dialog-portrait .loading{background-color:#9999FF;height:10px;width:680px;margin:0px auto;}
 .dialog-portrait .loading .bar{background-image:url('/images/bar-loading.gif');width:0%;height:100%;opacity:0.12;}
 
@@ -191,21 +197,21 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-index_sethomepage .broswer li .name{font-size:16px;font-weight:bold;background:#F1F1F1;padding:8px;cursor:pointer;display:block;text-decoration:none;color:#000000;}
 .page-index_sethomepage .broswer li .name:hover{background:#E1E1E1;}
 .page-index_sethomepage .broswer li .name .logo{width:20px;height:20px;display:block;float:left;margin-right:10px;background:url(../images/icon-broswer.png) 0px 0px no-repeat;}
-.page-index_sethomepage .broswer li .name .logo.chrome{background-position: 0px 0px;}
-.page-index_sethomepage .broswer li .name .logo.firefox{background-position: 0px -25px;}
-.page-index_sethomepage .broswer li .name .logo.green{background-position: 0px -50px;}
-.page-index_sethomepage .broswer li .name .logo.ie{background-position: 0px -75px;}
-.page-index_sethomepage .broswer li .name .logo.kr{background-position: 0px -100px;}
-.page-index_sethomepage .broswer li .name .logo.maxthon{background-position: 0px -125px;}
-.page-index_sethomepage .broswer li .name .logo.opera{background-position: 0px -150px;}
-.page-index_sethomepage .broswer li .name .logo.qq{background-position: 0px -175px;}
-.page-index_sethomepage .broswer li .name .logo.s360s{background-position: 0px -200px;}
-.page-index_sethomepage .broswer li .name .logo.s360c{background-position: 0px -225px;}
-.page-index_sethomepage .broswer li .name .logo.safari{background-position: 0px -250px;}
-.page-index_sethomepage .broswer li .name .logo.sougou{background-position: 0px -275px;}
-.page-index_sethomepage .broswer li .name .logo.tt{background-position: 0px -300px;}
-.page-index_sethomepage .broswer li .name .logo.world{background-position: 0px -325px;}
-.page-index_sethomepage .broswer li .name .logo.worldc{background-position: 0px -350px;}
+.page-index_sethomepage .broswer li .name .logo.chrome{background-position:0px 0px;}
+.page-index_sethomepage .broswer li .name .logo.firefox{background-position:0px -25px;}
+.page-index_sethomepage .broswer li .name .logo.green{background-position:0px -50px;}
+.page-index_sethomepage .broswer li .name .logo.ie{background-position:0px -75px;}
+.page-index_sethomepage .broswer li .name .logo.kr{background-position:0px -100px;}
+.page-index_sethomepage .broswer li .name .logo.maxthon{background-position:0px -125px;}
+.page-index_sethomepage .broswer li .name .logo.opera{background-position:0px -150px;}
+.page-index_sethomepage .broswer li .name .logo.qq{background-position:0px -175px;}
+.page-index_sethomepage .broswer li .name .logo.s360s{background-position:0px -200px;}
+.page-index_sethomepage .broswer li .name .logo.s360c{background-position:0px -225px;}
+.page-index_sethomepage .broswer li .name .logo.safari{background-position:0px -250px;}
+.page-index_sethomepage .broswer li .name .logo.sougou{background-position:0px -275px;}
+.page-index_sethomepage .broswer li .name .logo.tt{background-position:0px -300px;}
+.page-index_sethomepage .broswer li .name .logo.world{background-position:0px -325px;}
+.page-index_sethomepage .broswer li .name .logo.worldc{background-position:0px -350px;}
 .page-index_sethomepage .broswer li .name .arrow{width:20px;height:20px;float:right;background:url("/images/arrow_close.gif") no-repeat scroll center center transparent;}
 .page-index_sethomepage .broswer li.open .name .arrow{background:url("/images/arrow_open.gif") no-repeat scroll center center transparent;}
 .page-index_sethomepage .broswer li.open .detail{display:block;}
