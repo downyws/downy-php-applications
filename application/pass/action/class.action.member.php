@@ -131,6 +131,7 @@ class ActionMember extends ActionCommon
 		$captcha['KEY'] .= md5(REMOTE_IP_ADDRESS);
 		$captcha['NOW_COUNT'] = intval($filecache->get($captcha['KEY']));
 		$captcha['SHOW'] = ($captcha['COUNT'] < 1) ? !!($captcha['COUNT'] + 1) : ($captcha['NOW_COUNT'] >= $captcha['COUNT']);
+
 		// 表单提交
 		$error = array('captcha' => null, 'agree' => null, 'fname' => null, 'lname' => null, 'account' => null, 'password' => null, 'passwordcfm' => null, 'email' => null, 'mobile' => null, 'system' => null);
 		if($params['submit'])
@@ -573,21 +574,34 @@ class ActionMember extends ActionCommon
 		// 错误提示
 		if(count($this->_submit->errors) > 0)
 		{
-			$this->jsonout(array('state' => false, 'message' => $this->_submit->errors));
+			$this->jsonout(array('state' => false, 'message' => array('other' => end($this->_submit->errors))));
 		}
 
 		$memberObj = Factory::getModel('member');
+		$config = $GLOBALS['CONFIG']['BIND_EMAIL_OPTIONS'];
+		$filecache = new Filecache();
+
 		// 处理一
 		if($params['step'] == '1')
 		{
+			$try_count = $filecache->get($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
+			if($try_count > $config['TRY_COUNT'])
+			{
+				$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('AMER_BIND_EMAIL_KEY_ATK'))));
+			}
+
 			$member = array('member_id' => $memberObj->getSessionMember('id'), 'email' => $params['email']);
 			$result = $memberObj->emailBind($member, $params['key']);
 			if($result)
 			{
+				$filecache->delete($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
+				setcookie('SEND_EMAIL_INTERVAL', '', -1);
+				setcookie('BIND_EMAIL', '', -1);
 				$this->jsonout(array('state' => true));
 			}
 
 			// 错误
+			$filecache->set($config['KEY'] . 'try' . REMOTE_IP_ADDRESS, $try_count + 1, $config['TRY_TIME']);
 			$errors = $memberObj->getError();
 			if(!empty($errors) && is_array($errors))
 			{
@@ -625,9 +639,22 @@ class ActionMember extends ActionCommon
 		// 处理三
 		else if($params['step'] == '3')
 		{
+			$result = $filecache->get($config['KEY'] . REMOTE_IP_ADDRESS);
+			if($result)
+			{
+				$this->jsonout(array('state' => false, 'message' => MCGetM('AMER_BIND_EMAIL_IP_LIMIT')));
+			}
+
 			$result = $memberObj->sendEmailKey($params['email']);
 			if($result)
 			{
+				$filecache->set($config['KEY'] . REMOTE_IP_ADDRESS, $params['email'], $config['INTERVAL']);
+
+				// Cookie记录
+				$now = time();
+				setcookie('SEND_EMAIL_INTERVAL', $now + $config['INTERVAL'], $now + $config['INTERVAL']);
+				setcookie('BIND_EMAIL', $params['email'], $now + $config['EXPIRY']);
+
 				$this->jsonout(array('state' => true));
 			}
 
@@ -641,10 +668,6 @@ class ActionMember extends ActionCommon
 				}
 			}
 			$this->jsonout(array('state' => false, 'message' => implode("\t", $errors)));
-		}
-		else
-		{
-			$this->jsonout(array('state' => false, 'message' => MCGetM('AMER_EMAIL_STEP_ERROR')));
 		}
 	}
 
@@ -671,21 +694,34 @@ class ActionMember extends ActionCommon
 		// 错误提示
 		if(count($this->_submit->errors) > 0)
 		{
-			$this->jsonout(array('state' => false, 'message' => $this->_submit->errors));
+			$this->jsonout(array('state' => false, 'message' => array('other' => end($this->_submit->errors))));
 		}
 
 		$memberObj = Factory::getModel('member');
+		$config = $GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'];
+		$filecache = new Filecache();
+
 		// 处理一
 		if($params['step'] == '1')
 		{
+			$try_count = $filecache->get($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
+			if($try_count > $config['TRY_COUNT'])
+			{
+				$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('AMER_BIND_MOBILE_KEY_ATK'))));
+			}
+
 			$member = array('member_id' => $memberObj->getSessionMember('id'), 'mobile' => $params['mobile']);
 			$result = $memberObj->mobileBind($member, $params['key']);
 			if($result)
 			{
+				$filecache->delete($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
+				setcookie('SEND_MOBILE_INTERVAL', '', -1);
+				setcookie('BIND_MOBILE', '', -1);
 				$this->jsonout(array('state' => true));
 			}
 
 			// 错误
+			$filecache->set($config['KEY'] . 'try' . REMOTE_IP_ADDRESS, $try_count + 1, $config['TRY_TIME']);
 			$errors = $memberObj->getError();
 			if(!empty($errors) && is_array($errors))
 			{
@@ -723,9 +759,22 @@ class ActionMember extends ActionCommon
 		// 处理三
 		else if($params['step'] == '3')
 		{
+			$result = $filecache->get($config['KEY'] . REMOTE_IP_ADDRESS);
+			if($result)
+			{
+				$this->jsonout(array('state' => false, 'message' => MCGetM('AMER_BIND_MOBILE_IP_LIMIT')));
+			}
+
 			$result = $memberObj->sendMobileKey($params['mobile']);
 			if($result)
 			{
+				$filecache->set($config['KEY'] . REMOTE_IP_ADDRESS, $params['mobile'], $config['INTERVAL']);
+
+				// Cookie记录
+				$now = time();
+				setcookie('SEND_MOBILE_INTERVAL', $now + $config['INTERVAL'], $now + $config['INTERVAL']);
+				setcookie('BIND_MOBILE', $params['mobile'], $now + $config['EXPIRY']);
+
 				$this->jsonout(array('state' => true));
 			}
 
@@ -739,10 +788,6 @@ class ActionMember extends ActionCommon
 				}
 			}
 			$this->jsonout(array('state' => false, 'message' => implode("\t", $errors)));
-		}
-		else
-		{
-			$this->jsonout(array('state' => false, 'message' => MCGetM('AMER_MOBILE_STEP_ERROR')));
 		}
 	}
 
