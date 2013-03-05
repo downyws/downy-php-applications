@@ -334,51 +334,39 @@ class ModelMember extends ModelCommon
 
 		if(empty($err))
 		{
-			$filecache = new Filecache();
 			$config = $GLOBALS['CONFIG']['BIND_EMAIL_OPTIONS'];
-			$try_count = $filecache->get($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
-			if($try_count > $config['TRY_COUNT'])
+			$filecache = new Filecache();
+			$k = $filecache->get($config['KEY'] . md5($member['email']));
+			if($k !== false && $key == $k)
 			{
-				$err[] = MCGetC('MMER_BIND_EMAIL_KEY_ATK');
-			}
-			else 
-			{
-				$k = $filecache->get($config['KEY'] . md5($member['email']));
-				if($k !== false && $key == $k)
+				// 删除相关信息
+				$filecache->delete($config['KEY'] . md5($member['email']));
+
+				$this->transStart();
+
+				// update
+				$condition = array();
+				$condition[] = array('id' => array('eq', $member['member_id']));
+				$data = array('email' => $member['email']);
+				$this->update($condition, $data);
+
+				// logs
+				$this->operateLog();
+
+				$res = $this->transCommit();
+				if($res)
 				{
-					// 删除相关信息
-					$filecache->delete($config['KEY'] . md5($member['email']));
-					$filecache->delete($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
-					setcookie('SEND_EMAIL_INTERVAL', '', -1);
-					setcookie('BIND_EMAIL', '', -1);
-
-					$this->transStart();
-
-					// update
-					$condition = array();
-					$condition[] = array('id' => array('eq', $member['member_id']));
-					$data = array('email' => $member['email']);
-					$this->update($condition, $data);
-
-					// logs
-					$this->operateLog();
-
-					$res = $this->transCommit();
-					if($res)
-					{
-						$this->setSessionMember($data);
-						return true;
-					}
-					else
-					{
-						$err[] = MCGetC('MCON_SYSERR_TELA');
-					}
+					$this->setSessionMember($data);
+					return true;
 				}
 				else
 				{
-					$err[] = MCGetC('MMER_BIND_EMAIL_KEY_ERROR');
-					$filecache->set($config['KEY'] . 'try' . REMOTE_IP_ADDRESS, $try_count + 1, $config['TRY_TIME']);
+					$err[] = MCGetC('MCON_SYSERR_TELA');
 				}
+			}
+			else
+			{
+				$err[] = MCGetC('MMER_BIND_EMAIL_KEY_ERROR');
 			}
 		}
 
@@ -394,36 +382,18 @@ class ModelMember extends ModelCommon
 
 		if(empty($err))
 		{
-			$filecache = new Filecache();
-			$config = $GLOBALS['CONFIG']['BIND_EMAIL_OPTIONS'];
-			$key = $filecache->get($config['KEY'] . REMOTE_IP_ADDRESS);
-			if(!$key)
+			$key = mt_rand(0, 999999);
+			if(sendEmail($email, APP_DIR_TEMPLATE . 'member_mymobile_send.html', $key))
 			{
-				$key = mt_rand(0, 999999);
-// 发送邮件 coding...
-				if(true)
-// 发送邮件 coding...
-				{
-					$now = time();
-
-					// 文件缓存
-					$filecache->set($config['KEY'] . REMOTE_IP_ADDRESS, $email, $config['INTERVAL']);
-					$filecache->set($config['KEY'] . md5($email), $key, $config['EXPIRY']);
-					
-					// Cookie记录
-					setcookie('SEND_EMAIL_INTERVAL', $now + $config['INTERVAL'], $now + $config['INTERVAL']);
-					setcookie('BIND_EMAIL', $email, $now + $config['EXPIRY']);
-					
-					return true;
-				}
-				else
-				{
-					$err[] = MCGetC('MMER_BIND_EMAIL_SEND_ERROR');
-				}
+				// 文件缓存
+				$config = $GLOBALS['CONFIG']['BIND_EMAIL_OPTIONS'];
+				$filecache = new Filecache();
+				$filecache->set($config['KEY'] . md5($email), $key, $config['EXPIRY']);
+				return true;
 			}
 			else
 			{
-				$err[] = MCGetC('MMER_BIND_EMAIL_IP_LIMIT');
+				$err[] = MCGetC('MMER_BIND_EMAIL_SEND_ERROR');
 			}
 		}
 
@@ -439,51 +409,39 @@ class ModelMember extends ModelCommon
 
 		if(empty($err))
 		{
-			$filecache = new Filecache();
 			$config = $GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'];
-			$try_count = $filecache->get($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
-			if($try_count > $config['TRY_COUNT'])
+			$filecache = new Filecache();
+			$k = $filecache->get($config['KEY'] . md5($member['mobile']));
+			if($k !== false && $key == $k)
 			{
-				$err[] = MCGetC('MMER_BIND_MOBILE_KEY_ATK');
-			}
-			else 
-			{
-				$k = $filecache->get($config['KEY'] . $member['mobile']);
-				if($k !== false && $key == $k)
+				// 删除相关信息
+				$filecache->delete($config['KEY'] . md5($member['mobile']));
+
+				$this->transStart();
+
+				// update
+				$condition = array();
+				$condition[] = array('id' => array('eq', $member['member_id']));
+				$data = array('mobile' => $member['mobile']);
+				$this->update($condition, $data);
+
+				// logs
+				$this->operateLog();
+
+				$res = $this->transCommit();
+				if($res)
 				{
-					// 删除相关信息
-					$filecache->delete($config['KEY'] . $member['mobile']);
-					$filecache->delete($config['KEY'] . 'try' . REMOTE_IP_ADDRESS);
-					setcookie('SEND_MOBILE_INTERVAL', '', -1);
-					setcookie('BIND_MOBILE', '', -1);
-
-					$this->transStart();
-
-					// update
-					$condition = array();
-					$condition[] = array('id' => array('eq', $member['member_id']));
-					$data = array('mobile' => $member['mobile']);
-					$this->update($condition, $data);
-
-					// logs
-					$this->operateLog();
-
-					$res = $this->transCommit();
-					if($res)
-					{
-						$this->setSessionMember($data);
-						return true;
-					}
-					else
-					{
-						$err[] = MCGetC('MCON_SYSERR_TELA');
-					}
+					$this->setSessionMember($data);
+					return true;
 				}
 				else
 				{
-					$err[] = MCGetC('MMER_BIND_MOBILE_KEY_ERROR');
-					$filecache->set($config['KEY'] . 'try' . REMOTE_IP_ADDRESS, $try_count + 1, $config['TRY_TIME']);
+					$err[] = MCGetC('MCON_SYSERR_TELA');
 				}
+			}
+			else
+			{
+				$err[] = MCGetC('MMER_BIND_MOBILE_KEY_ERROR');
 			}
 		}
 
@@ -499,36 +457,18 @@ class ModelMember extends ModelCommon
 
 		if(empty($err))
 		{
-			$filecache = new Filecache();
-			$config = $GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'];
-			$key = $filecache->get($config['KEY'] . REMOTE_IP_ADDRESS);
-			if(!$key)
+			$key = mt_rand(0, 999999);
+			if(sendMobile($mobile, APP_DIR_TEMPLATE . 'member_mymobile_send.html', $key))
 			{
-				$key = mt_rand(0, 999999);
-// 发送短信 coding...
-				if(true)
-// 发送短信 coding...
-				{
-					$now = time();
-
-					// 文件缓存
-					$filecache->set($config['KEY'] . REMOTE_IP_ADDRESS, $mobile, $config['INTERVAL']);
-					$filecache->set($config['KEY'] . $mobile, $key, $config['EXPIRY']);
-					
-					// Cookie记录
-					setcookie('SEND_MOBILE_INTERVAL', $now + $config['INTERVAL'], $now + $config['INTERVAL']);
-					setcookie('BIND_MOBILE', $mobile, $now + $config['EXPIRY']);
-					
-					return true;
-				}
-				else
-				{
-					$err[] = MCGetC('MMER_BIND_MOBILE_SEND_ERROR');
-				}
+				// 文件缓存
+				$config = $GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'];
+				$filecache = new Filecache();
+				$filecache->set($config['KEY'] . md5($mobile), $key, $config['EXPIRY']);
+				return true;
 			}
 			else
 			{
-				$err[] = MCGetC('MMER_BIND_MOBILE_IP_LIMIT');
+				$err[] = MCGetC('MMER_BIND_MOBILE_SEND_ERROR');
 			}
 		}
 
