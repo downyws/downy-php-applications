@@ -77,3 +77,15 @@ $GLOBALS['MSGCODE']['M']['10417010'] = '表单错误，请刷新页面。';
 
 $GLOBALS['MSGCODE']['C']['AMER_EMAIL_STEP_ERROR'] = '10418010';
 $GLOBALS['MSGCODE']['M']['10418010'] = '表单错误，请刷新页面。';
+
+$GLOBALS['MSGCODE']['C']['AMER_BIND_EMAIL_KEY_ATK'] = '10419010';
+$GLOBALS['MSGCODE']['M']['10419010'] = '您已连续输错多次，请稍后尝试。';
+
+$GLOBALS['MSGCODE']['C']['AMER_BIND_EMAIL_IP_LIMIT'] = '10420010';
+$GLOBALS['MSGCODE']['M']['10420010'] = '您的IP地址在3分钟内已发送过验证邮件，请稍后再尝试。';
+
+$GLOBALS['MSGCODE']['C']['AMER_BIND_MOBILE_KEY_ATK'] = '10421010';
+$GLOBALS['MSGCODE']['M']['10421010'] = '您已连续输错多次，请稍后尝试。';
+
+$GLOBALS['MSGCODE']['C']['AMER_BIND_MOBILE_IP_LIMIT'] = '10422010';
+$GLOBALS['MSGCODE']['M']['10422010'] = '您的IP地址在3分钟内已发送过验证邮件，请稍后再尝试。';
