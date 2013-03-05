@@ -28,10 +28,6 @@ define('CHECK_MEMBER_REGISTER', 1);		// 用户注册
 define('CHECK_MEMBER_MODIFY_BASE', 2);	// 用户基础信息修改
 define('CHECK_MEMBER_MODIFY_INFO', 3);	// 用户扩展信息修改
 
-// 已验证信息
-define('MEMBER_VERIFY_EMAIL',	0x1);	// 邮箱
-define('MEMBER_VERIFY_MOBILE',	0x10);	// 手机
-
 // 类型
 // - InOut
 define('INOUT_TPYE_IN', 1);		// 登录
