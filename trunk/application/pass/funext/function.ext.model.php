@@ -161,3 +161,42 @@ function rand_qanda()
 	}
 	return $result;
 }
+
+function islike_rand_qanda($q, $a)
+{
+	if(preg_match('/^\d{1,3}(\s[+\-*]\s\d{1,3}){2}\s\=\s\?$/', $q))
+	{
+		$q = substr($q, 0, -3);
+		$q = eval("return $q;");
+		return $q == $a;
+	}
+	return false;
+}
+
+function send_email($target, $tpl, $data)
+{
+	require_once LIBRARY_DIR . 'smarty/library.smarty.php';
+	$tpl = new Smarty();
+	$tpl->cache_dir = APP_DIR_CACHE . 'smarty/page/';
+	$tpl->compile_dir = APP_DIR_CACHE . 'smarty/compile/';
+	$tpl->left_delimiter = '{';
+	$tpl->right_delimiter = '}';
+	$tpl->error_reporting = E_ALL;
+	$tpl->assign('data', $data);
+	$content = $tpl->fetch($tpl);
+	return false;
+}
+
+function send_mobile($target, $tpl, $data)
+{
+	require_once LIBRARY_DIR . 'smarty/library.smarty.php';
+	$tpl = new Smarty();
+	$tpl->cache_dir = APP_DIR_CACHE . 'smarty/page/';
+	$tpl->compile_dir = APP_DIR_CACHE . 'smarty/compile/';
+	$tpl->left_delimiter = '{';
+	$tpl->right_delimiter = '}';
+	$tpl->error_reporting = E_ALL;
+	$tpl->assign('data', $data);
+	$content = $tpl->fetch($tpl);
+	return false;
+}

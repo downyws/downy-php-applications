@@ -36,6 +36,22 @@ class ModelMember extends ModelCommon
 		return $apps;
 	}
 
+	public function getMemberId($value, $type = 'account')
+	{
+		$condition = array();
+		switch($type)
+		{
+			case 'account':
+			case 'email':
+			case 'mobile':
+				$condition[] = array($type => array('eq', $value));
+				break;
+			default:
+				return false;
+		}
+		return $this->getOne($condition, 'id');
+	}
+
 	public function getMemberInfo($member_id)
 	{
 		$condition = array();
