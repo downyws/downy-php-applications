@@ -33,8 +33,10 @@ define('CHECK_MEMBER_MODIFY_INFO', 3);	// 用户扩展信息修改
 define('INOUT_TPYE_IN', 1);		// 登录
 define('INOUT_TPYE_OUT', 2);	// 登出
 
-// QAndA
-define('MAX_COUNT', 3);	// QA最大数量
+// Support
+define('SUPPORT_QUESTION', 0);			// 疑问
+define('SUPPORT_LOST_ACCOUNT', 1);		// 忘记账号
+define('SUPPORT_LOGIN_QUESTION', 2);	// 登录疑问
 
 // 配置
 // - ACTION 设置
@@ -48,12 +50,16 @@ $GLOBALS['CONFIG']['ACTION_OPTIONS'] = array(
 		'RUN_LONG_TIME' => array()
 	),
 	'member' => array(
-		'NOT_LOGIN' => array('login', 'logout', 'register', 'recover', 'active'),
+		'NOT_LOGIN' => array('login', 'logout', 'register', 'active'),
 		'RUN_LONG_TIME' => array(),
 		'MYACTIVITY' => array('PAGE_SIZE' => 10)
 	),
 	'connect' => array(
 		'NOT_LOGIN' => array('login'),
+		'RUN_LONG_TIME' => array()
+	),
+	'support' => array(
+		'NOT_LOGIN' => array('ask', 'login', 'recover', 'resetpassword'),
 		'RUN_LONG_TIME' => array()
 	)
 );
@@ -71,6 +77,15 @@ $GLOBALS['CONFIG']['REGISTER_CAPTCHA_OPTIONS'] = array('COUNT' => 0, 'TIME' => 3
 $GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'] = array('KEY' => 'bind_mobile/', 'INTERVAL' => 300, 'EXPIRY' => 1800, 'TRY_COUNT' => 10, 'TRY_TIME' => 600);
 // - 邮箱绑定验证码
 $GLOBALS['CONFIG']['BIND_EMAIL_OPTIONS'] = array('KEY' => 'bind_email/', 'INTERVAL' => 180, 'EXPIRY' => 1800, 'TRY_COUNT' => 10, 'TRY_TIME' => 600);
+// - 用户支持配置
+$GLOBALS['CONFIG']['SUPPORT_ASK_OPTIONS'] = array('KEY' => 'support/', 'SUBMIT_INTERVAL' => 600, 'SUBMIT_COUNT' => 3);
+// - 找回密码配置
+$GLOBALS['CONFIG']['LOST_PASSWORD_OPTIONS'] = array(
+	'KEY' => 'lost_pwd/', 'TRY_TIME' => 900, 'TRY_COUNT' => 30,
+	'RESET_KEY' => 'reset_pwd/', 'RESET_TIME' => 300,
+	'EMAIL_INTERVAL' => 180, 'EMAIL_EXPIRY' => 1800,
+	'MOBILE_INTERVAL' => 300, 'MOBILE_EXPIRY' => 1800
+);
 
 // 性别
 $GLOBALS['SEX'] = array('OTHER' => 0, 'MALE' => 1, 'FEMALE' => 2);

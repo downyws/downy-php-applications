@@ -189,6 +189,18 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .block-page-common_message.success{background:transparent url("/images/robot-success.png") no-repeat 90% center;background-color:#FFFFFF;}
 .block-page-common_message .message{position:absolute;top:40%;width:400px;text-align:center;font-size:16px;}
 
+.block-support{background-color:#F3F3F3;border:1px solid #D9D9D9;padding:20px 25px 15px;margin-bottom:10px;}
+.block-support .title{font-weight:bold;width:100px;text-align:right;padding-right:10px;}
+.block-support .message{width:200px;color:#FF0000;padding-left:10px;}
+.block-support .notice{padding-bottom:10px;}
+.block-support .btn{text-align:right;}
+.block-support .btn span span{width:280px;padding-right:10px;}
+.block-support .dy-text{width:250px;}
+.block-support .dy-textarea{width:380px;height:150px;}
+.block-support label{width:250px;display:inline-block;position:relative;}
+.block-support label span{color:#BBBBBB;position:absolute;display:none;top:8px;left:10px;cursor:text;}
+.block-support label .dy-text{width:100%;}
+
 .action-member .detail{width:78%;float:right;}
 
 .page-index_sethomepage .title{font-weight:bold;font-size:18px;}
@@ -325,3 +337,38 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-member_myemail input[name=email]{width:250px;}
 .page-member_myemail .panel table td.notice{padding-bottom:5px;}
 .page-member_myemail .pagesubmit td{padding-bottom:20px;}
+
+.page-support_login{position:relative;}
+.page-support_login .loading{position:absolute;top:0;left:0;width:100%;height:100%;background:url("/images/loading.gif") no-repeat center center;background-color:#EFEFEF;filter:alpha(Opacity=60);opacity:0.6;display:none;}
+.page-support_login .nav{margin-bottom:20px;border:1px solid #D9D9D9;background-color:#F3F3F3;}
+.page-support_login .nav .item{cursor:pointer;font-size:14px;font-family:微软雅黑,黑体;color:#000000;float:left;padding:5px;padding-left:25px;background:url("/images/recover_nav.png") no-repeat left transparent;}
+.page-support_login .nav .item.first{background:none;padding-left:10px;}
+.page-support_login .nav .item:hover{color:#999999;}
+.page-support_login .block-support label.content{width:100%;padding:0px;}
+.page-support_login .block-support label.first_name{width:120px;margin-right:7px;}
+.page-support_login .block-support label.last_name{width:120px;}
+.page-support_login .block-support .tarow{padding-top:12px;vertical-align:top;}
+.page-support_login .block-support .dy-text.qanda{width:380px;font-size:12px;}
+.page-support_login .block-support .dy-label.qanda{width:380px;font-size:12px;}
+.page-support_login .choose{margin-bottom:10px;}
+.page-support_login .choose .item{background:#D9D9D9;width:30%;margin-right:5%;float:left;}
+.page-support_login .choose .item div{margin:1px;text-align:center;font-weight:bold;font-size:12px;padding:150px 0px 10px;cursor:pointer;}
+.page-support_login .choose .item div:hover{color:#999999;}
+.page-support_login .choose .item.last{margin-right:0px;}
+.page-support_login .choose .item.lpwd div{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F3F3F3;}
+.page-support_login .choose .item.lpwd div:hover{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F1F1F1;}
+.page-support_login .choose .item.lacc div{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F3F3F3;}
+.page-support_login .choose .item.lacc div:hover{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F1F1F1;}
+.page-support_login .choose .item.ques div{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F3F3F3;}
+.page-support_login .choose .item.ques div:hover{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F1F1F1;}
+.page-support_login .choose .item.qanda div{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F3F3F3;}
+.page-support_login .choose .item.qanda div:hover{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F1F1F1;}
+.page-support_login .choose .item.mobile div{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F3F3F3;}
+.page-support_login .choose .item.mobile div:hover{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F1F1F1;}
+.page-support_login .choose .item.email div{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F3F3F3;}
+.page-support_login .choose .item.email div:hover{background:url("/images/recover_item.png") no-repeat center center transparent;background-color:#F1F1F1;}
+
+.page-support_resetpassword{position:relative;}
+.page-support_resetpassword .loading{position:absolute;top:0;left:0;width:100%;height:100%;background:url("/images/loading.gif") no-repeat center center;background-color:#EFEFEF;filter:alpha(Opacity=60);opacity:0.6;display:none;}
+.page-support_resetpassword .nav{margin-bottom:20px;border:1px solid #D9D9D9;background-color:#F3F3F3;}
+.page-support_resetpassword .nav .item{font-size:14px;font-family:微软雅黑,黑体;color:#000000;float:left;padding:5px 5px 5px 10px;}

@@ -1,0 +1,212 @@
+{include file="common_top.html"}
+{include file="common_head.html"}
+{include file="common_center.html"}
+<div class="app-wrapper">
+	{include file="common_appheader.html"}
+	<div class="app-body">
+		<div class="content clearfix">
+			<div class="page-support_login">
+				<div class="nav clearfix">
+					<div data-step="1" class="item item-1 first">登录时遇到问题了？</div>
+					<div data-step="11" class="item item-11 hide">如何找回密码？</div>
+					<div data-step="0" class="item item-0 hide">填写资料</div>
+				</div>
+				<div class="choose clearfix items-1">
+					<div data-step="11" class="item lpwd"><div>忘记密码</div></div>
+					<div data-step="12" class="item lacc"><div>忘记账号</div></div>
+					<div data-step="13" class="item ques last"><div>其他问题</div></div>
+				</div>
+				<div class="choose clearfix items-11 hide">
+					<div data-step="111" class="item qanda"><div>保密问题</div></div>
+					<div data-step="112" class="item mobile"><div>手机</div></div>
+					<div data-step="113" class="item email last"><div>邮箱</div></div>
+				</div>
+				<div class="block-support hide"></div>
+				<div class="loading"></div>
+			</div>
+		</div>
+	</div>
+	{include file="common_appfooter.html"}
+</div>
+<div class="block-support-list">
+	<div class="block-support-12 block-support">
+		<form action="/index.php?a=support&m=ask&t=ajax" method="post">
+			<input type="hidden" name="step" value="12" />
+			<table>
+				<tr class="name"><td class="title">姓名</td><td class="control">
+					<label class="first_name"><input type="text" class="dy-text" name="first_name" data-dy_tips="#dy-tips-first_name" /><span id="dy-tips-first_name">姓氏</span></label>
+					<label class="last_name"><input type="text" class="dy-text" name="last_name" data-dy_tips="#dy-tips-last_name" /><span id="dy-tips-last_name">名字</span></label>
+				</td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="contact"><td class="title">联系方式</td><td class="control">
+					<label><input type="text" name="contact" class="dy-text" data-dy_tips="#dy-tips-contact" /><span id="dy-tips-contact">邮箱 / 手机</span></label>
+				</td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="content"><td class="title tarow">说明</td><td class="control">
+					<label class="content"><textarea name="content" class="dy-textarea" data-dy_tips="#dy-tips-content"></textarea><span id="dy-tips-content">请提供尽可能多的证据，充足且准确的证据将有助于帮您找回帐号。</span></label>
+				</td><td><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="pagesubmit"><td class="btn" colspan="2"><span class="message"><span></span></span><input type="submit" class="dy-button blue" value="下一步" /></td><td></td></tr>
+			</table>
+		</form>
+	</div>
+	<div class="block-support-13">
+		<form action="/index.php?a=support&m=ask&t=ajax" method="post">
+			<input type="hidden" name="step" value="13" />
+			<table>
+				<tr class="account"><td class="title">账号</td><td class="control">
+					<label><input type="text" name="account" class="dy-text" data-dy_tips="#dy-tips-account" /><span id="dy-tips-account">账号 / 邮箱 / 手机号码</span></label>
+				</td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="contact"><td class="title">联系方式</td><td class="control">
+					<label><input type="text" name="contact" class="dy-text" data-dy_tips="#dy-tips-contact" /><span id="dy-tips-contact">邮箱 / 手机</span></label>
+				</td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="content"><td class="title tarow">说明</td><td class="control">
+					<label class="content"><textarea name="content" class="dy-textarea" data-dy_tips="#dy-tips-content"></textarea><span id="dy-tips-content">请尽可能详细的描述您遇到的问题。</span></label>
+				</td><td><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="pagesubmit"><td class="btn" colspan="2"><span class="message"><span></span></span><input type="submit" class="dy-button blue" value="确认" /></td><td></td></tr>
+			</table>
+		</form>
+	</div>
+	<div class="block-support-111">
+		<form action="/index.php?a=support&m=recover&t=ajax" method="post">
+			<input type="hidden" name="step" value="111" />
+			<table>
+				<tr class="account"><td class="title">账号</td><td class="control"><input type="text" name="account" class="dy-text" /></td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="pagesubmit"><td class="btn" colspan="2"><span class="message"><span></span></span><input type="submit" class="dy-button blue" value="下一步" /></td><td></td></tr>
+			</table>
+		</form>
+	</div>
+	<div class="block-support-112">
+		<form action="/index.php?a=support&m=recover&t=ajax" method="post">
+			<input type="hidden" name="step" value="112" />
+			<table>
+				<tr class="account"><td class="title">账号</td><td class="control"><input type="text" name="account" class="dy-text" /></td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="mobile"><td class="title">手机</td><td class="control"><input type="text" name="mobile" class="dy-text" /></td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+
+				<tr class="key"><td class="title">验证码</td><td class="control"><input type="text" name="key" class="dy-text" /><input type="submit" class="dy-button white" value="发送验证码" /></td>
+					<td class="message"><span></span></td>
+				</tr>
+				<tr><td></td><td colspan="2" class="notice">验证码只能使用一次，{$minute_expiry}分钟内有效</td></tr>
+
+
+				<tr class="pagesubmit"><td class="btn" colspan="2"><span class="message"><span></span></span><input type="submit" class="dy-button blue" value="确认" /></td><td></td></tr>
+
+			</table>
+		</form>
+	</div>
+	<div class="block-support-113">
+		<form action="/index.php?a=support&m=recover&t=ajax" method="post">
+			<input type="hidden" name="step" value="113" />
+			<table>
+				<tr class="account"><td class="title">账号</td><td class="control"><input type="text" name="account" class="dy-text" /></td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="email"><td class="title">邮箱</td><td class="control"><input type="text" name="email" class="dy-text" /></td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="pagesubmit"><td class="btn" colspan="2"><span class="message"><span></span></span><input type="submit" class="dy-button blue" value="确认" /></td><td></td></tr>
+			</table>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+{literal}
+var block_recover = {
+	"12":$(".block-support-12").html(),
+	"13":$(".block-support-13").html(),
+	"111":$(".block-support-111").html(),
+	"112":$(".block-support-112").html(),
+	"113":$(".block-support-113").html()
+};
+$(".block-support-list").remove();
+
+var CONFIG = {SPEED:200};
+$(".item").click(function(){
+	var without = {
+		'1':[".items-1"], '11':[".item-11", ".items-11"],
+		'12':[".item-0", ".block-support"], '13':[".item-0", ".block-support"],
+		'111':[".item-11", ".item-0", ".block-support"], '112':[".item-11", ".item-0", ".block-support"], '113':[".item-11", ".item-0", ".block-support"]
+	};
+	var step = $(this).data("step");
+	switch(step){
+		case 12: case 13: case 111: case 112: case 113:
+			F_BlockInOut(step);
+		case 1: case 11:
+			F_ItemInOut(without[step]);
+	}
+});
+
+function F_ItemInOut(without){
+	var i, j, save, list = new Array(".block-support", ".item-0", ".item-11", ".items-1", ".items-11");
+	for(i = 0; i < list.length; i++){
+		save = false;
+		for(j = 0; j < without.length; j++){
+			if(without[j] == list[i]){
+				save = true;
+				break;
+			}
+		}
+		if(!save){
+			$(list[i]).hide(CONFIG.SPEED);
+		}else{
+			$(list[i]).show(CONFIG.SPEED);
+		}
+	}
+}
+
+function F_BlockInOut(name){
+	$(".block-support").html(block_recover[name]);
+	$(".block-support").find(".dy-text, .dy-textarea").each(function(){
+		$(this).dyText({tips: true});
+	});
+	var step = $(".block-support form input[name=step]").val();
+	$(".block-support form").submit(function(){
+		$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {beforeSend:function(){
+			$(".page-support_login .loading").show(300);
+		}, success: function(result){
+			if(result.state){
+				if(step == "111" && typeof(result.data) != "undefined"){
+					var html = "";
+					var j = 0;
+					for(var i in result.data.qanda){
+						html += "<tr><td class='title'>保密问题" + result.data.qanda[i].index + "</td><td class='control' colspan='2'>" + result.data.qanda[i].question + "</tr>";
+						html += "<tr><td class='title'>答案</td><td class='control'><input type='text' name='answer" + j++ + "' class='dy-text' /></td><td class='message'></td></tr>";
+						html += "<tr><td></td><td class='notice' colspan='2'></td></tr>";
+					}
+					html += "<tr class='hide'><td colspan='3'><input type='hidden' name='member_id' value='" + result.data.member_id + "' /></td></tr>";
+					$(html).insertBefore(".page-support_login .pagesubmit");
+					var account = $(".page-support_login .account input");
+					account.parent().html(account.val() + "<input type='hidden' name='account' value='" + account.val() +"' />");
+				}else{
+					window.location.href = result.url;
+				}
+			}else{
+				for(var k in result.message){
+					if($(".page-support_login ." + k + " .message span").length){
+						$(".page-support_login ." + k + " .message span").html(result.message[k]).show(300);
+					}else{
+						$(".page-support_login .pagesubmit .message span").html(result.message[k]).show(300);
+					}
+				}
+				$("body").one('mousedown', function(){
+					$(".page-support_login .message span").hide(300);
+				});
+			}
+			$(".page-support_login .loading").hide(300);
+		}, error: function(jqXHR, textStatus, errorThrown){
+			$(".page-support_login .pagesubmit .message span").show(300).html("AJAX请求错误[" + errorThrown + "]。");
+			$("body").one('mousedown', function(){
+				$(".page-support_login .pagesubmit .message span").hide(300);
+			});
+			$(".page-support_login .loading").hide(300);
+		}}});
+		return false;
+	});
+}
+{/literal}
+</script>
+{include file="common_bottom.html"}
