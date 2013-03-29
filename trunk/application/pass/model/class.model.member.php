@@ -10,6 +10,13 @@ class ModelMember extends ModelCommon
 		include_once(APP_DIR_MSGCODE . str_replace('Model', 'define.model.', __CLASS__) . '.php');
 	}
 
+	public function getMember($member_id)
+	{
+		$condition = array();
+		$condition[] = array('id' => array('eq', $member_id));
+		return $this->getObject($condition);
+	}
+
 	public function getMemberApps($member_id)
 	{
 		$filecache = new Filecache();
@@ -399,7 +406,7 @@ class ModelMember extends ModelCommon
 		if(empty($err))
 		{
 			$key = mt_rand(0, 999999);
-			if(sendEmail($email, APP_DIR_TEMPLATE . 'member_mymobile_send.html', $key))
+			if(send_email($email, APP_DIR_TEMPLATE . 'member_mymobile_send.html', $key))
 			{
 				// 文件缓存
 				$config = $GLOBALS['CONFIG']['BIND_EMAIL_OPTIONS'];
@@ -474,7 +481,7 @@ class ModelMember extends ModelCommon
 		if(empty($err))
 		{
 			$key = mt_rand(0, 999999);
-			if(sendMobile($mobile, APP_DIR_TEMPLATE . 'member_mymobile_send.html', $key))
+			if(send_mobile($mobile, APP_DIR_TEMPLATE . 'member_mymobile_send.html', $key))
 			{
 				// 文件缓存
 				$config = $GLOBALS['CONFIG']['BIND_MOBILE_OPTIONS'];

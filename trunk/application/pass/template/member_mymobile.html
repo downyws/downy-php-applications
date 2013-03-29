@@ -83,7 +83,7 @@ $(".confirm-dialog").remove();
 
 // 倒计时
 function F_CountDown(second, tpl){
-	if(second == 0){
+	if(second < 1){
 		$(".step1 .mobile .count_down").hide(300);
 		$(".step1 .mobile input[type=button]").show(300);
 	}else{

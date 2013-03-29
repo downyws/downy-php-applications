@@ -17,3 +17,6 @@ $GLOBALS['MSGCODE']['M']['10101440'] = '页面不存在。';
 
 $GLOBALS['MSGCODE']['C']['ACON_NO_LOGIN'] = '10102010';
 $GLOBALS['MSGCODE']['M']['10102010'] = '您没有登录。';
+
+$GLOBALS['MSGCODE']['C']['ACON_SYSERR_TELA'] = '10103010';
+$GLOBALS['MSGCODE']['M']['10103010'] = '系统发生错误，请联系管理员。';

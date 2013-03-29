@@ -10,6 +10,7 @@
 					<div data-step="1" class="item item-1 first">登录时遇到问题了？</div>
 					<div data-step="11" class="item item-11 hide">如何找回密码？</div>
 					<div data-step="0" class="item item-0 hide">填写资料</div>
+					<div data-step="back" class="item item-back last">返回登录页</div>
 				</div>
 				<div class="choose clearfix items-1">
 					<div data-step="11" class="item lpwd"><div>忘记密码</div></div>
@@ -88,15 +89,9 @@
 				<tr><td></td><td class="notice" colspan="2"></td></tr>
 				<tr class="mobile"><td class="title">手机</td><td class="control"><input type="text" name="mobile" class="dy-text" /></td><td class="message"><span></span></td></tr>
 				<tr><td></td><td class="notice" colspan="2"></td></tr>
-
-				<tr class="key"><td class="title">验证码</td><td class="control"><input type="text" name="key" class="dy-text" /><input type="submit" class="dy-button white" value="发送验证码" /></td>
-					<td class="message"><span></span></td>
-				</tr>
-				<tr><td></td><td colspan="2" class="notice">验证码只能使用一次，{$minute_expiry}分钟内有效</td></tr>
-
-
+				<tr class="captcha"><td class="title">验证码</td><td class="control"><input type="text" name="captcha" class="dy-text short" /><input type="button" class="dy-button white short" value="发送验证码" /></td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
 				<tr class="pagesubmit"><td class="btn" colspan="2"><span class="message"><span></span></span><input type="submit" class="dy-button blue" value="确认" /></td><td></td></tr>
-
 			</table>
 		</form>
 	</div>
@@ -107,6 +102,8 @@
 				<tr class="account"><td class="title">账号</td><td class="control"><input type="text" name="account" class="dy-text" /></td><td class="message"><span></span></td></tr>
 				<tr><td></td><td class="notice" colspan="2"></td></tr>
 				<tr class="email"><td class="title">邮箱</td><td class="control"><input type="text" name="email" class="dy-text" /></td><td class="message"><span></span></td></tr>
+				<tr><td></td><td class="notice" colspan="2"></td></tr>
+				<tr class="captcha"><td class="title">验证码</td><td class="control"><input type="text" name="captcha" class="dy-text short" /><input type="button" class="dy-button white short" value="发送验证码" /></td><td class="message"><span></span></td></tr>
 				<tr><td></td><td class="notice" colspan="2"></td></tr>
 				<tr class="pagesubmit"><td class="btn" colspan="2"><span class="message"><span></span></span><input type="submit" class="dy-button blue" value="确认" /></td><td></td></tr>
 			</table>
@@ -124,6 +121,7 @@ var block_recover = {
 };
 $(".block-support-list").remove();
 
+var TEMPLASTE = new Array("发送验证码", "%s秒后可以重发", "%s秒后可以发送");
 var CONFIG = {SPEED:200};
 $(".item").click(function(){
 	var without = {
@@ -133,12 +131,26 @@ $(".item").click(function(){
 	};
 	var step = $(this).data("step");
 	switch(step){
+		case "back":
+			window.location.href = "/index.php?a=member&m=login";
+			break;
 		case 12: case 13: case 111: case 112: case 113:
 			F_BlockInOut(step);
 		case 1: case 11:
 			F_ItemInOut(without[step]);
 	}
 });
+
+function F_CountDown(obj, second, tpl){
+	if(second < 1){
+		$(obj).val(TEMPLASTE[0]).data("stop", false);
+	}else{
+		$(obj).val(tpl.replace("%s", second));
+		setTimeout(function(){
+			F_CountDown(obj, second - 1, tpl);
+		}, 1000);
+	}
+}
 
 function F_ItemInOut(without){
 	var i, j, save, list = new Array(".block-support", ".item-0", ".item-11", ".items-1", ".items-11");
@@ -164,6 +176,52 @@ function F_BlockInOut(name){
 		$(this).dyText({tips: true});
 	});
 	var step = $(".block-support form input[name=step]").val();
+
+	if(step == "112" || step == "113"){
+		$(".dy-button[type='button']").data("stop", false).click(function(){
+			if($(this).data("stop")){
+				return false;
+			}
+			var that = this;
+			var parent = $(this).parent().parent().parent().parent().parent();
+			var action = parent.attr("action");
+			var data = null;
+			if(step == "112"){
+				data = {step: parent.find("input[name='step']").val(), account: parent.find("input[name='account']").val(), mobile: parent.find("input[name='mobile']").val(), getcaptcha: "1"};
+			}else if(step == "113"){
+				data = {step: parent.find("input[name='step']").val(), account: parent.find("input[name='account']").val(), email: parent.find("input[name='email']").val(), getcaptcha: "1"};
+			}
+			$(".page-support_login .loading").show(300);
+			$.ajax({type: "POST", dataType: "JSON", url: action, data: data, async: false, success: function(result){
+				if(result.state){
+					$(that).data("stop", true);
+					F_CountDown(that, result.data, TEMPLASTE[1]);
+				}else{
+					if(typeof(result.data) != "undefined"){
+						$(that).data("stop", true);
+						F_CountDown(that, result.data, TEMPLASTE[2]);
+					}
+					for(var k in result.message){
+						if($(".page-support_login ." + k + " .message span").length){
+							$(".page-support_login ." + k + " .message span").html(result.message[k]).show(300);
+						}else{
+							$(".page-support_login .pagesubmit .message span").html(result.message[k]).show(300);
+						}
+					}
+					$("body").one('mousedown', function(){
+						$(".page-support_login .message span").hide(300);
+					});
+				}
+				$(".page-support_login .loading").hide(300);
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$(".page-support_login .pagesubmit .message span").show(300).html("AJAX请求错误[" + errorThrown + "]。");
+				$("body").one('mousedown', function(){
+					$(".page-support_login .pagesubmit .message span").hide(300);
+				});
+				$(".page-support_login .loading").hide(300);
+			}});
+		});
+	}
 	$(".block-support form").submit(function(){
 		$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {beforeSend:function(){
 			$(".page-support_login .loading").show(300);
