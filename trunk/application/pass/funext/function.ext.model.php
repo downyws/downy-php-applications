@@ -177,30 +177,56 @@ function islike_rand_qanda($q, $a)
 	return false;
 }
 
-function send_email($target, $tpl, $data)
-{return true;
+function content_fetch($tpl, $data)
+{
 	require_once LIBRARY_DIR . 'smarty/library.smarty.php';
-	$tpl = new Smarty();
-	$tpl->cache_dir = APP_DIR_CACHE . 'smarty/page/';
-	$tpl->compile_dir = APP_DIR_CACHE . 'smarty/compile/';
-	$tpl->left_delimiter = '{';
-	$tpl->right_delimiter = '}';
-	$tpl->error_reporting = E_ALL;
-	$tpl->assign('data', $data);
-	$content = $tpl->fetch($tpl);
+	$writer = new Smarty();
+	$writer->cache_dir = APP_DIR_CACHE . 'smarty/page/';
+	$writer->compile_dir = APP_DIR_CACHE . 'smarty/compile/';
+	$writer->left_delimiter = '{';
+	$writer->right_delimiter = '}';
+	$writer->error_reporting = E_ALL;
+	$writer->assign('data', $data);
+	return $writer->fetch($tpl);
+}
+
+function send_email($target, $tpl, $data)
+{
+	$content = content_fetch($tpl, $data);
+	$content = explode('<!--#split#-->', $content);
+
+	Factory::loadLibrary('phpmailer');
+	$config = $GLOBALS['CONFIG']['EMAIL'];
+	$phpmailer = new PHPMailer(true);
+	$phpmailer->IsSMTP();
+	$phpmailer->SMTPAuth = $config['SMTPAuth'];
+	$phpmailer->Port = $config['Port'];
+	$phpmailer->Host = $config['Host'];
+	$phpmailer->Username = $config['Username'];
+	$phpmailer->Password = $config['Password'];
+	$phpmailer->From = $config['From'];
+	$phpmailer->FromName = $config['FromName'];
+	$phpmailer->IsHTML($config['IsHTML']);
+	$phpmailer->CharSet = $config['CharSet'];
+
+	try
+	{
+		$phpmailer->AddAddress($target);
+		$phpmailer->Subject = $content[0];
+		$phpmailer->MsgHTML($content[1]);
+		return $phpmailer->Send();
+	}
+	catch(phpmailerException $e)
+	{
+		$logs = new Logs();
+		$logs->message('Error: Send email Failed, see ' . $logs->attachment(array($e->errorMessage())));
+	}
 	return false;
 }
 
 function send_mobile($target, $tpl, $data)
-{return true;
-	require_once LIBRARY_DIR . 'smarty/library.smarty.php';
-	$tpl = new Smarty();
-	$tpl->cache_dir = APP_DIR_CACHE . 'smarty/page/';
-	$tpl->compile_dir = APP_DIR_CACHE . 'smarty/compile/';
-	$tpl->left_delimiter = '{';
-	$tpl->right_delimiter = '}';
-	$tpl->error_reporting = E_ALL;
-	$tpl->assign('data', $data);
-	$content = $tpl->fetch($tpl);
-	return false;
+{
+	$content = content_fetch($tpl, $data);
+
+	return true;
 }

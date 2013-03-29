@@ -405,7 +405,7 @@ class ModelMember extends ModelCommon
 
 		if(empty($err))
 		{
-			$key = mt_rand(0, 999999);
+			$key = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
 			if(send_email($email, APP_DIR_TEMPLATE . 'member_mymobile_send.html', $key))
 			{
 				// 文件缓存
@@ -480,7 +480,7 @@ class ModelMember extends ModelCommon
 
 		if(empty($err))
 		{
-			$key = mt_rand(0, 999999);
+			$key = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
 			if(send_mobile($mobile, APP_DIR_TEMPLATE . 'member_mymobile_send.html', $key))
 			{
 				// 文件缓存
