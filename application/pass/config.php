@@ -26,6 +26,20 @@ $GLOBALS['CONFIG']['CONNECT'] = array
 	'WEIBO' => array('A_KEY' => '20777358', 'S_KEY' => 'd85cb33680fb31fed6da0943701c7731')
 );
 
+// 邮箱配置
+$GLOBALS['CONFIG']['EMAIL'] = array
+(
+	'SMTPAuth' => true,
+	'Port' => '',
+	'Host' => '',
+	'Username' => '',
+	'Password' => '',
+	'From' => '',
+	'FromName' => '',
+	'IsHTML' => true,
+	'CharSet' => 'UTF-8'
+);
+
 // CURL
 $GLOBALS['CONFIG']['CURL'] = array
 (

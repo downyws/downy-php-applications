@@ -242,7 +242,7 @@ class ActionSupport extends ActionCommon
 					}
 
 					// 发送
-					$captcha = mt_rand(0, 999999);
+					$captcha = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
 					if(send_mobile($params['mobile'], APP_DIR_TEMPLATE . 'support_recover_mobile.html', $captcha))
 					{
 						$filecache->set($config['MOBILE_KEY'] . 'ip_' . md5(REMOTE_IP_ADDRESS), time() + $config['MOBILE_INTERVAL'], $config['MOBILE_INTERVAL']);
@@ -257,6 +257,11 @@ class ActionSupport extends ActionCommon
 				// 提交
 				else
 				{
+					if($params['captcha'] == '')
+					{
+						$this->jsonout(array('state' => false, 'message' => array('captcha' => MCGetM('ASUP_CAPTCHA_CNT_EMPTY'))));
+					}
+
 					// 账号对应的手机号码是否正确
 					$is_true = false;
 					$memberObj = Factory::getModel('member');
@@ -342,7 +347,7 @@ class ActionSupport extends ActionCommon
 					}
 
 					// 发送
-					$captcha = mt_rand(0, 999999);
+					$captcha = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
 					if(send_email($params['email'], APP_DIR_TEMPLATE . 'support_recover_email.html', $captcha))
 					{
 						$filecache->set($config['EMAIL_KEY'] . 'ip_' . md5(REMOTE_IP_ADDRESS), time() + $config['EMAIL_INTERVAL'], $config['EMAIL_INTERVAL']);
@@ -357,6 +362,11 @@ class ActionSupport extends ActionCommon
 				// 提交
 				else
 				{
+					if($params['captcha'] == '')
+					{
+						$this->jsonout(array('state' => false, 'message' => array('captcha' => MCGetM('ASUP_CAPTCHA_CNT_EMPTY'))));
+					}
+
 					// 账号对应的手机号码是否正确
 					$is_true = false;
 					$memberObj = Factory::getModel('member');
