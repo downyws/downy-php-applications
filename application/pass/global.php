@@ -83,8 +83,8 @@ $GLOBALS['CONFIG']['SUPPORT_ASK_OPTIONS'] = array('KEY' => 'support/', 'SUBMIT_I
 $GLOBALS['CONFIG']['LOST_PASSWORD_OPTIONS'] = array(
 	'KEY' => 'lost_pwd/', 'TRY_TIME' => 900, 'TRY_COUNT' => 30,
 	'RESET_KEY' => 'reset_pwd/', 'RESET_TIME' => 300,
-	'EMAIL_INTERVAL' => 180, 'EMAIL_EXPIRY' => 1800,
-	'MOBILE_INTERVAL' => 300, 'MOBILE_EXPIRY' => 1800
+	'EMAIL_INTERVAL' => 180, 'EMAIL_EXPIRY' => 1800, 'EMAIL_KEY' => 'log_pwd_email/',
+	'MOBILE_INTERVAL' => 300, 'MOBILE_EXPIRY' => 1800, 'MOBILE_KEY' => 'log_pwd_mobile/'
 );
 
 // 性别

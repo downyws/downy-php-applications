@@ -190,8 +190,204 @@ class ActionSupport extends ActionCommon
 				}
 				break;
 			case '112':
+				// 获取参数
+				$params = $this->_submit->obtain($_REQUEST, array(
+					'account' => array(array('format', 'trim'), array('valid', 'empty', MCGetC('ASUP_RECOVER_ACCOUNT_CNT_EMPTY'), null, null)),
+					'mobile' => array(array('format', 'trim'), array('valid', 'empty', MCGetC('ASUP_RECOVER_MOBILE_CNT_EMPTY'), null, null)),
+					'captcha' => array(array('format', 'trim')),
+					'getcaptcha' => array(array('format', 'int'))
+				));
+
+				// 错误提示
+				if(count($this->_submit->errors) > 0)
+				{
+					$type = array
+					(
+						substr(MCGetC('ASUP_RECOVER_ACCOUNT_CNT_EMPTY'), 0, 5) => 'account',
+						substr(MCGetC('ASUP_RECOVER_MOBILE_CNT_EMPTY'), 0, 5) => 'mobile'
+					);
+					foreach($this->_submit->errors as $v)
+					{
+						$t = empty($type[substr($v, 0, 5)]) ? 'other' : $type[substr($v, 0, 5)];
+						$message[$t][] = MCGetM($v);
+					}
+					$this->jsonout(array('state' => false, 'message' => $message));
+				}
+
+				// 获取验证码
+				if($params['getcaptcha'])
+				{
+					// 账号对应的手机号码是否正确
+					$is_true = false;
+					$memberObj = Factory::getModel('member');
+					$member_id = $memberObj->getMemberId($params['account']);
+					if($member_id)
+					{
+						$member = $memberObj->getMember($member_id);
+						if($member && $member['mobile'] != '' && $member['mobile'] == $params['mobile'])
+						{
+							$is_true = true;
+						}
+					}
+					if(!$is_true)
+					{
+						$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('ASUP_ACCOUNT_OR_MOBILE_ERR'))));
+					}
+
+					// 是否可以发送
+					$try = $filecache->get($config['MOBILE_KEY'] . 'ip_' . md5(REMOTE_IP_ADDRESS));
+					if($try)
+					{
+						$this->jsonout(array('state' => false, 'data' => $try - time(), 'message' => array('other' => MCGetM('ASUP_PLZ_WAIT'))));
+					}
+
+					// 发送
+					$captcha = mt_rand(0, 999999);
+					if(send_mobile($params['mobile'], APP_DIR_TEMPLATE . 'support_recover_mobile.html', $captcha))
+					{
+						$filecache->set($config['MOBILE_KEY'] . 'ip_' . md5(REMOTE_IP_ADDRESS), time() + $config['MOBILE_INTERVAL'], $config['MOBILE_INTERVAL']);
+						$filecache->set($config['MOBILE_KEY'] . 't_' . md5($params['mobile']), $captcha, $config['MOBILE_EXPIRY']);
+						$this->jsonout(array('state' => true, 'data' => $config['MOBILE_INTERVAL']));
+					}
+					else
+					{
+						$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('ACON_SYSERR_TELA'))));
+					}
+				}
+				// 提交
+				else
+				{
+					// 账号对应的手机号码是否正确
+					$is_true = false;
+					$memberObj = Factory::getModel('member');
+					$member_id = $memberObj->getMemberId($params['account']);
+					if($member_id)
+					{
+						$member = $memberObj->getMember($member_id);
+						if($member && $member['mobile'] != '' && $member['mobile'] == $params['mobile'])
+						{
+							$is_true = true;
+						}
+					}
+					if(!$is_true)
+					{
+						$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('ASUP_ACCOUNT_OR_MOBILE_ERR'))));
+					}
+
+					// 验证码是否正确
+					$captcha = $filecache->get($config['MOBILE_KEY'] . 't_' . md5($params['mobile']));
+					if($captcha && $captcha == $params['captcha'])
+					{
+						$key = md5(time() . mt_rand());
+						$filecache->set($config['RESET_KEY'] . $key, $member_id, $config['RESET_TIME']);
+						$url = '/index.php?a=support&m=resetpassword&key=' . $key;
+						$this->jsonout(array('state' => true, 'url' => $url));
+					}
+					else
+					{
+						$this->jsonout(array('state' => false, 'message' => array('captcha' => MCGetM('ASUP_RECOVER_CAPTCHA_ERROR'))));
+					}
+				}
 				break;
 			case '113':
+				// 获取参数
+				$params = $this->_submit->obtain($_REQUEST, array(
+					'account' => array(array('format', 'trim'), array('valid', 'empty', MCGetC('ASUP_RECOVER_ACCOUNT_CNT_EMPTY'), null, null)),
+					'email' => array(array('format', 'trim'), array('valid', 'empty', MCGetC('ASUP_RECOVER_EMAIL_CNT_EMPTY'), null, null)),
+					'captcha' => array(array('format', 'trim')),
+					'getcaptcha' => array(array('format', 'int'))
+				));
+
+				// 错误提示
+				if(count($this->_submit->errors) > 0)
+				{
+					$type = array
+					(
+						substr(MCGetC('ASUP_RECOVER_ACCOUNT_CNT_EMPTY'), 0, 5) => 'account',
+						substr(MCGetC('ASUP_RECOVER_EMAIL_CNT_EMPTY'), 0, 5) => 'email'
+					);
+					foreach($this->_submit->errors as $v)
+					{
+						$t = empty($type[substr($v, 0, 5)]) ? 'other' : $type[substr($v, 0, 5)];
+						$message[$t][] = MCGetM($v);
+					}
+					$this->jsonout(array('state' => false, 'message' => $message));
+				}
+
+				// 获取验证码
+				if($params['getcaptcha'])
+				{
+					// 账号对应的邮箱是否正确
+					$is_true = false;
+					$memberObj = Factory::getModel('member');
+					$member_id = $memberObj->getMemberId($params['account']);
+					if($member_id)
+					{
+						$member = $memberObj->getMember($member_id);
+						if($member && $member['email'] != '' && $member['email'] == $params['email'])
+						{
+							$is_true = true;
+						}
+					}
+					if(!$is_true)
+					{
+						$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('ASUP_ACCOUNT_OR_EMAIL_ERR'))));
+					}
+
+					// 是否可以发送
+					$try = $filecache->get($config['EMAIL_KEY'] . 'ip_' . md5(REMOTE_IP_ADDRESS));
+					if($try)
+					{
+						$this->jsonout(array('state' => false, 'data' => $try - time(), 'message' => array('other' => MCGetM('ASUP_PLZ_WAIT'))));
+					}
+
+					// 发送
+					$captcha = mt_rand(0, 999999);
+					if(send_email($params['email'], APP_DIR_TEMPLATE . 'support_recover_email.html', $captcha))
+					{
+						$filecache->set($config['EMAIL_KEY'] . 'ip_' . md5(REMOTE_IP_ADDRESS), time() + $config['EMAIL_INTERVAL'], $config['EMAIL_INTERVAL']);
+						$filecache->set($config['EMAIL_KEY'] . 't_' . md5($params['email']), $captcha, $config['EMAIL_EXPIRY']);
+						$this->jsonout(array('state' => true, 'data' => $config['EMAIL_INTERVAL']));
+					}
+					else
+					{
+						$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('ACON_SYSERR_TELA'))));
+					}
+				}
+				// 提交
+				else
+				{
+					// 账号对应的手机号码是否正确
+					$is_true = false;
+					$memberObj = Factory::getModel('member');
+					$member_id = $memberObj->getMemberId($params['account']);
+					if($member_id)
+					{
+						$member = $memberObj->getMember($member_id);
+						if($member && $member['email'] != '' && $member['email'] == $params['email'])
+						{
+							$is_true = true;
+						}
+					}
+					if(!$is_true)
+					{
+						$this->jsonout(array('state' => false, 'message' => array('other' => MCGetM('ASUP_ACCOUNT_OR_EMAIL_ERR'))));
+					}
+
+					// 验证码是否正确
+					$captcha = $filecache->get($config['EMAIL_KEY'] . 't_' . md5($params['email']));
+					if($captcha && $captcha == $params['captcha'])
+					{
+						$key = md5(time() . mt_rand());
+						$filecache->set($config['RESET_KEY'] . $key, $member_id, $config['RESET_TIME']);
+						$url = '/index.php?a=support&m=resetpassword&key=' . $key;
+						$this->jsonout(array('state' => true, 'url' => $url));
+					}
+					else
+					{
+						$this->jsonout(array('state' => false, 'message' => array('captcha' => MCGetM('ASUP_RECOVER_CAPTCHA_ERROR'))));
+					}
+				}
 				break;
 		}
 	}

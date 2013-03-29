@@ -122,6 +122,10 @@ function report_log($value)
 					break;
 			}
 			break;
+		case 'supportresetpassword':
+			$value['cate'] = '编辑';
+			$value['text'] = '密码重置';
+			break;
 		default:
 			$value = report_unknow($value, 'log');
 			break;
@@ -174,7 +178,7 @@ function islike_rand_qanda($q, $a)
 }
 
 function send_email($target, $tpl, $data)
-{
+{return true;
 	require_once LIBRARY_DIR . 'smarty/library.smarty.php';
 	$tpl = new Smarty();
 	$tpl->cache_dir = APP_DIR_CACHE . 'smarty/page/';
@@ -188,7 +192,7 @@ function send_email($target, $tpl, $data)
 }
 
 function send_mobile($target, $tpl, $data)
-{
+{return true;
 	require_once LIBRARY_DIR . 'smarty/library.smarty.php';
 	$tpl = new Smarty();
 	$tpl->cache_dir = APP_DIR_CACHE . 'smarty/page/';
