@@ -1,7 +1,7 @@
 $(function(){
 	// 验证码
 	$(".dy_captcha").each(function(){
-		$(this).dyCaptcha({url: $(this).data("url"), width: $(this).data("width"), msgerr: $(this).data("msgerr")});
+		$(this).dyCaptcha({url: $(this).data("url"), width: $(this).data("width"), msgerr: $(this).data("msgerr"), help: $(this).data("help")});
 	});
 	// 下拉框
 	$(".dy_select").each(function(){
@@ -240,7 +240,7 @@ $.fn.extend({
 		html += "</label>";
 		html += "<div class='btns'>";
 		html += "<a href='#' title='获取新的验证方式' class='reload'></a>";
-		html += "<a href='javascript:;' title='帮助' class='help'></a>";
+		html += "<a href='" + option.help + "' target='_blank' title='帮助' class='help'></a>";
 		html += "</div>";
 		html += "</div>";
 		html += "</div>";
@@ -254,9 +254,6 @@ $.fn.extend({
 				obj.data("src", obj.attr("src") + (obj.attr("src").indexOf("?") ? "&" : "?"));
 			}
 			obj.attr("src", obj.data("src") + Math.random());
-		});
-		$(this).find(".btns a.help").click(function(){
-			alert("coding...");
 		});
 		$(this).find("input[name=captcha]").focus(function(){
 			var obj = $(this).parent().find(".msgerr");
