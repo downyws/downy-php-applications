@@ -60,7 +60,7 @@
 						</div>
 						-->
 						{if $show_captcha}
-						<div class="element dy_captcha" data-url="/index.php?a=index&m=captcha&wh=300x60" data-width="230" {if $error.captcha}data-msgerr="{$error.captcha.message}"{/if}></div>
+						<div class="element dy_captcha" data-url="/index.php?a=index&m=captcha&wh=300x60" data-width="230" data-help="/index.php?a=index&m=intl&article=help" {if $error.captcha}data-msgerr="{$error.captcha.message}"{/if}></div>
 						{/if}
 						<div class="element service">
 							<label>
