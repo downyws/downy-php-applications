@@ -7,8 +7,33 @@
 		<div class="content clearfix">
 			<div class="action-member">
 				{include file="member_common_navg.html"}
-				<div class="detail">
-				
+				<div class="detail page-member_connect">
+					{assign var=index value=0}
+					{foreach from=$connects item=v}{if !empty($v.data)}
+					<div class="item {if ($index + 2) % 3 == 0}space{/if}">
+						<table>
+							{if $v.data.status == $smarty.const.STATUS_DEFAULT}<tr>
+								<td class="logo"><span title="{$v.name}" style="background-position:0px -{60 * ($v.id - 1)}px;"></span></td>
+								<td class="data" valign="top"><div>{$v.data.data.text}</div></td>
+							</tr>{else}<tr>
+								<td class="logo"><span title="{$v.name}" style="background-position:60px -{60 * ($v.id - 1)}px;"></span></td>
+								<td class="data" valign="top"><div class="disable">{$v.data.data.text}</div></td>
+							</tr>{/if}
+							<tr><td class="bind"><a href="/index.php?a=connect&m=unbind&name={$v.key}">解除关联</a></td><td class="info">{$v.name}</td></tr>
+						</table>
+					</div>
+					{assign var=index value=$index+1}
+					{/if}{/foreach}
+					{foreach from=$connects item=v}{if empty($v.data)}
+					<div class="item {if ($index + 2) % 3 == 0}space{/if}">
+						<table>
+							<tr><td class="logo"><a href="/index.php?a=connect&m=bind&name={$v.key}"><span title="{$v.name}" style="background-position:0px -{60 * ($v.id - 1)}px;"></span></a></td>
+							<td class="data" valign="top"><a href="/index.php?a=connect&m=bind&name={$v.key}"><div class="unbind"></div></a></td></tr>
+							<tr><td class="bind"><a href="/index.php?a=connect&m=bind&name={$v.key}">绑定关联</a></td><td class="info">{$v.name}</td></tr>
+						</table>
+					</div>
+					{assign var=index value=$index+1}
+					{/if}{/foreach}
 				</div>
 			</div>
 		</div>

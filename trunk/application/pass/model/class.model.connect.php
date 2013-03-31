@@ -10,12 +10,12 @@ class ModelConnect extends ModelCommon
 		include_once(APP_DIR_MSGCODE . str_replace('Model', 'define.model.', __CLASS__) . '.php');
 	}
 
-	public function getAllPairs($field_key, $field_value, $status, $cache = false)
+	public function getConnects($field_key, $field_value, $status, $cache = false)
 	{
 		// 获取缓存
 		if($cache)
 		{
-			$cache_key = 'default/' . md5('connect_get_all_pairs' . $field_key . $field_value . $status);
+			$cache_key = 'default/' . md5('connect_get_all_pairs' . serialize($field_key) . serialize($field_value) . $status);
 			$filecache = new Filecache();
 			$result = $filecache->get($cache_key);
 			if($result)
@@ -30,8 +30,19 @@ class ModelConnect extends ModelCommon
 		{
 			$condition[] = array('`status`' => array('eq', $status));
 		}
-		$sql = 'SELECT `' . $field_key . '`, `' . $field_value . '` FROM ' . $this->table() . $this->getWhere($condition) . ' ORDER BY `sort_order` DESC';
-		$result = $this->fetchPairs($sql);
+		if(is_string($field_key) && is_string($field_value))
+		{
+			$fields = array('`' . $field_key . '`', '`' . $field_value . '`');
+			return $this->getPairs($condition, $fields);
+		}
+		else if(is_array($field_value))
+		{
+			$result = $this->getObjects($condition, $field_value);
+		}
+		else
+		{
+			$result = array();
+		}
 
 		// 保存缓存
 		if($cache && $result)
@@ -42,9 +53,16 @@ class ModelConnect extends ModelCommon
 		return $result;
 	}
 
+	public function getMemberConnects($member_id)
+	{
+		$condition = array();
+		$condition[] = array('member_id' => array('eq', $member_id));
+		return $this->getObjects($condition, array(), $table = 'member_connect');
+	}
+
 	public function getId($name)
 	{
-		$list = $this->getAllPairs('key', 'id', null, true);
+		$list = $this->getConnects('key', 'id', null, true);
 		if(array_key_exists($name, $list))
 		{
 			return $list[$name];

@@ -174,8 +174,8 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .block-member_common_navg .tree{position:relative;}
 .block-member_common_navg .tree .arrow{left:18px;position:absolute;width:17px;height:29px;padding:0px;}
 .block-member_common_navg .tree .arrow:hover{background-color:#EEEEEE;}
-.block-member_common_navg .tree .open{background:url("/images/arrow_down.png") no-repeat center;}
-.block-member_common_navg .tree .close{background:url("/images/arrow_right.png") no-repeat center;}
+.block-member_common_navg .tree .open{background:url("/images/arrow.png") no-repeat -116px -10px;}
+.block-member_common_navg .tree .close{background:url("/images/arrow.png") no-repeat -67px -10px;}
 .block-member_common_navg .tree .sub{display:none;}
 .block-member_common_navg a{display:block;padding:5px 0px 6px;border-left:3px solid #FFFFFF;color:#000000;text-decoration:none;line-height:18px;}
 .block-member_common_navg a.current{border-left:3px solid #DD4B39;color:#DD4B39;}
@@ -226,8 +226,8 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-index_sethomepage .broswer li .name .logo.tt{background-position:0px -300px;}
 .page-index_sethomepage .broswer li .name .logo.world{background-position:0px -325px;}
 .page-index_sethomepage .broswer li .name .logo.worldc{background-position:0px -350px;}
-.page-index_sethomepage .broswer li .name .arrow{width:20px;height:20px;float:right;background:url("/images/arrow_close.gif") no-repeat scroll center center transparent;}
-.page-index_sethomepage .broswer li.open .name .arrow{background:url("/images/arrow_open.gif") no-repeat scroll center center transparent;}
+.page-index_sethomepage .broswer li .name .arrow{width:20px;height:20px;float:right;background:url("/images/arrow.png") no-repeat scroll -15px -65px transparent;}
+.page-index_sethomepage .broswer li.open .name .arrow{background:url("/images/arrow.png") no-repeat scroll -115px -65px transparent;}
 .page-index_sethomepage .broswer li.open .detail{display:block;}
 .page-index_sethomepage .broswer li .detail{display:none;}
 .page-index_sethomepage .broswer li .detail p{font-weight:bold;background:#F4F9FF;padding:10px;font-size:14px;margin:0px;}
@@ -289,6 +289,19 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-member_base .item .val a{color:#999999;text-decoration:none;}
 .page-member_base .item .privacy{float:right;margin-right:15px;}
 
+.page-member_connect .item{background:#F9F9F9;width:30%;height:100px;float:left;margin-bottom:20px;}
+.page-member_connect .item.space{margin-left:5%;margin-right:5%;}
+.page-member_connect .item table{border:1px solid #EEEEEE;width:100%;height:100%;table-layout:fixed;}
+.page-member_connect .item table td{padding:0px 10px;word-wrap:break-word;}
+.page-member_connect .item table td.logo{width:60px;height:60px;padding-top:10px;}
+.page-member_connect .item table td.logo span{display:block;width:60px;height:60px;background:url("/images/connect.png");}
+.page-member_connect .item table td.bind{text-align:center;}
+.page-member_connect .item table td.data{padding-top:10px;}
+.page-member_connect .item table td.data div{height:60px;overflow:hidden;}
+.page-member_connect .item table td.data .unbind{background:url("/images/connect_status.png");}
+.page-member_connect .item table td.data .disable{background:url("/images/connect_status.png") bottom;}
+.page-member_connect .item table td.info{color:#DD4B39;text-align:right;}
+
 .page-member_safe .item{margin-bottom:35px;}
 .page-member_safe .item .name{color:#606060;border-bottom:1px solid #EBEBEB;font-size:20px;padding-bottom:5px;margin-bottom:10px;}
 .page-member_safe .item .title{color:#606060;font-size:17px;}
@@ -311,8 +324,8 @@ h1, h2, h3, h4, h5, h6{font-weight:normal;}
 .page-member_myactivity .item .info .cont .cate{color:#1155CC;width:20%;}
 .page-member_myactivity .item .info .cont .text{max-width:70%;color:#000000;}
 .page-member_myactivity .item .info .cont .arrow{width:5%;cursor:pointer;}
-.page-member_myactivity .item .info .cont .arrow.open{background:url("/images/arrow_d.png") no-repeat right center;}
-.page-member_myactivity .item .info .cont .arrow.close{background:url("/images/arrow_l.png") no-repeat right center;}
+.page-member_myactivity .item .info .cont .arrow.open{background:url("/images/arrow.png") no-repeat -108px -117px;}
+.page-member_myactivity .item .info .cont .arrow.close{background:url("/images/arrow.png") no-repeat -158px -117px;}
 .page-member_myactivity .item .info .time{width:20%;float:right;color:#1155CC;text-align:right;}
 .page-member_myactivity .item .info .ip{width:20%;float:right;color:#1155CC;text-align:center;}
 .page-member_myactivity .item .ext_info{margin-top:5px;color:#999999;display:none;overflow:hidden;}
