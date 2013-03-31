@@ -12,7 +12,7 @@ class ActionConnect extends ActionCommon
 	{
 		// 获取网站接入列表
 		$connectObj = Factory::getModel('connect');
-		$connects = $connectObj->getAllPairs('id', 'key', STATUS_DEFAULT, true);
+		$connects = $connectObj->getConnects('id', 'key', STATUS_DEFAULT, true);
 
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'name' => array(array('format', 'trim'), array('valid', 'in', '', null, $connects)),

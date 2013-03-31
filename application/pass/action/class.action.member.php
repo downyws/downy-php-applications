@@ -83,7 +83,7 @@ class ActionMember extends ActionCommon
 
 		// 可用的网站接入
 		$connectObj = Factory::getModel('connect');
-		$connects = $connectObj->getAllPairs('key', 'name', STATUS_DEFAULT, true);
+		$connects = $connectObj->getConnects('key', 'name', STATUS_DEFAULT, true);
 
 		// 产品介绍
 		$product = $connectObj->productDomain($params['callback']);
@@ -389,6 +389,27 @@ class ActionMember extends ActionCommon
 
 	public function methodConnect()
 	{
+		$connectObj = Factory::getModel('connect');
+		$memberObj = Factory::getModel('member');
+
+		$connects = $connectObj->getConnects(array(), array(), STATUS_DEFAULT, true);
+		$temp = $connectObj->getMemberConnects($memberObj->getSessionMember('id'));
+		$member_connects = array();
+		foreach($temp as $v)
+		{
+			$member_connects[$v['connect_id']] = $v;
+			$member_connects[$v['connect_id']]['data'] = unserialize($v['data']);
+		}
+		foreach($connects as $k => $v)
+		{
+			if(isset($member_connects[$v['id']]))
+			{
+				$connects[$k]['data'] = $member_connects[$v['id']];
+				$connects[$k]['config'] = unserialize($connects[$k]['config']);
+			}
+		}
+
+		$this->assign('connects', $connects);
 	}
 
 	public function methodSafe()
