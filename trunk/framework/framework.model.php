@@ -104,7 +104,7 @@ class Model extends Db
 		$data = $data[0];
 		foreach($data as $k => $v)
 		{
-			$data[$k] = '`' . $k . '` = "' . $this->escape($v) . '"';
+			$data[$k] = '`' . $k . '` = "' . $v . '"';
 		}
 
 		$sql = 'UPDATE ' . $table . ' SET ' . implode(', ', $data) . $this->getWhere($condition);
@@ -129,7 +129,7 @@ class Model extends Db
 		{
 			foreach($data as $k => $v)
 			{
-				$data[$k] = '`' . $k . '` = "' . $this->escape($v) . '"';
+				$data[$k] = '`' . $k . '` = "' . $v . '"';
 			}
 			$sql = 'UPDATE ' . $table .  ' SET ' . implode(', ', $data) . $this->getWhere($condition);
 			if($this->query($sql) !== false)
@@ -244,7 +244,7 @@ class Model extends Db
 		return ' LIMIT ' . ($p - 1) * $ps . ', ' . $ps;
 	}
 
-	public function getPager($p, $count, $ps = APP_PAGEE_SIZE, $pc = APP_PAGER_COUNT)
+	public function getPager($p, $count, $ps = APP_PAGER_SIZE, $pc = APP_PAGER_COUNT)
 	{
 		$result = array();
 		$result['total'] = $count;
