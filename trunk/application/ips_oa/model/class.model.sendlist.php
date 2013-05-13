@@ -8,7 +8,7 @@ class ModelSendList extends ModelCommon
 		parent::__construct();
 	}
 
-	public function getList($id, $p, $params, $ps = APP_PAGEE_SIZE)
+	public function getList($id, $p, $params, $ps = APP_PAGER_SIZE)
 	{
 		$condition = array();
 		$condition[] = array('s.`task_id`' => array('eq', $id));

@@ -40,7 +40,7 @@ define('SHORT_URI_TYPE_FILE', 2);
 define('CHANNEL_TYPE_EMAIL', 1);
 define('CHANNEL_TYPE_SMS', 2);
 
-define('APP_PAGEE_SIZE', 15);
+define('APP_PAGER_SIZE', 15);
 define('APP_PAGER_COUNT', 10);
 
 define('APP_TIMEZONE', 'Asia/Shanghai');
