@@ -8,7 +8,7 @@ class ModelLog extends ModelCommon
 		parent::__construct();
 	}
 
-	public function getList($p, $params, $ps = APP_PAGEE_SIZE)
+	public function getList($p, $params, $ps = APP_PAGER_SIZE)
 	{
 		$condition = array();
 		!empty($params['account']) && $condition[] = array('u.`account`' => array('like', $params['account']));

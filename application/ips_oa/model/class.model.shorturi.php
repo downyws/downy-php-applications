@@ -8,7 +8,7 @@ class ModelShortUri extends ModelCommon
 		parent::__construct();
 	}
 
-	public function getList($p, $params, $ps = APP_PAGEE_SIZE)
+	public function getList($p, $params, $ps = APP_PAGER_SIZE)
 	{
 		$condition = array();
 		!empty($params['task_title']) && $condition[] = array('tm.`title`' => array('like', $params['task_title']));

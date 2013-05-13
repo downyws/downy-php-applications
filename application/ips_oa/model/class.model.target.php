@@ -8,7 +8,7 @@ class ModelTarget extends ModelCommon
 		parent::__construct();
 	}
 
-	public function getList($p, $params, $ps = APP_PAGEE_SIZE)
+	public function getList($p, $params, $ps = APP_PAGER_SIZE)
 	{
 		$condition = array();
 		!empty($params['contact']) && $condition[] = array('`contact`' => array('like', $params['contact']));
