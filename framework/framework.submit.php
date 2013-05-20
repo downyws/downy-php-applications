@@ -8,7 +8,7 @@ class Submit
 		'user_name' => array(
 			array('mapping', 'new name'),
 			array('format', 'trim'),
-			array('vaild', 'set', 'message', 'default value', data),
+			array('valid', 'set', 'message', 'default value', data),
 			......
 		)
 	);*/
@@ -88,13 +88,6 @@ class Submit
 					$this->errors[] = 'params count error.';
 					break;
 				}
-				else
-				{
-					foreach($values[$field] as $k => $v)
-					{
-						$request[$k][$field] = $v;
-					}
-				}
 			}
 			else
 			{
@@ -105,6 +98,14 @@ class Submit
 
 		if(!$this->errors)
 		{
+			foreach($params as $field => $rules)
+			{
+				foreach($values[$field] as $k => $v)
+				{
+					$request[$k][$field] = $v;
+				}
+			}
+
 			foreach($request as $k => $v)
 			{
 				$item = $this->obtain($v, $params);
@@ -187,7 +188,7 @@ class Submit
 	{
 		return $value >= $rule[4][0] && $value <= $rule[4][1];
 	}
-	
+
 	public function validIn($rule, $value)
 	{
 		return in_array($value, $rule[4]);
