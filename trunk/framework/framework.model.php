@@ -81,7 +81,7 @@ class Model extends Db
 				$byte = $b;
 				$i++;
 			}
-			$batch[$i] = $item;
+			$batch[$i][] = $item;
 		}
 
 		$sql = 'INSERT ' . ($ignore ? ' IGNORE ' : '') . ' INTO ' . $table . ' (`' . implode('`, `', $fields) . '`) VALUES ';
