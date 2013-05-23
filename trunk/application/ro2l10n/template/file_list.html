@@ -1,0 +1,153 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+	<style type="text/css">
+	{literal}
+		.datatable .data td b{margin-right:10px;}
+		.datatable .data td.uploadscope{background:#F0F0F0;text-align:center;font-weight:bold;width:150px;}
+		.datatable .data td.operating{text-align:right;}
+	{/literal}
+	</style>
+	<script type="text/javascript">
+	{literal}
+		var obj;
+		// 文件拖拽
+		function H_Drop(event){
+			F_DropType($(this), "stop");
+			event.stopPropagation();
+			event.preventDefault();
+			$(this).css({"background":"#F0F0F0"});
+			var filelist = event.dataTransfer.files;
+			if (!filelist || !filelist.length){
+				$(".msgdialog").attr("title", "Message").html("Error.").dialog({
+					modal:true, buttons:{Ok:function(){$(this).dialog("close");}}
+				});
+				F_DropType($(this), "start");
+			}else if(filelist.length > 1){
+				$(".msgdialog").attr("title", "Message").html("Only one file.").dialog({
+					modal:true, buttons:{Ok:function(){$(this).dialog("close");}}
+				});
+				F_DropType($(this), "start");
+			}else{
+				var that = this, obj = $(this);
+				obj.html("Uploading...");
+				$.fn.dyUploadFile(filelist[0], {
+					dataType: "JSON",
+					name: "file",
+					url: "/index.php?a=file&m=import&t=ajax&file_name=" + $(that).data("file_name"),
+					onEvent: {success: function(result){
+						$(".msgdialog").attr("title", "Message").html(result.message).dialog({
+							modal:true, buttons:{Ok:function(){$(this).dialog("close");}}
+						});
+						if(result.state){
+							var fileblock = $(that).parent().parent().parent().parent().parent();
+							var id = parseInt(Math.random() * 100000);
+							fileblock.after("<div class='temp_fileblock'></div>").remove();
+							$(".temp_fileblock").after(result.data).remove();
+						}
+						obj.html("Upload file scope");
+						F_DropType($(that), "start");
+					}, error: function(error){
+						$(".msgdialog").attr("title", "Message").html("AJAX request error[" + error + "].").dialog({
+							modal:true, buttons:{Ok:function(){$(this).dialog("close");}}
+						});
+						obj.html("Upload file scope");
+						F_DropType($(that), "start");
+					}, progress: function(event){
+						if(obj.html() == "Uploading......"){
+							obj.html("Uploading...");
+						}else{
+							obj.html(obj.html() + ".");
+						}
+					}}
+				});
+			}
+		}
+		function F_DropType(obj, option){
+			if(option == "stop"){
+				obj.get(0).removeEventListener("drop", H_Drop, false);
+				obj.unbind("dragleave", H_DragLeave);
+				obj.unbind("dragover", H_DragOver);
+				obj.get(0).addEventListener("drop", H_DropWait, false);
+				obj.bind("dragleave", H_DropWait);
+				obj.bind("dragover", H_DropWait);
+			}else if(option == "start"){
+				obj.get(0).removeEventListener("drop", H_DropWait, false);
+				obj.unbind("dragleave", H_DropWait);
+				obj.unbind("dragover", H_DropWait);
+				obj.get(0).addEventListener("drop", H_Drop, false);
+				obj.bind("dragleave", H_DragLeave);
+				obj.bind("dragover", H_DragOver);
+			}
+		}
+		function H_DropWait(event){
+			event.stopPropagation();
+			event.preventDefault();
+		}
+		function H_DragLeave(event){
+			event.stopPropagation();
+			event.preventDefault();
+			$(this).css({"background":"#F0F0F0"});
+		}
+		function H_DragOver(event){
+			event.stopPropagation();
+			event.preventDefault();
+			$(this).css({"background":"#E0E0E0"});
+		}
+	{/literal}
+	</script>
+</head>
+<body class="mainbody">
+	{foreach from=$objects.data item=object}
+		{include file="file_list_block.html"}
+	{/foreach}
+	<div class="msgdialog"></div>
+	<script type="text/javascript">
+	{literal}
+		$("body").on("click", ".btn_refresh", function(){
+			var id = $(this).data("id");
+			$(".msg").remove();
+			var obj = $(this).parent().parent().parent().parent().parent().parent();
+			obj.after("<div class='msg'></div>");
+			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=file&m=refresh&t=ajax", data: {id: id}, async: false, success: function(result){
+				if(result.state){
+					$.fn.notificationShow($(".msg"), "Refresh success.", "success");
+					obj.after("<div class='temp_fileblock'></div>").remove();
+					$(".temp_fileblock").after(result.data).remove();
+				}else{
+					$.fn.notificationShow($(".msg"), "Refresh error.", "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}});
+		});
+		$("body").on("click", ".btn_del", function(){
+			var id = $(this).data("id");
+			var that = this;
+			$(".msgdialog").attr("title", "Confirm").html($(this).data("confirm")).dialog({
+				modal: true, buttons: {
+					Ok: function(){
+						$(".msg").remove();
+						var obj = $(that).parent().parent().parent().parent().parent().parent();
+						obj.after("<div class='msg'></div>");
+						$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=file&m=delete&t=ajax", data: {id: id}, async: false, success: function(result){
+							if(result.state){
+								$.fn.notificationShow($(".msg"), "Delete success.", "success");
+								obj.remove();
+							}else{
+								$.fn.notificationShow($(".msg"), "Delete error.", "error");
+							}
+						}, error: function(jqXHR, textStatus, errorThrown){
+							$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+						}});
+						$(this).dialog("close");
+					},
+					Cancel: function(){
+						$(this).dialog("close");
+					}
+				}
+			});
+		});
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

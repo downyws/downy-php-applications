@@ -1,0 +1,95 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+</head>
+<body class="navgbody">
+	<div class="logo">{$smarty.const.APP_NAME}</div>
+	<div class="info">
+		<div>Hello, {$smarty.session.USER.nick}</div>
+		<div>
+			<a href="javascript:;" class="btn_dict">Open Dictionary</a>
+			<span>|</span>
+			<a href="javascript:;" class="btn_panel">Close Panel</a>
+			<br />
+			<a href="/index.php?a=index&m=logout" target="_top">Sign Out</a>
+		</div>
+	</div>
+	<ul class="menu">
+		<li><a target="bodyFrame" class="topitem nosub current" href="/index.php?a=index&m=home">Home</a></li>
+		<li><a href="javascript:;" class="topitem">My Settings</a>
+			<ul>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=user&m=individuation">Individuation</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=user&m=editpwd">Edit Password</a></li>
+			</ul>
+		</li>
+		<li><a href="javascript:;" class="topitem">Localization</a>
+			<ul>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=localization&m=list">Localization List</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=localization&m=mytask">My Localization Task</a></li>
+			</ul>
+		</li>
+		{if $smarty.session.USER.super || $smarty.session.USER.dict}
+		<li><a target="bodyFrame" href="/index.php?a=dict&m=list" class="topitem nosub">Dictionary Manage</a></li>
+		{/if}
+		{if $smarty.session.USER.super}
+		<li><a href="javascript:;" class="topitem">File Manage</a>
+			<ul>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=file&m=list">Localization file List</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=file&m=edit&id=0">Add a localization file</a></li>
+			</ul>
+		</li>
+		<li><a target="bodyFrame" href="/index.php?a=user&m=list" class="topitem nosub">User Manage</a></li>
+		<li><a target="bodyFrame" href="/index.php?a=notice&m=list" class="topitem nosub">Notice Manage</a></li>
+		<li><a target="bodyFrame" href="/index.php?a=system&m=info" class="topitem nosub">System Info</a></li>
+		{/if}
+	</ul>
+	<div class="sizebtn btn_panel" title="Close panel"></div>
+	<script type="text/javascript">
+	{literal}
+		// Navg
+		$(".navgbody .menu a.topitem").hover(function(){
+			$(this).stop().animate({paddingRight: "25px"}, 200);
+		},function(){
+			$(this).stop().animate({paddingRight: "15px"});
+		});
+		$(".navgbody .menu a").click(function(){
+			if($(this).hasClass("nosub")){
+				$(".navgbody .menu a").removeClass("current");
+				$(this).addClass("current");
+			}else if($(this).hasClass("issub")){
+				$(".navgbody .menu a").removeClass("current");
+				$(this).addClass("current");
+				$(this).parent().parent().parent().find(".topitem").addClass("current");
+			}else{
+				$(this).parent().siblings().find("ul").slideUp("normal");
+				$(this).next().slideToggle("normal");
+			}
+		});
+		// Dict
+		$(".btn_dict").click(function(){
+			if($(this).data("dict")){
+				$(this).data("dict", false);
+				$(this).html("Open Dictionary");
+				parent.mainFrame.cols = "230,*,0";
+			}else{
+				$(this).data("dict", true);
+				$(this).html("Close Dictionary");
+				parent.mainFrame.cols = "230,*,230";
+			}
+		});
+		// Panel
+		$(".btn_panel").click(function(){
+			var r_p = $(".btn_dict").data("dict") ? 230 : 0;
+			if($("a.btn_panel").data("panel")){
+				$("a.btn_panel").data("panel", false);
+				parent.mainFrame.cols = "9,*," + r_p;
+				$(".btn_panel").attr("title", "Open panel");
+			}else{
+				$("a.btn_panel").data("panel", true);
+				parent.mainFrame.cols = "230,*," + r_p;
+				$(".btn_panel").attr("title", "Close panel");
+			}
+		});
+		$("a.btn_panel").data("panel", true);
+	{/literal}
+	</script>
+{include file="common_bottom.html"}

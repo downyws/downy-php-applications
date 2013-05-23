@@ -1,0 +1,87 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+	<style type="text/css">
+	{if $object.id != 0}
+		{literal}textarea{width:300px;}{/literal}
+	{else}
+		{literal}textarea{width:100%;}{/literal}
+	{/if}
+	</style>
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<h3>
+			{if $object.id > 0}
+				Notice Edit No.{$object.id}
+			{else if $object.id == 0}
+				Related Descriptions Edit
+			{else}
+				Notice Add
+			{/if}
+		</h3>
+		<form action="/index.php?a=notice&m=edit&t=ajax" method="post">
+			<input type="hidden" value="{$object.id}" id="object_id" name="id" />
+			<div class="data"><table><tbody>
+				{if $object.id != 0}
+					<tr><th style="width:100px;">Show time</th><td>
+						<input type="text" class="txt jq-time" name="start_time" value="{$object.start_time|date_format:"%Y-%m-%d %H:%M:%S"}" />
+						<span>~</span>
+						<input type="text" class="txt jq-time" name="end_time" value="{$object.end_time|date_format:"%Y-%m-%d %H:%M:%S"}" />
+					</td></tr>
+					<tr><th>Sort</th><td><input type="text" class="txt w50" name="sort" value="{$object.sort}" /></td></tr>
+					<tr><th>Content</th><td>
+						<i>one line limited.</i><br />
+						<textarea class="txt" rows="3" name="content">{$object.content}</textarea>
+					</td></tr>
+					<tr><th>Style</th><td>
+						U<span class="mgr25 mgl5"><input type="checkbox" name="style_u" value="1" {if $object.style_u}checked="checked"{/if} /></span>
+						B<span class="mgr25 mgl5"><input type="checkbox" name="style_b" value="1" {if $object.style_b}checked="checked"{/if} /></span>
+						I<span class="mgr25 mgl5"><input type="checkbox" name="style_i" value="1" {if $object.style_i}checked="checked"{/if} /></span>
+						S<span class="mgr25 mgl5"><input type="checkbox" name="style_s" value="1" {if $object.style_s}checked="checked"{/if} /></span>
+						Color<span class="mgr25 mgl5"><input type="text" name="style_color" class="txt w50" value="{$object.style_color}" /></span>
+					</td></tr>
+				{else}
+					<tr><td colspan="2">
+						<textarea class="txt" rows="5" name="content">{$object.content|htmlspecialchars}</textarea>
+					</td></tr>
+					<input type="hidden" value="0" name="start_time" />
+					<input type="hidden" value="0" name="end_time" />
+				{/if}
+				<tr class="pagination"><td colspan="2">
+					<div class="button"><input type="submit" class="btn" value="Save" /></div>
+				</td></tr>
+			</tbody></table></div>
+		</form>
+	</div>
+	<div class="msg"></div>
+	<div class="msgdialog" title="Save result"></div>
+	<script type="text/javascript">
+	{literal}
+		$("form").submit(function(){
+			// Clear
+			$(".msg").html("");
+
+			// Submit
+			$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {success: function(result){
+				if(result.state){
+					if($("#object_id").val() < 0){
+						$(".msgdialog").html(result.message).dialog({
+							modal: true, buttons: {
+								Ok: function(){window.location.href = result.url;}
+							}
+						});
+					}else{
+						$.fn.notificationShow($(".msg"), result.message, "success");
+					}
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}}});
+			return false;
+		});
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

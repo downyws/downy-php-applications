@@ -1,0 +1,29 @@
+<div class="datatable list">
+	<div class="data"><table><tbody>
+		<tr class="nobb">
+			<td><b>{$object.file_name}</b></td>
+			<td><b>{$object.file_name_short}</b></td>
+			<td><b>NT</b>{$object.wait_t_count}</td>
+			<td><b>NP</b>{$object.wait_p_count}</td>
+			<td><b>NA</b>{$object.wait_a_count}</td>
+			<td><b>Data</b>{$object.data_count}</td>
+			<td><b>Update</b>{$object.update_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+			<td class="uploadscope fileid-{$object.id}" data-file_name="{$object.file_name}">Upload file scope</td>
+			<td class="operating">
+				<a target="_blank" href="/index.php?a=file&m=export&id={$object.id}"></a>
+				<a data-id="{$object.id}" class="btn_refresh" href="javascript:;">Refresh</a>
+				<a target="_blank" href="/index.php?a=file&m=export&id={$object.id}">Export</a>
+				<a href="/index.php?a=file&m=edit&id={$object.id}">Edit</a>
+				<a data-id="{$object.id}" data-confirm="Confirm delete '{$object.file_name}'?" class="btn_del" href="javascript:;">Delete</a>
+			</td>
+		</tr>
+	</tbody></table></div>
+</div>
+<script type="text/javascript">
+	obj = $(".fileid-{$object.id}");
+{literal}
+	obj.get(0).addEventListener("drop", H_Drop, false);
+	obj.bind("dragleave", H_DragLeave);
+	obj.bind("dragover", H_DragOver);
+{/literal}
+</script>

@@ -1,0 +1,158 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+	<style type="text/css">
+	{literal}
+		.datatable .data table td.filter .state-block{float:left;}
+		.datatable .data table td.filter .filter-item label{font-size:12px;}
+		.datatable .data table td.filter .file-block{float:left;line-height:30px;}
+		.datatable .data table tr.filter td .btn{float:left;}
+		.datatable.opr .data .msg .notification{margin-bottom:0px;}
+		.datatable .data table .pagination.bb td{border-bottom:1px;}
+	{/literal}
+	</style>
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<div class="data"><table><tbody>
+			<tr class="nobb filter"><td class="filter">
+				<form action="/index.php?a=localization&m=list&t=ajax" method="post" class="form-filter">
+					<input type="hidden" name="page" id="page" />
+					<div class="filter-item clearfix">
+						<div class="state-block">
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_CP}" id="state_{$smarty.const.MAPPING_STATE_CP}" /><label for="state_{$smarty.const.MAPPING_STATE_CP}">CP</label>
+						</div>
+						<div class="state-block">
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TW}" id="state_{$smarty.const.MAPPING_STATE_TW}" /><label for="state_{$smarty.const.MAPPING_STATE_TW}">TW</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TD}" id="state_{$smarty.const.MAPPING_STATE_TD}" /><label for="state_{$smarty.const.MAPPING_STATE_TD}">TD</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TB}" id="state_{$smarty.const.MAPPING_STATE_TB}" /><label for="state_{$smarty.const.MAPPING_STATE_TB}">TB</label>
+						</div>
+						<div class="state-block">
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PW}" id="state_{$smarty.const.MAPPING_STATE_PW}" /><label for="state_{$smarty.const.MAPPING_STATE_PW}">PW</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PD}" id="state_{$smarty.const.MAPPING_STATE_PD}" /><label for="state_{$smarty.const.MAPPING_STATE_PD}">PD</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PB}" id="state_{$smarty.const.MAPPING_STATE_PB}" /><label for="state_{$smarty.const.MAPPING_STATE_PB}">PB</label>
+						</div>
+						<div class="state-block">
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AW}" id="state_{$smarty.const.MAPPING_STATE_AW}" /><label for="state_{$smarty.const.MAPPING_STATE_AW}">AW</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AD}" id="state_{$smarty.const.MAPPING_STATE_AD}" /><label for="state_{$smarty.const.MAPPING_STATE_AD}">AD</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AB}" id="state_{$smarty.const.MAPPING_STATE_AB}" /><label for="state_{$smarty.const.MAPPING_STATE_AB}">AB</label>
+						</div>
+					</div>
+					<div class="filter-item hide mfilter mgb15 mgt15" data-hide="true">
+						<label>Key</label><input type="text" name="key" class="txt w100" />
+						<label>En content</label><input type="text" name="content_new_en" class="txt w300" placeholder="It will so slowly..." />
+					</div>
+					<div class="filter-item clearfix hide mfilter" data-hide="true">
+						<div class="file-block filelist">
+							{foreach from=$files.data item=file}
+								<input type="checkbox" name="file[]" value="{$file.id}" id="file_{$file.id}" /><label for="file_{$file.id}">{$file.file_name_short} [ {$file.data_count - $file.wait_t_count - $file.wait_p_count - $file.wait_a_count} / {$file.data_count} ]</label>
+							{/foreach}
+						</div>
+					</div>
+				</form>
+			</td><td class="w50">
+				<input type="button" class="btn btn_morefilter" value="Show more filter" />
+			</td><td class="w50">
+				<input type="button" class="btn btn_turnpage" data-page="1" value="Submit filter" />
+			</td></tr>
+		</tbody></table></div>
+	</div>
+	<div class="datatable opr">
+		<div class="data"><table><tbody>
+			<tr class="nobb">
+				<td class="w50"><input type="button" class="btn btn_selall" value="Select All" /></td>
+				{if $smarty.session.USER.translation}<td class="w50"><input type="button" class="btn btn_occt" value="Occ T" /></td>{/if}
+				{if $smarty.session.USER.proof}<td class="w50"><input type="button" class="btn btn_occp" value="Occ P" /></td>{/if}
+				{if $smarty.session.USER.audit}<td class="w50"><input type="button" class="btn btn_occa" value="Occ A" /></td>{/if}
+				{if $smarty.session.USER.audit >= 2}<td class="w50"><input type="button" class="btn btn_backa" value="Back A" /></td>{/if}
+				<td class="msg"></td>
+			</tr>
+		</tbody></table></div>
+	</div>
+	<div class="datatable"><div class="data datalist"></div></div>
+	<script type="text/javascript">
+		var filetitle = {$filetitle|json_encode};
+	{literal}
+		function F_TurnPage(page){
+			if(page > 0){
+				$("#page").val(page);
+			}
+			$(".msg").html("");
+			$.fn.dyAjaxForm($(".form-filter"), {dataType: "JSON", onEvent: {success: function(result){
+				if(result.state){
+					$(".datalist").html(result.data);
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}}});
+		}
+		function F_OccTask(opr){
+			var has = false;
+			$(".datalist .opr_file_key").each(function(){
+				if($(this).is(":checked")){
+					has = true;
+				}
+			});
+			if(!has) return;
+
+			$("#opr").val(opr);
+			$(".msg").html("");
+			$.fn.dyAjaxForm($(".form-opr"), {dataType: "JSON", onEvent: {success: function(result){
+				if(result.state){
+					F_TurnPage(0);
+					$.fn.notificationShow($(".msg"), result.message, "success");
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}}});
+		}
+		$(".state-block").buttonset();
+		$(".file-block").buttonset();
+		$(".filelist label").each(function(){
+			var id = $(this).attr("for");
+			id = id.substr(5, id.length - 5);
+			$(this).attr("title", filetitle[id]).tooltip({show: {effect: "slideDown", delay: 250}});
+		});
+		$(".btn_morefilter").click(function(){
+			if($(".mfilter").data("hide")){
+				$(this).val("Hide more filter");
+				$(".mfilter").data("hide", false).slideDown(300);
+			}else{
+				$(this).val("Show more filter");
+				$(".mfilter").data("hide", true).slideUp(300);
+			}
+		});
+		$("body").on("click", ".btn_turnpage", function(){
+			var page = $(this).data("page");
+			F_TurnPage(page);
+		});
+		$(".btn_selall").click(function(){
+			var selall = false;
+			$(".datalist .opr_file_key").each(function(){
+				if(!$(this).is(":checked")){
+					selall = true;
+				}
+			});
+			$(".datalist .opr_file_key").each(function(){
+				$(this).prop('checked', selall);
+			});
+		});
+		$(".btn_occt").click(function(){
+			F_OccTask("translation");
+		});
+		$(".btn_occp").click(function(){
+			F_OccTask("proof");
+		});
+		$(".btn_occa").click(function(){
+			F_OccTask("audit");
+		});
+		$(".btn_backa").click(function(){
+			F_OccTask("back");
+		});
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

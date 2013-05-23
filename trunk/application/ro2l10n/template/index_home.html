@@ -1,0 +1,18 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<h3>Notice</h3>
+		<div class="data"><table><tbody>
+			{foreach from=$notices item=notice}
+			<tr><td style="{$notice.style}">{$notice.content|htmlspecialchars}</td></tr>
+			{/foreach}
+		</tbody></table></div>
+	</div>
+	<div class="datatable">
+		<h3>Related Descriptions</h3>
+		<div class="data">{$related_desc.content}</div>
+	</div>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

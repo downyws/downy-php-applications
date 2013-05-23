@@ -1,0 +1,36 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+</head>
+<body class="loginbody">
+	<div class="main">
+		<div class="logo">{$smarty.const.APP_NAME}</div>
+		<div class="panel">
+			<form action="/index.php?a=index&m=login&t=ajax" method="post">
+				<div class="clearfix"><label>Email</label><input type="text" class="txt" name="email" /></div>
+				<div class="clearfix"><label>Password</label><input type="password" class="txt" name="password" /></div>
+				<div class="tr"><input type="submit" class="btn" value="Sign In" /></div>
+			</form>
+		</div>
+		<div class="msg"></div>
+	</div>
+	<script type="text/javascript">
+	{literal}
+		$("form").submit(function(){
+			// Clear
+			$(".msg").html("");
+
+			// Submit
+			$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {success: function(result){
+				if(result.state){
+					window.location.href = result.url;
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}}});
+			return false;
+		});
+	{/literal}
+	</script>
+{include file="common_bottom.html"}

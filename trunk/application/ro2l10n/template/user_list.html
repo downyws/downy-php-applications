@@ -1,0 +1,88 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<div class="data"><table><tbody>
+			<tr>
+				<th>Id</th>
+				<th>Nick</th>
+				<th>Email</th>
+				<th>Task</th>
+				<th>T Point</th>
+				<th>P Point</th>
+				<th>A Point</th>
+				<th>Dict</th>
+				<th>T Power</th>
+				<th>P Power</th>
+				<th>A Power</th>
+				<th>Super</th>
+				<th>Lock</th>
+				<th>Operating</th>
+			</tr>
+			{foreach from=$objects.data item=object}
+			<tr>
+				<td>{$object.id}</td>
+				<td>{$object.nick}</td>
+				<td>{$object.email}</td>
+				<td>{$object.task_occ_count} / {$object.task_max_count}</td>
+				<td>{$object.dedicate_t_count}</td>
+				<td>{$object.dedicate_p_count}</td>
+				<td>{$object.dedicate_a_count}</td>
+				<td>{if $object.dict}Yes{else}No{/if}</td>
+				<td>{if $object.translation}Lv {$object.translation}{else}-{/if}</td>
+				<td>{if $object.proof}Lv {$object.proof}{else}-{/if}</td>
+				<td>{if $object.audit}Lv {$object.audit}{else}-{/if}</td>
+				<td>{if $object.super}Yes{else}No{/if}</td>
+				<td>{if $object.state == $smarty.const.USER_STATE_LOCK}<font class="attention">Yes</font>{else}No{/if}</td>
+				<td>
+					<a href="/index.php?a=user&m=edit&id={$object.id}">Edit</a>
+					<a href="/index.php?a=user&m=delete&id={$object.id}" data-confirm="Confirm delete user No.{$object.id}?" class="delConfirm">Delete</a>
+				</td>
+			</tr>
+			{/foreach}
+			<tr class="pagination"><td colspan="14">
+				<div class="button">
+					<a href="/index.php?a=user&m=edit&id=0" class="btn">Add user</a>
+					<span>&nbsp;</span>
+					<a href="javascript:;" class="btn btn_refresh">Refresh mapping</a>
+				</div>
+				<div class="navigation">
+					<a href="/index.php?a=user&m=list&page=1">« First</a>
+					<a href="/index.php?a=user&m=list&page={$objects.pager.prev}">« Previous</a>
+					{for $i = $objects.pager.start; $i <= $objects.pager.end; $i++}
+						{if $i == $objects.pager.current}
+							<a class="number current" href="javascript:;">{$i}</a>
+						{else}
+							<a class="number" href="/index.php?a=user&m=list&page={$i}">{$i}</a>
+						{/if}
+					{/for}
+					<a href="/index.php?a=user&m=list&page={$objects.pager.next}">Next »</a>
+					<a href="/index.php?a=user&m=list&page={$objects.pager.last}">Last »</a>
+				</div>
+			</td></tr>
+		</tbody></table></div>
+	</div>
+	<div class="msgdialog" title="Confirm"></div>
+	<div class="msg"></div>
+	<script type="text/javascript">
+	{literal}
+		$(".btn_refresh").click(function(){
+			$(".msg").html("");
+			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=user&m=refreshmapping&t=ajax", async: false, success: function(result){
+				var msg = result.state ? "Refresh mapping success." : "Refresh mapping error.";
+				$(".msgdialog").attr("title", "Message").html(msg).dialog({
+					modal: true, buttons: {
+						Ok: function(){
+							window.location.href = "/index.php?a=user&m=list";
+						}
+					}
+				});
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}});
+		});
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}
