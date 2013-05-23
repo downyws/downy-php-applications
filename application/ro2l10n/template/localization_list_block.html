@@ -1,0 +1,55 @@
+<form action="/index.php?a=localization&m=occ&t=ajax" method="post" class="form-opr">
+	<input type="hidden" name="opr" id="opr" />
+	<table><tbody>
+		{if $objects.data}
+		<tr class="pagination bb"><td colspan="5">
+			<div class="navigation">
+				<a data-page="1" class="btn_turnpage" href="javascript:;">« First</a>
+				<a data-page="{$objects.pager.prev}" class="btn_turnpage" href="javascript:;">« Previous</a>
+				{for $i = $objects.pager.start; $i <= $objects.pager.end; $i++}
+					{if $i == $objects.pager.current}
+						<a data-page="{$i}" class="number current btn_turnpage" href="javascript:;">{$i}</a>
+					{else}
+						<a data-page="{$i}" class="number btn_turnpage" href="javascript:;">{$i}</a>
+					{/if}
+				{/for}
+				<a data-page="{$objects.pager.next}" class="btn_turnpage" href="javascript:;">Next »</a>
+				<a data-page="{$objects.pager.last}" class="btn_turnpage" href="javascript:;">Last »</a>
+			</div>
+		</td></tr>
+		{else}
+		<tr class="nobb"><td>No data.</td></tr>
+		{/if}
+		{foreach from=$objects.data item=object}
+			<tr>
+				<td width="20px"><input type="checkbox" class="opr_file_key" name="opr_file_key[]" value="{$object.file_id}_{$object.key}" /></td>
+				<td width="30px">{$object.file_name_short}</td>
+				<td width="80px">{$object.key}</td>
+				<td width="25px">{$object.state|mapping_state_format}</td>
+				<td class="mapping_item" title="{if $object.state == $smarty.const.MAPPING_STATE_CP}{$object.content_new_cn}{else}{$object.content_old_en}{/if}">{$object.content_new_en}</td>
+			</tr>
+		{/foreach}
+		{if $objects.data}
+		<tr class="pagination"><td colspan="5">
+			<div class="navigation">
+				<a data-page="1" class="btn_turnpage" href="javascript:;">« First</a>
+				<a data-page="{$objects.pager.prev}" class="btn_turnpage" href="javascript:;">« Previous</a>
+				{for $i = $objects.pager.start; $i <= $objects.pager.end; $i++}
+					{if $i == $objects.pager.current}
+						<a data-page="{$i}" class="number current btn_turnpage" href="javascript:;">{$i}</a>
+					{else}
+						<a data-page="{$i}" class="number btn_turnpage" href="javascript:;">{$i}</a>
+					{/if}
+				{/for}
+				<a data-page="{$objects.pager.next}" class="btn_turnpage" href="javascript:;">Next »</a>
+				<a data-page="{$objects.pager.last}" class="btn_turnpage" href="javascript:;">Last »</a>
+			</div>
+		</td></tr>
+		{/if}
+	</tbody></table>
+	<script type="text/javascript">
+	{literal}
+		$(".mapping_item").tooltip({show: {effect: "slideDown", delay: 250}});
+	{/literal}
+	</script>
+</form>

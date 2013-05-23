@@ -1,0 +1,40 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<h3>Password Edit</h3>
+		<form action="/index.php?a=user&m=editpwd&t=ajax" method="post">
+			<div class="data"><table><tbody>
+				<tr><th style="width:120px;">Old Password</th><td><input type="password" class="txt" name="old_password" /></td></tr>
+				<tr><th>New Password</th><td><input type="password" class="txt" name="new_password" /></td></tr>
+				<tr><th>Confirm Password</th><td><input type="password" class="txt" name="cfm_password" /></td></tr>
+				<tr class="pagination"><td colspan="2">
+					<div class="button"><input type="submit" class="btn" value="Save" /></div>
+				</td></tr>
+			</tbody></table></div>
+		</form>
+	</div>
+	<div class="msg"></div>
+	<script type="text/javascript">
+	{literal}
+		$("form").submit(function(){
+			// Clear
+			$(".msg").html("");
+
+			// Submit
+			$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {success: function(result){
+				if(result.state){
+					$.fn.notificationShow($(".msg"), result.message, "success");
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}}});
+			return false;
+		});
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

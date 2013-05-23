@@ -1,0 +1,77 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<h3>
+			{if $object.id > 0}
+				User Edit No.{$object.id}
+			{else}
+				User Add
+			{/if}
+		</h3>
+		<form action="/index.php?a=user&m=edit&t=ajax" method="post">
+			<input type="hidden" value="{$object.id}" id="object_id" name="id" />
+			<div class="data"><table><tbody>
+				<tr><th style="width:150px;">Nick</th><td><input type="text" class="txt" name="nick" value="{$object.nick}" /></td></tr>
+				<tr><th>Email</th><td><input type="text" class="txt" name="email" value="{$object.email}" /></td></tr>
+				<tr><th>Password</th><td><input type="password" class="txt" name="password" /></td></tr>
+				<tr><th>Lock user</th><td><input type="checkbox" name="state" value="1" {if $object.state}checked="checked"{/if} /></td></tr>
+				<tr><th>Task max count</th><td><input type="text" class="txt w50" name="task_max_count" value="{$object.task_max_count}" /></td></tr>
+				<tr><th>Power</th><td>
+					Dict<span class="mgr25 mgl5"><input type="checkbox" name="dict" value="1" {if $object.dict}checked="checked"{/if} /></span>
+					Super<span class="mgr25 mgl5"><input type="checkbox" name="super" value="1" {if $object.super}checked="checked"{/if} /></span>
+				</td></tr>
+				<tr><th>Translation</th><td>
+					Lv 0<span class="mgr25 mgl5"><input type="radio" name="translation" value="0" {if $object.translation == 0}checked="checked"{/if} /></span>
+					Lv 1<span class="mgr25 mgl5"><input type="radio" name="translation" value="1" {if $object.translation == 1}checked="checked"{/if} /></span>
+					Lv 2<span class="mgr25 mgl5"><input type="radio" name="translation" value="2" {if $object.translation == 2}checked="checked"{/if} /></span>
+				</td></tr>
+				<tr><th>Proof</th><td>
+					Lv 0<span class="mgr25 mgl5"><input type="radio" name="proof" value="0" {if $object.proof == 0}checked="checked"{/if} /></span>
+					Lv 1<span class="mgr25 mgl5"><input type="radio" name="proof" value="1" {if $object.proof == 1}checked="checked"{/if} /></span>
+					Lv 2<span class="mgr25 mgl5"><input type="radio" name="proof" value="2" {if $object.proof == 2}checked="checked"{/if} /></span>
+				</td></tr>
+				<tr><th>Audit</th><td>
+					Lv 0<span class="mgr25 mgl5"><input type="radio" name="audit" value="0" {if $object.audit == 0}checked="checked"{/if} /></span>
+					Lv 1<span class="mgr25 mgl5"><input type="radio" name="audit" value="1" {if $object.audit == 1}checked="checked"{/if} /></span>
+					Lv 2<span class="mgr25 mgl5"><input type="radio" name="audit" value="2" {if $object.audit == 2}checked="checked"{/if} /></span>
+				</td></tr>
+				<tr class="pagination"><td colspan="2">
+					<div class="button"><input type="submit" class="btn" value="Save" /></div>
+				</td></tr>
+			</tbody></table></div>
+		</form>
+	</div>
+	<div class="msg"></div>
+	<div class="msgdialog" title="Save result"></div>
+	<script type="text/javascript">
+	{literal}
+		$("form").submit(function(){
+			// Clear
+			$(".msg").html("");
+
+			// Submit
+			$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {success: function(result){
+				if(result.state){
+					if($("#object_id").val() < 1){
+						$(".msgdialog").html(result.message).dialog({
+							modal: true, buttons: {
+								Ok: function(){window.location.href = result.url;}
+							}
+						});
+					}else{
+						$.fn.notificationShow($(".msg"), result.message, "success");
+					}
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}}});
+			return false;
+		});
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

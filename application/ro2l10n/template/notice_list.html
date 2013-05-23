@@ -1,0 +1,47 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+	<style type="text/css">
+	{literal}
+		.datatable .data table .info td, .datatable .data table .info th{border-bottom:0px;}
+	{/literal}
+	</style>
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<div class="data"><table><tbody>
+			{foreach from=$objects.data item=object}
+			<tr class="info {if !$object.id || $object.is_show}current{/if}">
+				<th>No.{$object.id}</th><td colspan="5" style="{$object.style}">{if $object.id}{$object.content}{else}Related Descriptions{/if}</td>
+			</tr>
+			<tr class="{if !$object.id || $object.is_show}current{/if}">
+				<th>Sort:</th><td>{$object.sort}</td>
+				<th>Time scope:</th><td>{$object.start_time|date_format:"%Y-%m-%d %H:%M:%S"} ~ {$object.end_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+				<td>
+					<a href="/index.php?a=notice&m=edit&id={$object.id}">Edit</a>
+					{if $object.id != 0}
+						<a href="/index.php?a=notice&m=delete&id={$object.id}" data-confirm="Confirm delete notice No.{$object.id}?" class="delConfirm">Delete</a>
+					{/if}
+				</td>
+			</tr>
+			{/foreach}
+			<tr class="pagination"><td colspan="6">
+				<div class="button"><a href="/index.php?a=notice&m=edit&id=-1" class="btn">Add notice</a></div>
+				<div class="navigation">
+					<a href="/index.php?a=notice&m=list&page=1">« First</a>
+					<a href="/index.php?a=notice&m=list&page={$objects.pager.prev}">« Previous</a>
+					{for $i = $objects.pager.start; $i <= $objects.pager.end; $i++}
+						{if $i == $objects.pager.current}
+							<a class="number current" href="javascript:;">{$i}</a>
+						{else}
+							<a class="number" href="/index.php?a=notice&m=list&page={$i}">{$i}</a>
+						{/if}
+					{/for}
+					<a href="/index.php?a=notice&m=list&page={$objects.pager.next}">Next »</a>
+					<a href="/index.php?a=notice&m=list&page={$objects.pager.last}">Last »</a>
+				</div>
+			</td></tr>
+		</tbody></table></div>
+	</div>
+	<div class="msgdialog" title="Confirm"></div>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

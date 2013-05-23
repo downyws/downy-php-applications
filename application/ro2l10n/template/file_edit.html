@@ -1,0 +1,64 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+	<style type="text/css">
+	{literal}
+		.ltxt, textarea{width:100%;}
+	{/literal}
+	</style>
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<h3>
+			{if $object.id > 0}
+				File '{$object.file_name}' Edit
+			{else}
+				File Add
+			{/if}
+		</h3>
+		<form action="/index.php?a=file&m=edit&t=ajax" method="post">
+			<input type="hidden" value="{$object.id}" id="object_id" name="id" />
+			<div class="data"><table><tbody>
+				<tr><th style="width:100px;">File name</th><td><input type="text" class="txt" name="file_name" value="{$object.file_name}" /></td></tr>
+				<tr><th>File short name</th><td><input type="text" class="txt" name="file_name_short" value="{$object.file_name_short}" /></td></tr>
+				<tr><th>Key name</th><td><input type="text" class="txt" name="name_key" value="{$object.name_key}" /></td></tr>
+				<tr><th>Value name</th><td><input type="text" class="txt" name="name_val" value="{$object.name_val}" /></td></tr>
+				<tr><th>Desc</th><td><input type="text" class="txt ltxt" name="desc" value="{$object.desc}" /></td></tr>
+				<tr><th>Detail</th><td>&nbsp;<br /><textarea name="detail" rows="5" class="txt">{$object.detail}</textarea></td></tr>
+				<tr class="pagination"><td colspan="2">
+					<div class="button"><input type="submit" class="btn" value="Save" /></div>
+				</td></tr>
+			</tbody></table></div>
+		</form>
+	</div>
+	<div class="msg"></div>
+	<div class="msgdialog" title="Save result"></div>
+	<script type="text/javascript">
+	{literal}
+		$("form").submit(function(){
+			// Clear
+			$(".msg").html("");
+
+			// Submit
+			$.fn.dyAjaxForm(this, {dataType: "JSON", onEvent: {success: function(result){
+				if(result.state){
+					if($("#object_id").val() < 1){
+						$(".msgdialog").html(result.message).dialog({
+							modal: true, buttons: {
+								Ok: function(){window.location.href = result.url;}
+							}
+						});
+					}else{
+						$.fn.notificationShow($(".msg"), result.message, "success");
+					}
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}}});
+			return false;
+		});
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

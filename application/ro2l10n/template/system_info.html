@@ -1,0 +1,48 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+	<style type="text/css">
+	{literal}
+		.datatable .data table th{width:150px;}
+	{/literal}
+	</style>
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<div class="data"><table><tbody>
+			<tr><th>OS version</th><td>{$info.os_version}</td></tr>
+			<tr><th>OS IP</th><td>{$info.os_ip}</td></tr>
+			<tr><th>Server time</th><td class="timeclock" data-timestamp="{$info.os_time * 1000}">Loding...</td></tr>
+			<tr><th>Timezone</th><td>{$info.app_timezone}</td></tr>
+		</tbody></table></div>
+	</div>
+	<div class="datatable">
+		<div class="data"><table><tbody>
+			<tr><th>Web version</th><td>{$info.web_version}</td></tr>
+			<tr><th>Safe mode / GID</th><td>{if $info.web_safe_mode}Yes{else}No{/if} / {if $info.web_safe_mode_gid}Yes{else}No{/if}</td></tr>
+			<tr><th>Max upload file size</th><td>{$info.web_upload_max_filesize}</td></tr>
+		</tbody></table></div>
+	</div>
+	<div class="datatable">
+		<div class="data"><table><tbody>
+			<tr><th>MYSQL version</th><td>{$info.mysql_version}</td></tr>
+			<tr><th>PHP version</th><td>{$info.php_version}</td></tr>
+			<tr><th>GD version</th><td>{$info.php_gd_version[1]}</td></tr>
+			<tr><th>Socket</th><td>{if $info.php_socket}Yes{else}No{/if}</td></tr>
+			<tr><th>Zlib</th><td>{if $info.php_zlib}Yes{else}No{/if}</td></tr>
+		</tbody></table></div>
+	</div>
+	<div class="datatable">
+		<div class="data"><table><tbody>
+			<tr><th>App name</th><td>{$info.app_name}</td></tr>
+			<tr><th>App path</th><td>{$info.app_path}</td></tr>
+			<tr><th>App file size</th><td>{($info.app_file_size / 1048576)|string_format:"%.2f"} MB</td></tr>
+			<tr><th>DB file size</th><td>{($info.app_db_size / 1048576)|string_format:"%.2f"} MB</td></tr>
+		</tbody></table></div>
+	</div>
+	<script type="text/javascript">
+	{literal}
+		$(".timeclock").dyTimeClock();
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}

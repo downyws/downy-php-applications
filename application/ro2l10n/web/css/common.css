@@ -1,0 +1,98 @@
+﻿html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td{margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-family:Arial,Helvetica,sans-serif;vertical-align:baseline;font-size:12px;}
+ol, ul{list-style: none outside none;}
+table{border-collapse:separate;border-spacing:0;}
+a{text-decoration:none;}
+.clearfix:after{visibility:hidden;display:block;font-size:0;content:'.';clear:both;height:0;}
+.hide{display:none;}
+.tr{text-align:right;}
+.w50{width:50px;}.w100{width:100px;}.w150{width:150px;}.w200{width:200px;}.w250{width:250px;}.w300{width:300px;}.w350{width:350px;}
+.mgl0{margin-left:0px;}.mgl5{margin-left:5px;}
+.mgr10{margin-right:10px;}.mgr25{margin-right:25px;}
+.mgt15{margin-top:15px;}
+.mgb15{margin-bottom:15px;}
+
+body{background:url("/images/bg-radial-gradient.gif") no-repeat fixed left top #F0F0F0;}
+
+.loginbody{background:url('/images/bg-login.gif');color:#FFFFFF;}
+.loginbody .main{background:url('/images/bg-login-top.png') repeat-x;}
+.loginbody .main .logo{text-align:center;font-size:36px;padding-top:150px;}
+.loginbody .main .panel{margin:0 auto;width:300px;margin-top:50px;}
+.loginbody .main .panel div{margin-bottom:25px;}
+.loginbody .main .panel label{font-size:16px;padding-top:5px;display:block;float:left;}
+.loginbody .main .panel .txt{width:200px;padding:5px;float:right;border:0;}
+.loginbody .main .panel .btn{text-align:right;}
+.loginbody .main .msg{margin:0 auto;width:300px;}
+.loginbody .main .msg .notification{border:0;background-color:#454545;color:#FFFFFF;}
+
+.navgbody{background:url("/images/bg-body.gif");color:#FFFFFF;padding-left:9px;}
+.navgbody .sizebtn{cursor:pointer;height:100%;width:9px;position:fixed;left:0;top:0;}
+.navgbody .logo, .navgbody .info, .navgbody .menu{width:221px;padding-top:20px;}
+.navgbody .logo{font-size:26px;text-align:center;}
+.navgbody .info{width:191px;text-align:right;padding:20px 15px;line-height:26px;}
+.navgbody .info a{color:#CCCCCC;}
+.navgbody .info a:hover{color:#FFFFFF;}
+.navgbody .info span{margin:0px 5px;}
+.navgbody .menu{width:206px;padding:0;margin:0 0 0 15px;font-family:Helvetica, Arial, sans-serif;}
+.navgbody .menu li{list-style:none;padding-bottom:10px;text-align:right;}
+.navgbody .menu li a.topitem{background:transparent url("/images/bg-menu-item-green.gif") right center no-repeat;padding:10px 15px;color:#fff;font-size:14px;cursor:pointer;display:block;}
+.navgbody .menu li a.current{background-image:url("/images/bg-menu-item-current.gif") !important;color:#333;font-weight:bold;}
+.navgbody .menu li a.current:hover{color:#333;}
+.navgbody .menu ul{font-size:12px;display:none;}
+.navgbody .menu ul li{list-style:none;margin:0;text-align:right;padding:0;}
+.navgbody .menu ul li a{padding:8px 15px;display:block;color:#aaa;font-size:13px;line-height:1.2em;}
+.navgbody .menu ul li a:hover,.navgbody .menu ul li a.current,.navgbody .menu ul li a.current:hover{color:#fff;}
+.navgbody .menu ul li a.current{background:transparent url("/images/menu-current-arrow.gif") right center no-repeat !important;}
+
+.dictbody{background:url("/images/bg-login.gif");color:#FFFFFF;}
+.dictbody .datain{padding:10px;height:130px;background:url("/images/bg-login-top.png") repeat-x scroll 0 bottom transparent;text-align:right;}
+.dictbody .datain textarea{width:100%;font-size:12px;border:0px;resize:none;margin-bottom:8px;}
+.dictbody .dataout{margin:10px 0px;padding:0px 10px;overflow:auto;}
+.dictbody .dataout li{margin-bottom:15px;}
+
+.mainbody{padding:15px 30px 0px;}
+
+.footer{border-top:1px solid #CCCCCC;font-size:11px;margin:15px 0px 0px;padding:10px 0px;color:#555555;}
+.footer a{font-size:11px;color:#57A000;}
+.footer a:hover{color:#000000;}
+
+.txt, .btn, .notification, .datatable{border-radius:4px 4px 4px 4px;}
+.txt{background:url("/images/bg-form-field.gif") repeat-x scroll left top #FFFFFF;border:1px solid #D5D5D5;padding:3px;}
+.btn{width:auto;color:#FFFFFF;background:url("/images/bg-button-green.gif") repeat-x scroll left top #459300 !important;border:1px solid #459300 !important;padding:4px 7px !important;cursor:pointer;}
+.btn:hover{text-decoration:underline;}
+.btn:active{padding:5px 7px 3px 7px !important;}
+a.btn{color:#FFFFFF !important;margin:0px !important;}
+a.btn:hover{color:#FFFFFF !important;}
+
+.notification{position:relative;margin:0 0 15px 0;border:1px solid;background-position:10px 11px !important;background-repeat:no-repeat !important;width:99.8%;}
+.notification div{padding:10px 15px 10px 36px;line-height:1.5em;}
+.notification .close{color:#990000;font-size:9px;position:absolute;right:5px;top:5px;}
+.notification.attention{background:#FFFBCC url("/images/exclamation.png") 10px 11px no-repeat;border-color:#E6DB55;color:#666452;}
+.notification.information{background:#DBE3FF url("/images/information.png");border-color:#A2B4EE;color:#585B66;}
+.notification.success{background:#D5FFCE url("/images/tick_circle.png");border-color:#9ADF8F;color:#556652;}
+.notification.error{background:#FFCECE url("/images/cross_circle.png");border-color:#DF8F8F;color:#665252;}
+
+.datatable{border:1px solid #ccc;margin:0 0 20px 0;background:#FFFFFF;}
+.datatable h3{background:#E5E5E5 url("/images/bg-content-box.gif") top left repeat-x;margin-top:1px;padding:7px 15px 6px;font-weight:bold;font-size:14px;}
+.datatable .data{padding:10px 15px 15px;}
+.datatable .data table{width:100%;}
+.datatable .data table th{font-weight:bold;}
+.datatable .data table td, .datatable .data table th{border-bottom: 1px solid #CCCCCC;padding:5px;text-align:left;}
+.datatable .data table tr.current td, .datatable .data table tr.current th{background:#F0F0F0;}
+.datatable .data table td a{margin:0px 5px;color:#57A000;}
+.datatable .data table td a:hover{color:#000000;}
+.datatable .data table .pagination td{border-bottom:0px;padding-bottom:0px;}
+.datatable .data table .pagination td .button{float:left;padding-top:5px;}
+.datatable .data table .pagination td .navigation{float:right;padding-top:5px;}
+.datatable .data table .pagination td .navigation .number{border-radius:4px 4px 4px 4px;border-color:#459300 !important;border:1px solid #DDDDDD;margin:0px 5px 0px 0px;padding:3px 6px;}
+.datatable .data table .pagination td .navigation .number:hover{text-decoration:underline;}
+.datatable .data table .pagination td .navigation .number.current{color:#FFFFFF;background:url("/images/bg-button-green.gif") repeat-x scroll left top #469400;}
+.datatable .data table td label{margin:0px 25px 0px 5px;}
+.datatable .data table td.filter label{margin:0px;font-weight:bold;font-size:14px;}
+.datatable .data table td.filter input{margin-left:5px;margin-right:25px;}
+.datatable .data table .nobb td, .datatable .data table .nobb th{border-bottom:0px;}
+
+font.attention{color:#E6DB55 !important;}
+font.information{color:#A2B4EE !important;}
+font.success{color:#9ADF8F !important;}
+font.error{color:#DF8F8F !important;}
+font.bold{font-weight:bold !important;}

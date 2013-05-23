@@ -1,0 +1,372 @@
+{include file="common_top.html"}
+	{include file="common_head.html"}
+	<style type="text/css">
+	{literal}
+		.datatable .data table td.filter .state-block{float:left;}
+		.datatable .data table td.filter .filter-item label{font-size:12px;}
+		.datatable .data table td.filter .file-block{float:left;line-height:30px;}
+		.datatable .data table tr.filter td .btn{float:left;}
+		.datatable.loadmore .data{padding:0px;}
+		.datatable.loadmore .data table td{font-size:14px;text-align:center;cursor:pointer;}
+		.datatable.loadmore .data table td:hover{background:#F3F3F3;}
+		.uploaddialog{border:1px solid #CCCCCC;background:#FFFFFF;border-radius:4px 4px 4px 4px;}
+		.uploaddialog .panel{border:3px dashed #DDDDDD;width:500px;height:100px;margin:0px;float:none;margin:10px;border-radius:4px 4px 4px 4px;}
+		.uploaddialog .panel .info{color:#DDDDDD;font-size:26px;height:50px;margin:auto;bottom:0;left:0;right:0;top:0;position:absolute;text-align:center;}
+		.uploaddialog .message{border-radius:4px 4px 4px 4px;background:#000000;color:#FFFFFF;padding:5px 10px;margin:5px;top:0;left:0;position:absolute;display:none;box-shadow:0 2px 4px rgba(0, 0, 0, 0.2);}
+		.uploaddialog .loading{background-color:#9999FF;height:10px;width:480px;margin:20px auto;}
+		.uploaddialog .loading .bar{background-image:url('/images/bar-loading.gif');width:0%;height:100%;opacity:0.12;}
+		.tpablock{margin-bottom:10px;padding:10px;position:relative;}
+		.tpablock.yellow{background:#FFFBCC;border:1px solid #E6DB55;}
+		.tpablock.blue{background:#DBE3FF;border:1px solid #A2B4EE;}
+		.tpablock.green{background:#D5FFCE;border:1px solid #9ADF8F;}
+		.tpablock.red{background:#FFCECE;border:1px solid #DF8F8F;}
+		.tpablock .content{cursor:pointer;}
+		.tpablock .content span{display:block;margin-bottom:5px;}
+		.tpablock .content span.hide{display:none;}
+		.tpablock .info b{margin-right:10px;}
+		.tpablock .btns{float:right;}
+		.tpablock .btns a{margin-left:15px;}
+		.tpablock .message{background:none repeat scroll 0 0 #000000;border-radius:4px 4px 4px 4px;box-shadow:0 2px 4px rgba(0, 0, 0, 0.2);color:#FFFFFF;display:none;left:0;margin:5px;padding:5px 10px;position:absolute;top:0;}
+	{/literal}
+	</style>
+</head>
+<body class="mainbody">
+	<div class="datatable">
+		<div class="data"><table><tbody>
+			<tr class="nobb filter"><td class="filter">
+				<form action="/index.php?a=localization&m=mytaskkey&t=ajax" method="post" class="form-filter">
+					<input type="hidden" name="page" id="page" />
+					<div class="filter-item clearfix">
+						<div class="state-block">
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TD}" id="state_{$smarty.const.MAPPING_STATE_TD}" /><label for="state_{$smarty.const.MAPPING_STATE_TD}">TD</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TB}" id="state_{$smarty.const.MAPPING_STATE_TB}" /><label for="state_{$smarty.const.MAPPING_STATE_TB}">TB</label>
+						</div>
+						<div class="state-block">
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PD}" id="state_{$smarty.const.MAPPING_STATE_PD}" /><label for="state_{$smarty.const.MAPPING_STATE_PD}">PD</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PB}" id="state_{$smarty.const.MAPPING_STATE_PB}" /><label for="state_{$smarty.const.MAPPING_STATE_PB}">PB</label>
+						</div>
+						<div class="state-block">
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AD}" id="state_{$smarty.const.MAPPING_STATE_AD}" /><label for="state_{$smarty.const.MAPPING_STATE_AD}">AD</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AB}" id="state_{$smarty.const.MAPPING_STATE_AB}" /><label for="state_{$smarty.const.MAPPING_STATE_AB}">AB</label>
+						</div>
+					</div>
+					<div class="filter-item hide mfilter mgb15 mgt15" data-hide="true">
+						<label>Key</label><input type="text" name="key" class="txt w100" />
+						<label>En content</label><input type="text" name="content_new_en" class="txt w300" placeholder="It will so slowly..." />
+					</div>
+					<div class="filter-item clearfix hide mfilter" data-hide="true">
+						<div class="file-block filelist">
+							{foreach from=$files.data item=file}
+								<input type="checkbox" name="file[]" value="{$file.id}" id="file_{$file.id}" /><label for="file_{$file.id}">{$file.file_name}</label>
+							{/foreach}
+						</div>
+					</div>
+				</form>
+			</td><td class="w50">
+				<input type="button" class="btn btn_morefilter" value="Show more filter" />
+			</td><td class="w50">
+				<input type="button" class="btn btn_turnpage" data-page="1" value="Submit filter" />
+			</td></tr>
+		</tbody></table></div>
+	</div>
+	<div class="datatable opr">
+		<div class="data"><table><tbody>
+			<tr class="nobb">
+				<td class="msg"></td>
+				<td class="w50"><input type="button" class="btn btn_import" value="Import translation" /></td>
+				<td class="w50"><input type="button" class="btn btn_export" value="Export translation" /></td>
+			</tr>
+		</tbody></table></div>
+	</div>
+	<div class="datatable datalist"><div class="data"></div></div>
+	<div class="datatable loadmore hide"><div class="data"><table><tbody><tr class="nobb"><td class="btn_more">Load more</td></tr></tbody></table></div></div>
+	<div class="msgdialog" title="Confirm"></div>
+	<script type="text/javascript">
+		var FILTER_KEY = "";
+		var DATA_AMOUNT = 0;
+		var PAGE_NOW = 0;
+		var PAGE_SIZE = "{$line_task}";
+		var TASK_EXCO = {if $task_exco}true{else}false{/if};
+	{literal}
+		$(".state-block").buttonset();
+		$(".file-block").buttonset();
+		$(".btn_morefilter").click(function(){
+			if($(".mfilter").data("hide")){
+				$(this).val("Hide more filter");
+				$(".mfilter").data("hide", false).slideDown(300);
+			}else{
+				$(this).val("Show more filter");
+				$(".mfilter").data("hide", true).slideUp(300);
+			}
+		});
+		$(".btn_turnpage").click(function(){
+			$(".msg").html("");
+			$.fn.dyAjaxForm($(".form-filter"), {dataType: "JSON", onEvent: {success: function(result){
+				if(result.state){
+					$(".datalist .data").html("");
+					FILTER_KEY = result.data.key;
+					DATA_AMOUNT = result.data.count;
+					PAGE_NOW = 0;
+					F_TurnPage();
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}}});
+		});
+		$(".btn_import").click(function(){
+			$.fn.dyDialog({
+				locate: {type: "window", x: "middle", y: "middle", origin: "mm"}, 
+				content: "<div class='uploaddialog'><div class='panel'><div class='info'>Drag and drop files to this</div></div><div class='message'></div></div>",
+				close: {className: "close", bgBtn: true},
+				onEvent: {open: function(){
+					var obj = $(".uploaddialog .panel");
+					obj.get(0).addEventListener("drop", H_Drop, false);
+					obj.bind("dragleave", H_DragLeave);
+					obj.bind("dragover", H_DragOver);
+				}}
+			});
+		});
+		$(".btn_export").click(function(){
+			var action = $(".form-filter").attr("action");
+			$(".form-filter").attr("action", "/index.php?a=localization&m=exporttask").attr("target", "_blank").submit();
+			$(".form-filter").attr("action", action).attr("target", "");
+		});
+		$(".btn_more").click(function(){
+			F_TurnPage();
+		});
+		$("body").on("click", ".tpablock .content", function(){
+			$(this).find(".coe").fadeIn(250);
+			$(this).find(".coc").fadeIn(250);
+		});
+		$("body").on("click", ".btn_dict", function(){
+			var obj = $(this).parent().parent();
+			var key = obj.data("key");
+			$(".dictbody form textarea" , window.top.frames['dictFrame'].document).val(key);
+			$(".dictbody form input" , window.top.frames['dictFrame'].document).click();
+		});
+		$("body").on("click", ".btn_finish, .btn_pass, .btn_confirm, .btn_forgo", function(){
+			var obj = $(this).parent().parent();
+			var file_id = obj.data("file_id");
+			var file_name = obj.data("file_name");
+			var key = obj.data("key");
+			var state = $(this).data("state");
+			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=localization&m=mytaskdo&t=ajax", data: {state: state, stamp: file_id + "_" + key}, async: false, success: function(result){
+				if(result.state){
+					var id = "msg_" + parseInt(Math.random() * 10000000);
+					$("#" + id).remove();
+					obj.after("<div id='" + id + "'></div>").remove();
+					$.fn.notificationShow($("#" + id), "Do [ " + state + " ] " + file_name + " " + key + " success.", "success");
+				}else{
+					var msg_obj = obj.find(".message");
+					msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html(result.message).show(300);	
+					$("body").one('mousedown', function(){msg_obj.hide(300);});
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				var msg_obj = obj.find(".message");
+				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX request error[" + errorThrown + "].").show(300);	
+				$("body").one('mousedown', function(){msg_obj.hide(300);});
+			}});
+		});
+		$("body").on("click", ".btn_back", function(){
+			var obj = $(this).parent().parent();
+			var file_id = obj.data("file_id");
+			var file_name = obj.data("file_name");
+			var key = obj.data("key");
+			$(".msgdialog").attr("title", "Reason").html("<b>" + file_name + "</b><br /><b>" + key + "</b><br /><input type='text' class='txt w250' id='reason' />").dialog({
+				modal: true, buttons: {
+					Ok: function(){
+						$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=localization&m=mytaskdo&t=ajax", data: {state: "back", stamp: file_id + "_" + key, reason: $("#reason").val()}, async: false, success: function(result){
+							if(result.state){
+								var id = "msg_" + parseInt(Math.random() * 10000000);
+								$("#" + id).remove();
+								obj.after("<div id='" + id + "'></div>").remove();
+								$.fn.notificationShow($("#" + id), "Pass " + file_name + " " + key + " success.", "success");
+							}else{
+								var msg_obj = obj.find(".message");
+								msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html(result.message).show(300);	
+								$("body").one('mousedown', function(){msg_obj.hide(300);});
+							}
+						}, error: function(jqXHR, textStatus, errorThrown){
+							var msg_obj = obj.find(".message");
+							msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX request error[" + errorThrown + "].").show(300);	
+							$("body").one('mousedown', function(){msg_obj.hide(300);});
+						}});
+						$(this).dialog("close");
+					},
+					Cancel: function(){
+						$(this).dialog("close");
+					}
+				}
+			});
+		});
+		function F_TurnPage(){
+			$(".msg").html("");
+			var start = PAGE_NOW;
+			var end = (PAGE_NOW + PAGE_SIZE - 1);
+			if(end >= DATA_AMOUNT){
+				end = DATA_AMOUNT - 1;
+			}
+			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=localization&m=mytasklist&t=ajax", data: {start: start, end: end, key: FILTER_KEY}, async: false, success: function(result){
+				if(result.state){
+					// 解析内容
+					var html = "";
+					for(i = 0; i < result.data.length; i++){
+						html += F_ConverToHTML(result.data[i]);
+					}
+					$(".datalist .data").append(html);
+					PAGE_NOW = end + 1;
+					if(PAGE_NOW >= DATA_AMOUNT){
+						$(".loadmore").hide();
+					}else{
+						$(".loadmore").show();
+					}
+				}else{
+					$.fn.notificationShow($(".msg"), result.message, "error");
+				}
+			}, error: function(jqXHR, textStatus, errorThrown){
+				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+			}});
+		}
+		function F_ConverToHTML(data){
+			var color = "red", state = "" , btns = "";
+			switch(data.state){
+				case "11": 
+					color = "yellow"; state = "TD";
+					btns += "<a href='javascript:;' data-state='finish' class='btn_finish'>Finish</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					break;
+				case "12":
+					color = "red"; state = "TB"; 
+					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>Confirm</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					break;
+				case "21":
+					color = "blue"; state = "PD"; 
+					btns += "<a href='javascript:;' data-state='pass' class='btn_pass'>Pass</a>";
+					btns += "<a href='javascript:;' data-state='back' class='btn_back'>Back</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					break;
+				case "22":
+					color = "red"; state = "PB"; 
+					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>Confirm</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					break;
+				case "31":
+					color = "green"; state = "AD"; 
+					btns += "<a href='javascript:;' data-state='pass' class='btn_pass'>Pass</a>";
+					btns += "<a href='javascript:;' data-state='back' class='btn_back'>Back</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					break;
+				case "32":
+					color = "red"; state = "AB"; 
+					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>Confirm</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					break;
+			}
+			var exco = TASK_EXCO ? '' : 'hide';
+
+			var html = "<div data-file_id='" + data.file_id + "' data-file_name='" + data.file_name + "' data-key='" + data.key + "' class='tpablock " + color + "'><div class='message'></div><div class='content'>";
+			html += "<span class='coe " + exco + "'><b>COE: </b>" + data.content_old_en + "</span>";
+			html += "<span class='cne'><b>CNE: </b>" + data.content_new_en + "</span>";
+			html += "<span class='coc " + exco + "'><b>COC: </b>" + data.content_old_en + "</span>";
+			html += "<span class='cnc'><b>CNC: </b>" + data.content_new_cn + "</span>";
+			html += "</div><span class='info'><b>" + state + "</b><b>" + data.file_name + "</b><b>" + data.key + "</b></span><span class='btns'>";
+			html += btns;
+			html += "</span></div>";
+
+			return html;
+		}
+		// 文件拖拽
+		function F_DropType(obj, option){
+			if(option == "stop"){
+				obj.get(0).removeEventListener("drop", H_Drop, false);
+				obj.unbind("dragleave", H_DragLeave);
+				obj.unbind("dragover", H_DragOver);
+				obj.get(0).addEventListener("drop", H_DropWait, false);
+				obj.bind("dragleave", H_DropWait);
+				obj.bind("dragover", H_DropWait);
+			}else if(option == "start"){
+				obj.get(0).removeEventListener("drop", H_DropWait, false);
+				obj.unbind("dragleave", H_DropWait);
+				obj.unbind("dragover", H_DropWait);
+				obj.get(0).addEventListener("drop", H_Drop, false);
+				obj.bind("dragleave", H_DragLeave);
+				obj.bind("dragover", H_DragOver);
+			}
+		}
+		function H_DropWait(event){
+			event.stopPropagation();
+			event.preventDefault();
+		}
+		function H_Drop(event){
+			F_DropType($(this), "stop");
+			event.stopPropagation();
+			event.preventDefault();
+			$(this).css({"border-color":"#DDDDDD"});
+			var filelist = event.dataTransfer.files;
+			if (!filelist || !filelist.length){
+				var msg_obj = $(this).parent().find(".message");
+				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("Error.").show(300);	
+				$("body").one('mousedown', function(){msg_obj.hide(300);});
+				F_DropType($(this), "start");
+			}else if(filelist.length > 1){
+				var msg_obj = $(this).parent().find(".message");
+				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("Only one file.").show(300);	
+				$("body").one('mousedown', function(){msg_obj.hide(300);});
+				F_DropType($(this), "start");
+			}else{
+				var that = this, obj = $(this);
+				obj.html("<div class='info'><div class='loading'><div class='bar'></div></div></div>");
+				$.fn.dyUploadFile(filelist[0], {
+					dataType: "JSON",
+					name: "file",
+					url: "/index.php?a=localization&m=importtask&t=ajax",
+					onEvent: {success: function(result){
+						if(result.state){
+							$(".msgdialog").attr("title", "Message").html(result.message).dialog({
+								modal: true, buttons: {
+									Ok: function(){
+										window.location.reload();
+									}
+								}
+							});
+						}else{
+							obj.html("<div class='info'>Drag and drop files to this</div>");
+							var msg_obj = $(that).parent().find(".message");
+							msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html(result.message).show(300);	
+							$("body").one('mousedown', function(){msg_obj.hide(300);});
+						}
+						F_DropType($(that), "start");
+					}, error: function(error){
+						var msg_obj = $(this).parent().find(".message");
+						msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX request error[" + error + "].").show(300);	
+						$("body").one('mousedown', function(){msg_obj.hide(300);});
+						F_DropType($(that), "start");
+					}, progress: function(event){
+						obj.find(".loading .bar").animate({"width": (event.loaded / filelist[0].size) * 100 + "%"}, 300);
+					}}
+				});
+			}
+		}
+		function H_DragLeave(event){
+			event.stopPropagation();
+			event.preventDefault();
+			$(this).css({"border-color":"#DDDDDD"});
+		}
+		function H_DragOver(event){
+			event.stopPropagation();
+			event.preventDefault();
+			$(this).css({"border-color":"#4D90FE"});
+		}
+	{/literal}
+	</script>
+{include file="common_copyright.html"}
+{include file="common_bottom.html"}
