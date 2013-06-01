@@ -118,3 +118,17 @@ CREATE TABLE `l10n_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `l10n_user` (`id`, `nick`, `email`, `password`, `individuation`, `state`, `task_max_count`, `task_occ_count`, `dedicate_t_count`, `dedicate_p_count`, `dedicate_a_count`, `super`, `dict`, `translation`, `proof`, `audit`) VALUES (0, 'Wing075', 'wing075@gmail.com', 'd41d8cd98f00b204e9800998ecf8427e', '', 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+-- ----------------------------
+-- Table structure for `l10n_auto_update`
+-- ----------------------------
+DROP TABLE IF EXISTS `l10n_auto_update`;
+CREATE TABLE `l10n_auto_update` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `keyword` varchar(20) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `url` text NOT NULL,
+  `update_time` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `path` (`path`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
