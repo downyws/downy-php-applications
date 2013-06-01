@@ -1,0 +1,10 @@
+<tr class="tr_{$object.id}">
+	<td>{$object.path}</td>
+	<td><input type="text" value="{$object.url}" class="txt w250 au_url" /></td>
+	<td>{$object.update_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+	<td>
+		<a data-id="{$object.id}" class="btn_edit" href="javascript:;">Save</a>
+		<a data-id="{$object.id}" class="btn_upd" href="javascript:;">Update</a>
+		<a data-id="{$object.id}" data-confirm="Confirm delete this data?" class="btn_del" href="javascript:;">Delete</a>
+	</td>
+</tr>

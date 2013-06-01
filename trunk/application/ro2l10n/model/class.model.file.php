@@ -7,7 +7,7 @@ class ModelFile extends ModelCommon
 	{
 		parent::__construct();
 	}
-	
+
 	public function getById($id)
 	{
 		$condition = array();
