@@ -17,9 +17,18 @@ class ModelAutoUpdate extends ModelCommon
 		return $object;
 	}
 
+	public function getSetting()
+	{
+		$sql = ' SELECT * FROM ' . $this->table() . ' WHERE id < 0 ORDER BY path ASC ';
+		$data = $this->fetchRows($sql);
+
+		$result = array('count' => count($data), 'data' => $data, 'pager' => null);
+		return $result;
+	}
+
 	public function getList()
 	{
-		$sql = ' SELECT * FROM ' . $this->table() . ' ORDER BY keyword ASC, path ASC ';
+		$sql = ' SELECT * FROM ' . $this->table() . ' WHERE id > 0 ORDER BY keyword ASC, path ASC ';
 		$data = $this->fetchRows($sql);
 
 		$result = array('count' => count($data), 'data' => $data, 'pager' => null);
@@ -49,7 +58,7 @@ class ModelAutoUpdate extends ModelCommon
 			$result['message'] = 'Url can not empty.';
 			return $result;
 		}
-		else if($object['id'] < 1)
+		else if($object['id'] == 0)
 		{
 			if(empty($object['keyword']))
 			{
@@ -66,6 +75,11 @@ class ModelAutoUpdate extends ModelCommon
 				return $result;
 			}
 		}
+		else if($object['id'] < 0)
+		{
+			$result['message'] = 'Object id error.';
+			return $result;
+		}
 
 		if($object['id'] > 0)
 		{
@@ -79,6 +93,51 @@ class ModelAutoUpdate extends ModelCommon
 			unset($object['id']);
 			$object['update_time'] = time();
 			$result['state'] = $this->insert($object);
+		}
+
+		$result['message'] = $result['state'] ? 'Save success.' : 'Save error.';
+
+		return $result;
+	}
+
+	public function saveSetting($object)
+	{
+		$result = array('state' => false);
+
+		if($object['id'] == 0)
+		{
+			// Î¨Ò»¼ì²é
+			$condition = array();
+			$condition[] = array('path' => array('eq', $object['path']));
+			if($this->getOne($condition, 'id'))
+			{
+				$result['message'] = 'Key exists.';
+				return $result;
+			}
+		}
+
+		if($object['id'] < 0)
+		{
+			$condition = array();
+			$condition[] = array('id' => array('eq', $object['id']));
+			$object = array('url' => $object['url']);
+			$result['state'] = $this->update($condition, $object);
+		}
+		else
+		{
+			$sql = 'SELECT MIN(id) FROM ' . $this->table();
+			$id = $this->fetchOne($sql) - 1;
+			$id = ($id >= 0) ? -1 : $id;
+			$object = array
+			(
+				'id' => $id,
+				'keyword' => '',
+				'path' => $object['path'],
+				'url' => $object['url'],
+				'update_time' => 0
+			);
+			$result['state'] = $this->insert($object);
+			$result['state'] = $result['state'] ? $id : $result['state'];
 		}
 
 		$result['message'] = $result['state'] ? 'Save success.' : 'Save error.';
