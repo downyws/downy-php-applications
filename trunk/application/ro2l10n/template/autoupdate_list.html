@@ -24,7 +24,7 @@
 		<h3>{$k}</h3>
 		<div class="data"><table><tbody>
 			{foreach from=$cate item=object}
-				{include file="file_autoupdate_block.html"}
+				{include file="autoupdate_list_block.html"}
 			{/foreach}
 		</tbody></table></div>
 		</div>
@@ -41,7 +41,7 @@
 			}else{
 				data = {id: id, type: "edit", keyword: obj.find(".au_keyword").val(), path: obj.find(".au_path").val(), url: obj.find(".au_url").val()};
 			}
-			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=file&m=autoupdate&t=ajax", data: data, async: false, success: function(result){
+			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=autoupdate&m=operate&t=ajax", data: data, async: false, success: function(result){
 				if(result.state){
 					$(".msgdialog").html(result.message).dialog({modal: true, buttons: {Ok: function(){
 						$(this).dialog("close");
@@ -62,7 +62,7 @@
 		$("body").on("click", ".btn_upd", function(){
 			var id = $(this).data("id");
 			var that = this;
-			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=file&m=autoupdate&t=ajax", data: {id: id, type: "upd"}, async: false, success: function(result){
+			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=autoupdate&m=operate&t=ajax", data: {id: id, type: "upd"}, async: false, success: function(result){
 				if(result.state){
 					$(".tr_" + id).addClass("tr_id_del").after(result.data);
 					$(".tr_id_del").remove();
@@ -80,7 +80,7 @@
 				modal: true, buttons: {
 					Ok: function(){
 						var thatthat = this;
-						$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=file&m=autoupdate&t=ajax", data: {id: id, type: "del"}, async: false, success: function(result){
+						$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=autoupdate&m=operate&t=ajax", data: {id: id, type: "del"}, async: false, success: function(result){
 							$(thatthat).dialog("close");
 							if(result.state){
 								$(that).parent().parent().remove();

@@ -63,8 +63,12 @@ $GLOBALS['CONFIG']['ACTION_METHOD'] = array(
 	'file_import' => array('super'),
 	'file_export' => array('super'),
 	'file_refresh' => array('super'),
-	'file_autoupdate' => array('super'),
-	'file_getautoupdate' => '',
+
+	'autoupdate_list' => array('super'),
+	'autoupdate_operate' => array('super'),
+	'autoupdate_setting' => array('super'),
+	'autoupdate_info' => '',
+	'autoupdate_file' => '',
 
 	'user_list' => array('super'),
 	'user_edit' => array('super'),

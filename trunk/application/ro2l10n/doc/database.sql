@@ -124,7 +124,7 @@ INSERT INTO `l10n_user` (`id`, `nick`, `email`, `password`, `individuation`, `st
 -- ----------------------------
 DROP TABLE IF EXISTS `l10n_auto_update`;
 CREATE TABLE `l10n_auto_update` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `keyword` varchar(20) NOT NULL,
   `path` varchar(255) NOT NULL,
   `url` text NOT NULL,
