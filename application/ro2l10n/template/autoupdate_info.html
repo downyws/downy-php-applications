@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-	{* <![CDATA[ ]]> *}
 	{foreach from=$objects.data item=object}
 	<item>
-		<key>{$object.path}</key>
-		<value>{$object.url}</value>
+		<key><![CDATA[{$object.path}]]></key>
+		<value><![CDATA[{$object.url}]]></value>
 	</item>
 	{/foreach}
 </info>

@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <files>
-	{* <![CDATA[ ]]> *}
 	{foreach from=$objects.data item=object}
 	<file>
 		<id>{$object.id}</id>
 		<update_time>{$object.update_time}</update_time>
 		<keyword>{$object.keyword}</keyword>
-		<path>{$object.path}</path>
-		<url>{$object.url}</url>
+		<path><![CDATA[{$object.path}]]></path>
+		<url><![CDATA[{$object.url}]]></url>
 	</file>
 	{/foreach}
 </files>
