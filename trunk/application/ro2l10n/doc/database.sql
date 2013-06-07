@@ -129,6 +129,5 @@ CREATE TABLE `l10n_auto_update` (
   `path` varchar(255) NOT NULL,
   `url` text NOT NULL,
   `update_time` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `path` (`path`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
