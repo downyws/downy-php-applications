@@ -6,9 +6,9 @@
 		<div class="logo">{$smarty.const.APP_NAME}</div>
 		<div class="panel">
 			<form action="/index.php?a=index&m=login&t=ajax" method="post">
-				<div class="clearfix"><label>Email</label><input type="text" class="txt" name="email" /></div>
-				<div class="clearfix"><label>Password</label><input type="password" class="txt" name="password" /></div>
-				<div class="tr"><input type="submit" class="btn" value="Sign In" /></div>
+				<div class="clearfix"><label>邮箱</label><input type="text" class="txt" name="email" /></div>
+				<div class="clearfix"><label>密码</label><input type="password" class="txt" name="password" /></div>
+				<div class="tr"><input type="submit" class="btn" value="登录" /></div>
 			</form>
 		</div>
 		<div class="msg"></div>
@@ -27,7 +27,7 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}}});
 			return false;
 		});

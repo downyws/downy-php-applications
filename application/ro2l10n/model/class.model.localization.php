@@ -69,7 +69,7 @@ class ModelLocalization extends ModelCommon
 			$result['data'][] = array('en' => 'More then ' . DICT_SHOW_COUNT . ', can not show all.', 'cn' => '');
 		}
 		$result['state'] = !!$result['data'];
-		$result['message'] = $result['state'] ? '' : 'Did not match any dictionaries.';
+		$result['message'] = $result['state'] ? '' : '没有匹配到字典。';
 
 		// 保存缓存
 		$filecache->set($key, $result, 3600);
@@ -86,7 +86,7 @@ class ModelLocalization extends ModelCommon
 			$condition[] = array('id' => array('eq', $object['id']));
 			$data = array('cn' => $object['cn']);
 			$result['state'] = $this->update($condition, $data);
-			$result['message'] = $result['state'] ? '' : 'save error.';
+			$result['message'] = $result['state'] ? '' : '保存错误。';
 		}
 		else
 		{
@@ -95,13 +95,13 @@ class ModelLocalization extends ModelCommon
 			$exists = $this->getOne($condition, 'COUNT(*)');
 			if($exists)
 			{
-				$result = array('state' => false, 'message' => 'dict en is exists.');
+				$result = array('state' => false, 'message' => '字典已经存在。');
 			}
 			else
 			{
 				$data = array('cn' => $object['cn'], 'en' => $object['en']);
 				$result['state'] = $this->insert($data);
-				$result['message'] = $result['state'] ? '' : 'save error.';
+				$result['message'] = $result['state'] ? '' : '保存错误。';
 			}
 		}
 		return $result;
@@ -141,7 +141,7 @@ class ModelLocalization extends ModelCommon
 
 		$result = array();
 		$result['state'] = $this->transCommit();
-		$result['message'] = $result['state'] ? 'Import success.' : 'Import error.';
+		$result['message'] = $result['state'] ? '导入成功。' : '导入错误。';
 		return $result;
 	}
 
@@ -196,11 +196,11 @@ class ModelLocalization extends ModelCommon
 
 		if(empty($condition))
 		{
-			$result['message'] = 'Have not item.';
+			$result['message'] = '没有数据。';
 		}
 		else if(!$opr_lv)
 		{
-			$result['message'] = 'No power.';
+			$result['message'] = '没有权限。';
 		}
 		else
 		{
@@ -238,7 +238,7 @@ class ModelLocalization extends ModelCommon
 				if($user['task_max_count'] < $user['task_occ_count'] + $exec)
 				{
 					$this->transRollback();
-					$result = array('state' => false, 'message' => 'You only can occ ' . ($user['task_max_count'] - $user['task_occ_count']) . ' task.');
+					$result = array('state' => false, 'message' => '你只能占领 ' . ($user['task_max_count'] - $user['task_occ_count']) . ' 条任务。');
 				}
 				else
 				{
@@ -248,18 +248,18 @@ class ModelLocalization extends ModelCommon
 					if($result['state'])
 					{
 						$this->setSessionUser(array('task_occ_count' => $user['task_occ_count'] + $exec));
-						$result = array('state' => true, 'message' => 'Choose ' . $count . ' rows, Exec ' . $exec . ' rows.');
+						$result = array('state' => true, 'message' => '选择 ' . $count . ' 条记录, 成功执行 ' . $exec . ' 条记录.');
 					}
 					else
 					{
-						$result = array('state' => false, 'message' => 'Occ error.');
+						$result = array('state' => false, 'message' => '占领错误。');
 					}
 				}
 			}
 			else
 			{
 				$this->transRollback();
-				$result = array('state' => false, 'message' => 'Occ error.');
+				$result = array('state' => false, 'message' => '占领错误。');
 			}
 		}
 		return $result;
@@ -313,7 +313,7 @@ class ModelLocalization extends ModelCommon
 		}
 		if(empty($stamp))
 		{
-			$result = array('state' => false, 'message' => 'No data.');
+			$result = array('state' => false, 'message' => '没有数据。');
 		}
 		else
 		{
@@ -348,11 +348,11 @@ class ModelLocalization extends ModelCommon
 				case 'finish':
 					if(empty($object['content_new_cn']))
 					{
-						$result['message'] = 'Translation content can not empty.';
+						$result['message'] = '翻译内容不能为空。';
 					}
 					else if($object['state'] != MAPPING_STATE_TD)
 					{
-						$result['message'] = 'Task state error.';
+						$result['message'] = '任务状态错误。';
 					}
 					else
 					{
@@ -362,7 +362,7 @@ class ModelLocalization extends ModelCommon
 						$sql = 'UPDATE ' . $this->table('user') . ' SET task_occ_count = task_occ_count - 1 WHERE id = ' . $user_id;
 						$this->query($sql);
 						$result['state'] = $this->transCommit();
-						$result['message'] = $result['state'] ? 'Finish success.' : 'Finish error.';
+						$result['message'] = $result['state'] ? '完成成功。' : '完成失败。';
 					}
 					break;
 				case 'pass':
@@ -374,7 +374,7 @@ class ModelLocalization extends ModelCommon
 						$sql = 'UPDATE ' . $this->table('user') . ' SET task_occ_count = task_occ_count - 1 WHERE id = ' . $user_id;
 						$this->query($sql);
 						$result['state'] = $this->transCommit();
-						$result['message'] = $result['state'] ? 'Pass success.' : 'Pass error.';
+						$result['message'] = $result['state'] ? '通过成功。' : '通过失败。';
 					}
 					else if($object['state'] == MAPPING_STATE_AD)
 					{
@@ -384,11 +384,11 @@ class ModelLocalization extends ModelCommon
 						$sql = 'UPDATE ' . $this->table('user') . ' SET task_occ_count = task_occ_count - 1 WHERE id = ' . $user_id;
 						$this->query($sql);
 						$result['state'] = $this->transCommit();
-						$result['message'] = $result['state'] ? 'Pass success.' : 'Pass error.';
+						$result['message'] = $result['state'] ? '通过成功。' : '通过失败。';
 					}
 					else
 					{
-						$result['message'] = 'Task state error.';
+						$result['message'] = '任务状态错误。';
 					}
 					break;
 				case 'back':
@@ -402,7 +402,7 @@ class ModelLocalization extends ModelCommon
 						$sql = 'UPDATE ' . $this->table('user') . ' SET task_occ_count = task_occ_count - 1 WHERE id = ' . $user_id;
 						$this->query($sql);
 						$result['state'] = $this->transCommit();
-						$result['message'] = $result['state'] ? 'Back success.' : 'Back error.';
+						$result['message'] = $result['state'] ? '退回成功。' : '退回失败。';
 					}
 					else if($object['state'] == MAPPING_STATE_AD)
 					{
@@ -414,7 +414,7 @@ class ModelLocalization extends ModelCommon
 						$sql = 'UPDATE ' . $this->table('user') . ' SET task_occ_count = task_occ_count - 1 WHERE id = ' . $user_id;
 						$this->query($sql);
 						$result['state'] = $this->transCommit();
-						$result['message'] = $result['state'] ? 'Back success.' : 'Back error.';
+						$result['message'] = $result['state'] ? '退回成功。' : '退回失败。';
 					}
 					else
 					{
@@ -430,7 +430,7 @@ class ModelLocalization extends ModelCommon
 						$sql = 'UPDATE ' . $this->table('user') . ' SET task_occ_count = task_occ_count - 1 WHERE id = ' . $user_id;
 						$this->query($sql);
 						$result['state'] = $this->transCommit();
-						$result['message'] = $result['state'] ? 'Forgo success.' : 'Forgo error.';
+						$result['message'] = $result['state'] ? '放弃成功。' : '放弃失败。';
 					}
 					else if(in_array($object['state'], array(MAPPING_STATE_PD, MAPPING_STATE_PB)))
 					{
@@ -440,7 +440,7 @@ class ModelLocalization extends ModelCommon
 						$sql = 'UPDATE ' . $this->table('user') . ' SET task_occ_count = task_occ_count - 1 WHERE id = ' . $user_id;
 						$this->query($sql);
 						$result['state'] = $this->transCommit();
-						$result['message'] = $result['state'] ? 'Forgo success.' : 'Forgo error.';
+						$result['message'] = $result['state'] ? '放弃成功。' : '放弃失败。';
 					}
 					else if(in_array($object['state'], array(MAPPING_STATE_AD, MAPPING_STATE_AB)))
 					{
@@ -450,11 +450,11 @@ class ModelLocalization extends ModelCommon
 						$sql = 'UPDATE ' . $this->table('user') . ' SET task_occ_count = task_occ_count - 1 WHERE id = ' . $user_id;
 						$this->query($sql);
 						$result['state'] = $this->transCommit();
-						$result['message'] = $result['state'] ? 'Forgo success.' : 'Forgo error.';
+						$result['message'] = $result['state'] ? '放弃成功。' : '放弃失败。';
 					}
 					else
 					{
-						$result['message'] = 'Task state error.';
+						$result['message'] = '任务状态错误。';
 					}
 					break;
 				case 'confirm':
@@ -462,30 +462,30 @@ class ModelLocalization extends ModelCommon
 					{
 						$data = array('state' => MAPPING_STATE_TD, 'reason' => '');
 						$result['state'] = $this->update($condition, $data);
-						$result['message'] = $result['state'] ? 'Confirm success.' : 'Confirm error.';
+						$result['message'] = $result['state'] ? '确认成功。' : '确认失败。';
 					}
 					else if($object['state'] == MAPPING_STATE_PB)
 					{
 						$data = array('state' => MAPPING_STATE_PD, 'reason' => '');
 						$result['state'] = $this->update($condition, $data);
-						$result['message'] = $result['state'] ? 'Confirm success.' : 'Confirm error.';
+						$result['message'] = $result['state'] ? '确认成功。' : '确认失败。';
 					}
 					else if($object['state'] == MAPPING_STATE_AB)
 					{
 						$data = array('state' => MAPPING_STATE_AD, 'reason' => '');
 						$result['state'] = $this->update($condition, $data);
-						$result['message'] = $result['state'] ? 'Confirm success.' : 'Confirm error.';
+						$result['message'] = $result['state'] ? '确认成功。' : '确认失败。';
 					}
 					else
 					{
-						$result['message'] = 'Task state error.';
+						$result['message'] = '任务状态错误。';
 					}
 					break;
 			}
 		}
 		else
 		{
-			$result['message'] = 'You have not this task.';
+			$result['message'] = '你没有这项任务。';
 		}
 
 		return $result;
@@ -537,7 +537,7 @@ class ModelLocalization extends ModelCommon
 
 		$result = array();
 		$result['state'] = $this->transCommit();
-		$result['message'] = $result['state'] ? 'Import task success.' : 'Import task error.';
+		$result['message'] = $result['state'] ? '导入成功。' : '导入失败。';
 		return $result;
 	}
 

@@ -5,7 +5,7 @@
 	<div class="datain">
 		<form action="/index.php?a=dict&m=search&t=ajax" method="post">
 			<textarea class="txt" rows="5" name="content"></textarea>
-			<input type="submit" class="btn" value="Search" />
+			<input type="submit" class="btn" value="搜索" />
 		</form>
 	</div>
 	<ul class="dataout"></ul>
@@ -34,7 +34,7 @@
 					$(".dataout").html("<li>" + result.message + "</li>");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$(".dataout").html("<li>AJAX request error[ " + errorThrown + " ]</li>");
+				$(".dataout").html("<li>AJAX请求出错[ " + errorThrown + " ]</li>");
 			}}});
 			return false;
 		};

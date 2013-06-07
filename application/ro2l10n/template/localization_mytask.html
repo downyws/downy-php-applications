@@ -38,21 +38,21 @@
 					<input type="hidden" name="page" id="page" />
 					<div class="filter-item clearfix">
 						<div class="state-block">
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TD}" id="state_{$smarty.const.MAPPING_STATE_TD}" /><label for="state_{$smarty.const.MAPPING_STATE_TD}">TD</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TB}" id="state_{$smarty.const.MAPPING_STATE_TB}" /><label for="state_{$smarty.const.MAPPING_STATE_TB}">TB</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TD}" id="state_{$smarty.const.MAPPING_STATE_TD}" /><label for="state_{$smarty.const.MAPPING_STATE_TD}">正翻</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TB}" id="state_{$smarty.const.MAPPING_STATE_TB}" /><label for="state_{$smarty.const.MAPPING_STATE_TB}">退翻</label>
 						</div>
 						<div class="state-block">
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PD}" id="state_{$smarty.const.MAPPING_STATE_PD}" /><label for="state_{$smarty.const.MAPPING_STATE_PD}">PD</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PB}" id="state_{$smarty.const.MAPPING_STATE_PB}" /><label for="state_{$smarty.const.MAPPING_STATE_PB}">PB</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PD}" id="state_{$smarty.const.MAPPING_STATE_PD}" /><label for="state_{$smarty.const.MAPPING_STATE_PD}">正校</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PB}" id="state_{$smarty.const.MAPPING_STATE_PB}" /><label for="state_{$smarty.const.MAPPING_STATE_PB}">退校</label>
 						</div>
 						<div class="state-block">
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AD}" id="state_{$smarty.const.MAPPING_STATE_AD}" /><label for="state_{$smarty.const.MAPPING_STATE_AD}">AD</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AB}" id="state_{$smarty.const.MAPPING_STATE_AB}" /><label for="state_{$smarty.const.MAPPING_STATE_AB}">AB</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AD}" id="state_{$smarty.const.MAPPING_STATE_AD}" /><label for="state_{$smarty.const.MAPPING_STATE_AD}">正审</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AB}" id="state_{$smarty.const.MAPPING_STATE_AB}" /><label for="state_{$smarty.const.MAPPING_STATE_AB}">退审</label>
 						</div>
 					</div>
 					<div class="filter-item hide mfilter mgb15 mgt15" data-hide="true">
-						<label>Key</label><input type="text" name="key" class="txt w100" />
-						<label>En content</label><input type="text" name="content_new_en" class="txt w300" placeholder="It will so slowly..." />
+						<label>键</label><input type="text" name="key" class="txt w100" />
+						<label>英</label><input type="text" name="content_new_en" class="txt w300" placeholder="使用这项会很慢..." />
 					</div>
 					<div class="filter-item clearfix hide mfilter" data-hide="true">
 						<div class="file-block filelist">
@@ -63,9 +63,9 @@
 					</div>
 				</form>
 			</td><td class="w50">
-				<input type="button" class="btn btn_morefilter" value="Show more filter" />
+				<input type="button" class="btn btn_morefilter" value="显示更多过滤项" />
 			</td><td class="w50">
-				<input type="button" class="btn btn_turnpage" data-page="1" value="Submit filter" />
+				<input type="button" class="btn btn_turnpage" data-page="1" value="提交过滤" />
 			</td></tr>
 		</tbody></table></div>
 	</div>
@@ -73,13 +73,13 @@
 		<div class="data"><table><tbody>
 			<tr class="nobb">
 				<td class="msg"></td>
-				<td class="w50"><input type="button" class="btn btn_import" value="Import translation" /></td>
-				<td class="w50"><input type="button" class="btn btn_export" value="Export translation" /></td>
+				<td class="w50"><input type="button" class="btn btn_import" value="导入翻译" /></td>
+				<td class="w50"><input type="button" class="btn btn_export" value="导出任务" /></td>
 			</tr>
 		</tbody></table></div>
 	</div>
 	<div class="datatable datalist"><div class="data"></div></div>
-	<div class="datatable loadmore hide"><div class="data"><table><tbody><tr class="nobb"><td class="btn_more">Load more</td></tr></tbody></table></div></div>
+	<div class="datatable loadmore hide"><div class="data"><table><tbody><tr class="nobb"><td class="btn_more">加载更多</td></tr></tbody></table></div></div>
 	<div class="msgdialog" title="Confirm"></div>
 	<script type="text/javascript">
 		var FILTER_KEY = "";
@@ -92,10 +92,10 @@
 		$(".file-block").buttonset();
 		$(".btn_morefilter").click(function(){
 			if($(".mfilter").data("hide")){
-				$(this).val("Hide more filter");
+				$(this).val("隐藏更多过滤项");
 				$(".mfilter").data("hide", false).slideDown(300);
 			}else{
-				$(this).val("Show more filter");
+				$(this).val("显示更多过滤项");
 				$(".mfilter").data("hide", true).slideUp(300);
 			}
 		});
@@ -112,13 +112,13 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}}});
 		});
 		$(".btn_import").click(function(){
 			$.fn.dyDialog({
 				locate: {type: "window", x: "middle", y: "middle", origin: "mm"}, 
-				content: "<div class='uploaddialog'><div class='panel'><div class='info'>Drag and drop files to this</div></div><div class='message'></div></div>",
+				content: "<div class='uploaddialog'><div class='panel'><div class='info'>拖拽文件到此</div></div><div class='message'></div></div>",
 				close: {className: "close", bgBtn: true},
 				onEvent: {open: function(){
 					var obj = $(".uploaddialog .panel");
@@ -157,7 +157,7 @@
 					var id = "msg_" + parseInt(Math.random() * 10000000);
 					$("#" + id).remove();
 					obj.after("<div id='" + id + "'></div>").remove();
-					$.fn.notificationShow($("#" + id), "Do [ " + state + " ] " + file_name + " " + key + " success.", "success");
+					$.fn.notificationShow($("#" + id), "执行 [ " + state + " ] " + file_name + " " + key + " 成功。", "success");
 				}else{
 					var msg_obj = obj.find(".message");
 					msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html(result.message).show(300);	
@@ -165,7 +165,7 @@
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
 				var msg_obj = obj.find(".message");
-				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX request error[" + errorThrown + "].").show(300);	
+				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX请求出错[" + errorThrown + "].").show(300);	
 				$("body").one('mousedown', function(){msg_obj.hide(300);});
 			}});
 		});
@@ -182,7 +182,7 @@
 								var id = "msg_" + parseInt(Math.random() * 10000000);
 								$("#" + id).remove();
 								obj.after("<div id='" + id + "'></div>").remove();
-								$.fn.notificationShow($("#" + id), "Pass " + file_name + " " + key + " success.", "success");
+								$.fn.notificationShow($("#" + id), "通过 " + file_name + " " + key + " 成功。", "success");
 							}else{
 								var msg_obj = obj.find(".message");
 								msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html(result.message).show(300);	
@@ -190,7 +190,7 @@
 							}
 						}, error: function(jqXHR, textStatus, errorThrown){
 							var msg_obj = obj.find(".message");
-							msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX request error[" + errorThrown + "].").show(300);	
+							msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX请求出错[" + errorThrown + "].").show(300);	
 							$("body").one('mousedown', function(){msg_obj.hide(300);});
 						}});
 						$(this).dialog("close");
@@ -210,7 +210,7 @@
 			}
 			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=localization&m=mytasklist&t=ajax", data: {start: start, end: end, key: FILTER_KEY}, async: false, success: function(result){
 				if(result.state){
-					// ��������
+					// 解析内容
 					var html = "";
 					for(i = 0; i < result.data.length; i++){
 						html += F_ConverToHTML(result.data[i]);
@@ -226,7 +226,7 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}});
 		}
 		function F_ConverToHTML(data){
@@ -234,57 +234,57 @@
 			switch(data.state){
 				case "11": 
 					color = "yellow"; state = "TD";
-					btns += "<a href='javascript:;' data-state='finish' class='btn_finish'>Finish</a>";
+					btns += "<a href='javascript:;' data-state='finish' class='btn_finish'>完成</a>";
 					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
-					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>放弃</a>";
 					break;
 				case "12":
 					color = "red"; state = "TB"; 
-					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>Confirm</a>";
+					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>确认</a>";
 					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
-					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>放弃</a>";
 					break;
 				case "21":
 					color = "blue"; state = "PD"; 
-					btns += "<a href='javascript:;' data-state='pass' class='btn_pass'>Pass</a>";
-					btns += "<a href='javascript:;' data-state='back' class='btn_back'>Back</a>";
-					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
-					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					btns += "<a href='javascript:;' data-state='pass' class='btn_pass'>通过</a>";
+					btns += "<a href='javascript:;' data-state='back' class='btn_back'>退回</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>字典</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>放弃</a>";
 					break;
 				case "22":
 					color = "red"; state = "PB"; 
-					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>Confirm</a>";
-					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
-					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>确认</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>字典</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>放弃</a>";
 					break;
 				case "31":
 					color = "green"; state = "AD"; 
-					btns += "<a href='javascript:;' data-state='pass' class='btn_pass'>Pass</a>";
-					btns += "<a href='javascript:;' data-state='back' class='btn_back'>Back</a>";
-					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
-					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					btns += "<a href='javascript:;' data-state='pass' class='btn_pass'>通过</a>";
+					btns += "<a href='javascript:;' data-state='back' class='btn_back'>退回</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>字典</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>放弃</a>";
 					break;
 				case "32":
 					color = "red"; state = "AB"; 
-					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>Confirm</a>";
-					btns += "<a href='javascript:;' class='btn_dict'>Dict</a>";
-					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>Forgo</a>";
+					btns += "<a href='javascript:;' data-state='confirm' class='btn_confirm'>确认</a>";
+					btns += "<a href='javascript:;' class='btn_dict'>字典</a>";
+					btns += "<a href='javascript:;' data-state='forgo' class='btn_forgo'>放弃</a>";
 					break;
 			}
 			var exco = TASK_EXCO ? '' : 'hide';
 
 			var html = "<div data-file_id='" + data.file_id + "' data-file_name='" + data.file_name + "' data-key='" + data.key + "' class='tpablock " + color + "'><div class='message'></div><div class='content'>";
-			html += "<span class='coe " + exco + "'><b>COE: </b>" + data.content_old_en + "</span>";
-			html += "<span class='cne'><b>CNE: </b>" + data.content_new_en + "</span>";
-			html += "<span class='coc " + exco + "'><b>COC: </b>" + data.content_old_en + "</span>";
-			html += "<span class='cnc'><b>CNC: </b>" + data.content_new_cn + "</span>";
+			html += "<span class='coe " + exco + "'><b>旧英: </b>" + data.content_old_en + "</span>";
+			html += "<span class='cne'><b>新英: </b>" + data.content_new_en + "</span>";
+			html += "<span class='coc " + exco + "'><b>旧中: </b>" + data.content_old_en + "</span>";
+			html += "<span class='cnc'><b>新中: </b>" + data.content_new_cn + "</span>";
 			html += "</div><span class='info'><b>" + state + "</b><b>" + data.file_name + "</b><b>" + data.key + "</b></span><span class='btns'>";
 			html += btns;
 			html += "</span></div>";
 
 			return html;
 		}
-		// �ļ���ק
+		// 文件拖拽
 		function F_DropType(obj, option){
 			if(option == "stop"){
 				obj.get(0).removeEventListener("drop", H_Drop, false);
@@ -314,12 +314,12 @@
 			var filelist = event.dataTransfer.files;
 			if (!filelist || !filelist.length){
 				var msg_obj = $(this).parent().find(".message");
-				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("Error.").show(300);	
+				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("出错。").show(300);	
 				$("body").one('mousedown', function(){msg_obj.hide(300);});
 				F_DropType($(this), "start");
 			}else if(filelist.length > 1){
 				var msg_obj = $(this).parent().find(".message");
-				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("Only one file.").show(300);	
+				msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("仅限一个文件。").show(300);	
 				$("body").one('mousedown', function(){msg_obj.hide(300);});
 				F_DropType($(this), "start");
 			}else{
@@ -339,7 +339,7 @@
 								}
 							});
 						}else{
-							obj.html("<div class='info'>Drag and drop files to this</div>");
+							obj.html("<div class='info'>拖拽文件到此</div>");
 							var msg_obj = $(that).parent().find(".message");
 							msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html(result.message).show(300);	
 							$("body").one('mousedown', function(){msg_obj.hide(300);});
@@ -347,7 +347,7 @@
 						F_DropType($(that), "start");
 					}, error: function(error){
 						var msg_obj = $(this).parent().find(".message");
-						msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX request error[" + error + "].").show(300);	
+						msg_obj.css("z-index", $.fn.dyMaxZindex("*:visible")).html("AJAX请求出错[" + error + "].").show(300);	
 						$("body").one('mousedown', function(){msg_obj.hide(300);});
 						F_DropType($(that), "start");
 					}, progress: function(event){

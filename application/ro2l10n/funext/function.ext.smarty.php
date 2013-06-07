@@ -3,17 +3,17 @@ function mapping_state_format($value)
 {
 	switch($value)
 	{
-		case MAPPING_STATE_TW: $value = 'TW'; break;
-		case MAPPING_STATE_TD: $value = 'TD'; break;
-		case MAPPING_STATE_TB: $value = 'TB'; break;
-		case MAPPING_STATE_PW: $value = 'PW'; break;
-		case MAPPING_STATE_PD: $value = 'PD'; break;
-		case MAPPING_STATE_PB: $value = 'PB'; break;
-		case MAPPING_STATE_AW: $value = 'AW'; break;
-		case MAPPING_STATE_AD: $value = 'AD'; break;
-		case MAPPING_STATE_AB: $value = 'AB'; break;
-		case MAPPING_STATE_CP: $value = 'CP'; break;
-		default: $value = 'UN'; break;
+		case MAPPING_STATE_TW: $value = '待翻'; break;
+		case MAPPING_STATE_TD: $value = '正翻'; break;
+		case MAPPING_STATE_TB: $value = '退翻'; break;
+		case MAPPING_STATE_PW: $value = '待校'; break;
+		case MAPPING_STATE_PD: $value = '正校'; break;
+		case MAPPING_STATE_PB: $value = '退校'; break;
+		case MAPPING_STATE_AW: $value = '待审'; break;
+		case MAPPING_STATE_AD: $value = '正审'; break;
+		case MAPPING_STATE_AB: $value = '退审'; break;
+		case MAPPING_STATE_CP: $value = '完成'; break;
+		default: $value = '未知'; break;
 	}
 	echo $value;
 }

@@ -10,28 +10,28 @@
 	<div class="datatable">
 		<h3>
 			{if $object.id > 0}
-				File '{$object.file_name}' Edit
+				文件 '{$object.file_name}' 编辑
 			{else}
-				File Add
+				文件添加
 			{/if}
 		</h3>
 		<form action="/index.php?a=file&m=edit&t=ajax" method="post">
 			<input type="hidden" value="{$object.id}" id="object_id" name="id" />
 			<div class="data"><table><tbody>
-				<tr><th style="width:100px;">File name</th><td><input type="text" class="txt" name="file_name" value="{$object.file_name}" /></td></tr>
-				<tr><th>File short name</th><td><input type="text" class="txt" name="file_name_short" value="{$object.file_name_short}" /></td></tr>
-				<tr><th>Key name</th><td><input type="text" class="txt" name="name_key" value="{$object.name_key}" /></td></tr>
-				<tr><th>Value name</th><td><input type="text" class="txt" name="name_val" value="{$object.name_val}" /></td></tr>
-				<tr><th>Desc</th><td><input type="text" class="txt ltxt" name="desc" value="{$object.desc}" /></td></tr>
-				<tr><th>Detail</th><td>&nbsp;<br /><textarea name="detail" rows="5" class="txt">{$object.detail}</textarea></td></tr>
+				<tr><th style="width:100px;">文件名</th><td><input type="text" class="txt" name="file_name" value="{$object.file_name}" /></td></tr>
+				<tr><th>文件名缩写</th><td><input type="text" class="txt" name="file_name_short" value="{$object.file_name_short}" /></td></tr>
+				<tr><th>键名</th><td><input type="text" class="txt" name="name_key" value="{$object.name_key}" /></td></tr>
+				<tr><th>值名</th><td><input type="text" class="txt" name="name_val" value="{$object.name_val}" /></td></tr>
+				<tr><th>简介</th><td><input type="text" class="txt ltxt" name="desc" value="{$object.desc}" /></td></tr>
+				<tr><th>详细</th><td>&nbsp;<br /><textarea name="detail" rows="5" class="txt">{$object.detail}</textarea></td></tr>
 				<tr class="pagination"><td colspan="2">
-					<div class="button"><input type="submit" class="btn" value="Save" /></div>
+					<div class="button"><input type="submit" class="btn" value="保存" /></div>
 				</td></tr>
 			</tbody></table></div>
 		</form>
 	</div>
 	<div class="msg"></div>
-	<div class="msgdialog" title="Save result"></div>
+	<div class="msgdialog" title="保存反馈"></div>
 	<script type="text/javascript">
 	{literal}
 		$("form").submit(function(){
@@ -54,7 +54,7 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}}});
 			return false;
 		});

@@ -60,7 +60,7 @@ class ActionLocalization extends ActionCommon
 	public function methodOccAjax()
 	{
 		$params = $this->_submit->obtain($_REQUEST, array(
-			'opr' => array(array('format', 'trim'), array('valid', 'in', 'Opr error.', 0, array('translation', 'proof', 'audit', 'back')))
+			'opr' => array(array('format', 'trim'), array('valid', 'in', '操作错误。', 0, array('translation', 'proof', 'audit', 'back')))
 		));
 		if($this->_submit->errors)
 		{
@@ -125,7 +125,7 @@ class ActionLocalization extends ActionCommon
 		}
 		else
 		{
-			$result = array('state' => false, 'message' => 'Filter error.');
+			$result = array('state' => false, 'message' => '过滤错误。');
 		}
 
 		$this->jsonout($result);
@@ -148,7 +148,7 @@ class ActionLocalization extends ActionCommon
 	public function methodMyTaskDoAjax()
 	{
 		$params = $this->_submit->obtain($_REQUEST, array(
-			'state' => array(array('format', 'trim'), array('valid', 'in', 'State error.', 0, array('pass', 'back', 'forgo', 'confirm', 'finish'))),
+			'state' => array(array('format', 'trim'), array('valid', 'in', '状态错误。', 0, array('pass', 'back', 'forgo', 'confirm', 'finish'))),
 			'stamp' => array(array('format', 'trim')),
 			'reason' => array(array('format', 'trim'))
 		));

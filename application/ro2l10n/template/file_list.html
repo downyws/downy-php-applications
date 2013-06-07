@@ -18,24 +18,24 @@
 			$(this).css({"background":"#F0F0F0"});
 			var filelist = event.dataTransfer.files;
 			if (!filelist || !filelist.length){
-				$(".msgdialog").attr("title", "Message").html("Error.").dialog({
+				$(".msgdialog").attr("title", "消息").html("出错").dialog({
 					modal:true, buttons:{Ok:function(){$(this).dialog("close");}}
 				});
 				F_DropType($(this), "start");
 			}else if(filelist.length > 1){
-				$(".msgdialog").attr("title", "Message").html("Only one file.").dialog({
+				$(".msgdialog").attr("title", "消息").html("仅限一个文件。").dialog({
 					modal:true, buttons:{Ok:function(){$(this).dialog("close");}}
 				});
 				F_DropType($(this), "start");
 			}else{
 				var that = this, obj = $(this);
-				obj.html("Uploading...");
+				obj.html("上传中...");
 				$.fn.dyUploadFile(filelist[0], {
 					dataType: "JSON",
 					name: "file",
 					url: "/index.php?a=file&m=import&t=ajax&file_name=" + $(that).data("file_name"),
 					onEvent: {success: function(result){
-						$(".msgdialog").attr("title", "Message").html(result.message).dialog({
+						$(".msgdialog").attr("title", "消息").html(result.message).dialog({
 							modal:true, buttons:{Ok:function(){$(this).dialog("close");}}
 						});
 						if(result.state){
@@ -44,17 +44,17 @@
 							fileblock.after("<div class='temp_fileblock'></div>").remove();
 							$(".temp_fileblock").after(result.data).remove();
 						}
-						obj.html("Upload file scope");
+						obj.html("上传文件区域");
 						F_DropType($(that), "start");
 					}, error: function(error){
-						$(".msgdialog").attr("title", "Message").html("AJAX request error[" + error + "].").dialog({
+						$(".msgdialog").attr("title", "消息").html("AJAX请求出错[" + error + "].").dialog({
 							modal:true, buttons:{Ok:function(){$(this).dialog("close");}}
 						});
-						obj.html("Upload file scope");
+						obj.html("上传文件区域");
 						F_DropType($(that), "start");
 					}, progress: function(event){
-						if(obj.html() == "Uploading......"){
-							obj.html("Uploading...");
+						if(obj.html() == "上传中......"){
+							obj.html("上传中...");
 						}else{
 							obj.html(obj.html() + ".");
 						}
@@ -110,20 +110,20 @@
 			obj.after("<div class='msg'></div>");
 			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=file&m=refresh&t=ajax", data: {id: id}, async: false, success: function(result){
 				if(result.state){
-					$.fn.notificationShow($(".msg"), "Refresh success.", "success");
+					$.fn.notificationShow($(".msg"), "刷新成功。", "success");
 					obj.after("<div class='temp_fileblock'></div>").remove();
 					$(".temp_fileblock").after(result.data).remove();
 				}else{
-					$.fn.notificationShow($(".msg"), "Refresh error.", "error");
+					$.fn.notificationShow($(".msg"), "刷新失败。", "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}});
 		});
 		$("body").on("click", ".btn_del", function(){
 			var id = $(this).data("id");
 			var that = this;
-			$(".msgdialog").attr("title", "Confirm").html($(this).data("confirm")).dialog({
+			$(".msgdialog").attr("title", "确认").html($(this).data("confirm")).dialog({
 				modal: true, buttons: {
 					Ok: function(){
 						$(".msg").remove();
@@ -131,13 +131,13 @@
 						obj.after("<div class='msg'></div>");
 						$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=file&m=delete&t=ajax", data: {id: id}, async: false, success: function(result){
 							if(result.state){
-								$.fn.notificationShow($(".msg"), "Delete success.", "success");
+								$.fn.notificationShow($(".msg"), "删除成功。", "success");
 								obj.remove();
 							}else{
-								$.fn.notificationShow($(".msg"), "Delete error.", "error");
+								$.fn.notificationShow($(".msg"), "删除失败。", "error");
 							}
 						}, error: function(jqXHR, textStatus, errorThrown){
-							$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+							$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 						}});
 						$(this).dialog("close");
 					},

@@ -12,11 +12,11 @@
 	<div class="datatable">
 		<h3>
 			{if $object.id > 0}
-				Notice Edit No.{$object.id}
+				编辑公告编号.{$object.id}
 			{else if $object.id == 0}
-				Related Descriptions Edit
+				相关信息编辑
 			{else}
-				Notice Add
+				公告编辑
 			{/if}
 		</h3>
 		<form action="/index.php?a=notice&m=edit&t=ajax" method="post">
@@ -28,17 +28,17 @@
 						<span>~</span>
 						<input type="text" class="txt jq-time" name="end_time" value="{$object.end_time|date_format:"%Y-%m-%d %H:%M:%S"}" />
 					</td></tr>
-					<tr><th>Sort</th><td><input type="text" class="txt w50" name="sort" value="{$object.sort}" /></td></tr>
-					<tr><th>Content</th><td>
-						<i>one line limited.</i><br />
+					<tr><th>排序</th><td><input type="text" class="txt w50" name="sort" value="{$object.sort}" /></td></tr>
+					<tr><th>内容</th><td>
+						<i>仅限一行。</i><br />
 						<textarea class="txt" rows="3" name="content">{$object.content}</textarea>
 					</td></tr>
 					<tr><th>Style</th><td>
-						U<span class="mgr25 mgl5"><input type="checkbox" name="style_u" value="1" {if $object.style_u}checked="checked"{/if} /></span>
-						B<span class="mgr25 mgl5"><input type="checkbox" name="style_b" value="1" {if $object.style_b}checked="checked"{/if} /></span>
-						I<span class="mgr25 mgl5"><input type="checkbox" name="style_i" value="1" {if $object.style_i}checked="checked"{/if} /></span>
-						S<span class="mgr25 mgl5"><input type="checkbox" name="style_s" value="1" {if $object.style_s}checked="checked"{/if} /></span>
-						Color<span class="mgr25 mgl5"><input type="text" name="style_color" class="txt w50" value="{$object.style_color}" /></span>
+						下划线<span class="mgr25 mgl5"><input type="checkbox" name="style_u" value="1" {if $object.style_u}checked="checked"{/if} /></span>
+						粗体<span class="mgr25 mgl5"><input type="checkbox" name="style_b" value="1" {if $object.style_b}checked="checked"{/if} /></span>
+						斜体<span class="mgr25 mgl5"><input type="checkbox" name="style_i" value="1" {if $object.style_i}checked="checked"{/if} /></span>
+						删除线<span class="mgr25 mgl5"><input type="checkbox" name="style_s" value="1" {if $object.style_s}checked="checked"{/if} /></span>
+						颜色<span class="mgr25 mgl5"><input type="text" name="style_color" class="txt w50" value="{$object.style_color}" /></span>
 					</td></tr>
 				{else}
 					<tr><td colspan="2">
@@ -48,13 +48,13 @@
 					<input type="hidden" value="0" name="end_time" />
 				{/if}
 				<tr class="pagination"><td colspan="2">
-					<div class="button"><input type="submit" class="btn" value="Save" /></div>
+					<div class="button"><input type="submit" class="btn" value="保存" /></div>
 				</td></tr>
 			</tbody></table></div>
 		</form>
 	</div>
 	<div class="msg"></div>
-	<div class="msgdialog" title="Save result"></div>
+	<div class="msgdialog" title="保存反馈"></div>
 	<script type="text/javascript">
 	{literal}
 		$("form").submit(function(){
@@ -77,7 +77,7 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}}});
 			return false;
 		});

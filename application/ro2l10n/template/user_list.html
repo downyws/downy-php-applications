@@ -5,20 +5,20 @@
 	<div class="datatable">
 		<div class="data"><table><tbody>
 			<tr>
-				<th>Id</th>
-				<th>Nick</th>
-				<th>Email</th>
-				<th>Task</th>
-				<th>T Point</th>
-				<th>P Point</th>
-				<th>A Point</th>
-				<th>Dict</th>
-				<th>T Power</th>
-				<th>P Power</th>
-				<th>A Power</th>
-				<th>Super</th>
-				<th>Lock</th>
-				<th>Operating</th>
+				<th>编号</th>
+				<th>昵称</th>
+				<th>邮箱</th>
+				<th>任务</th>
+				<th>翻译量</th>
+				<th>校对量</th>
+				<th>审核量</th>
+				<th>字典</th>
+				<th>翻译权限</th>
+				<th>校对权限</th>
+				<th>审核权限</th>
+				<th>管理员</th>
+				<th>状态</th>
+				<th>操作</th>
 			</tr>
 			{foreach from=$objects.data item=object}
 			<tr>
@@ -29,27 +29,27 @@
 				<td>{$object.dedicate_t_count}</td>
 				<td>{$object.dedicate_p_count}</td>
 				<td>{$object.dedicate_a_count}</td>
-				<td>{if $object.dict}Yes{else}No{/if}</td>
+				<td>{if $object.dict}是{else}否{/if}</td>
 				<td>{if $object.translation}Lv {$object.translation}{else}-{/if}</td>
 				<td>{if $object.proof}Lv {$object.proof}{else}-{/if}</td>
 				<td>{if $object.audit}Lv {$object.audit}{else}-{/if}</td>
-				<td>{if $object.super}Yes{else}No{/if}</td>
-				<td>{if $object.state == $smarty.const.USER_STATE_LOCK}<font class="attention">Yes</font>{else}No{/if}</td>
+				<td>{if $object.super}是{else}否{/if}</td>
+				<td>{if $object.state == $smarty.const.USER_STATE_LOCK}<font class="attention">是</font>{else}否{/if}</td>
 				<td>
-					<a href="/index.php?a=user&m=edit&id={$object.id}">Edit</a>
-					<a href="/index.php?a=user&m=delete&id={$object.id}" data-confirm="Confirm delete user No.{$object.id}?" class="delConfirm">Delete</a>
+					<a href="/index.php?a=user&m=edit&id={$object.id}">编辑</a>
+					<a href="/index.php?a=user&m=delete&id={$object.id}" data-confirm="确认删除用户编号.{$object.id}？" class="delConfirm">删除</a>
 				</td>
 			</tr>
 			{/foreach}
 			<tr class="pagination"><td colspan="14">
 				<div class="button">
-					<a href="/index.php?a=user&m=edit&id=0" class="btn">Add user</a>
+					<a href="/index.php?a=user&m=edit&id=0" class="btn">添加用户</a>
 					<span>&nbsp;</span>
-					<a href="javascript:;" class="btn btn_refresh">Refresh mapping</a>
+					<a href="javascript:;" class="btn btn_refresh">刷新映射</a>
 				</div>
 				<div class="navigation">
-					<a href="/index.php?a=user&m=list&page=1">« First</a>
-					<a href="/index.php?a=user&m=list&page={$objects.pager.prev}">« Previous</a>
+					<a href="/index.php?a=user&m=list&page=1">« 第一页</a>
+					<a href="/index.php?a=user&m=list&page={$objects.pager.prev}">« 上一页</a>
 					{for $i = $objects.pager.start; $i <= $objects.pager.end; $i++}
 						{if $i == $objects.pager.current}
 							<a class="number current" href="javascript:;">{$i}</a>
@@ -57,21 +57,21 @@
 							<a class="number" href="/index.php?a=user&m=list&page={$i}">{$i}</a>
 						{/if}
 					{/for}
-					<a href="/index.php?a=user&m=list&page={$objects.pager.next}">Next »</a>
-					<a href="/index.php?a=user&m=list&page={$objects.pager.last}">Last »</a>
+					<a href="/index.php?a=user&m=list&page={$objects.pager.next}">下一页 »</a>
+					<a href="/index.php?a=user&m=list&page={$objects.pager.last}">最后页 »</a>
 				</div>
 			</td></tr>
 		</tbody></table></div>
 	</div>
-	<div class="msgdialog" title="Confirm"></div>
+	<div class="msgdialog" title="确认"></div>
 	<div class="msg"></div>
 	<script type="text/javascript">
 	{literal}
 		$(".btn_refresh").click(function(){
 			$(".msg").html("");
 			$.ajax({type: "POST", dataType: "JSON", url: "/index.php?a=user&m=refreshmapping&t=ajax", async: false, success: function(result){
-				var msg = result.state ? "Refresh mapping success." : "Refresh mapping error.";
-				$(".msgdialog").attr("title", "Message").html(msg).dialog({
+				var msg = result.state ? "刷新映射成功。" : "刷新映射失败。";
+				$(".msgdialog").attr("title", "消息").html(msg).dialog({
 					modal: true, buttons: {
 						Ok: function(){
 							window.location.href = "/index.php?a=user&m=list";
@@ -79,7 +79,7 @@
 					}
 				});
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}});
 		});
 	{/literal}

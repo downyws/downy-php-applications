@@ -28,7 +28,7 @@ class ActionAutoupdate extends ActionCommon
 	{
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int')),
-			'type' => array(array('format', 'trim'), array('valid', 'in', 'Type error.', null, array('del', 'upd', 'edit')))
+			'type' => array(array('format', 'trim'), array('valid', 'in', '类型错误。', null, array('del', 'upd', 'edit')))
 		));
 		if($this->_submit->errors)
 		{
@@ -43,14 +43,14 @@ class ActionAutoupdate extends ActionCommon
 				$result = array('state' => $autoupdateObj->remove($params['id']));
 				if(!$result['state'])
 				{
-					$result['message'] = 'Delete data error.';
+					$result['message'] = '删除数据错误。';
 				}
 				break;
 			case 'upd':
 				$result = array('state' => $autoupdateObj->remoteUpd($params['id']));
 				if(!$result['state'])
 				{
-					$result['message'] = 'Remote update data error.';
+					$result['message'] = '远程更新数据出错。';
 				}
 				else
 				{
@@ -93,7 +93,7 @@ class ActionAutoupdate extends ActionCommon
 	{
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int')),
-			'type' => array(array('format', 'trim'), array('valid', 'in', 'Type error.', null, array('del', 'edit')))
+			'type' => array(array('format', 'trim'), array('valid', 'in', '类型错误。', null, array('del', 'edit')))
 		));
 		if($this->_submit->errors)
 		{
@@ -108,7 +108,7 @@ class ActionAutoupdate extends ActionCommon
 				$result = array('state' => $autoupdateObj->remove($params['id']));
 				if(!$result['state'])
 				{
-					$result['message'] = 'Delete data error.';
+					$result['message'] = '删除数据错误。';
 				}
 				break;
 			case 'edit':
