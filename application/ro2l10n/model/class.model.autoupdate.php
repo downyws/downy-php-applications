@@ -111,8 +111,8 @@ class ModelAutoUpdate extends ModelCommon
 			$condition[] = array('path' => array('eq', $object['path']));
 			if($this->getOne($condition, 'id'))
 			{
-				$result['message'] = '键存在。';
-				return $result;
+			//	$result['message'] = '键存在。';
+			//	return $result;
 			}
 		}
 
