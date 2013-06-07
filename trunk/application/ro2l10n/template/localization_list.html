@@ -19,27 +19,27 @@
 					<input type="hidden" name="page" id="page" />
 					<div class="filter-item clearfix">
 						<div class="state-block">
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_CP}" id="state_{$smarty.const.MAPPING_STATE_CP}" /><label for="state_{$smarty.const.MAPPING_STATE_CP}">CP</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_CP}" id="state_{$smarty.const.MAPPING_STATE_CP}" /><label for="state_{$smarty.const.MAPPING_STATE_CP}">完成</label>
 						</div>
 						<div class="state-block">
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TW}" id="state_{$smarty.const.MAPPING_STATE_TW}" /><label for="state_{$smarty.const.MAPPING_STATE_TW}">TW</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TD}" id="state_{$smarty.const.MAPPING_STATE_TD}" /><label for="state_{$smarty.const.MAPPING_STATE_TD}">TD</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TB}" id="state_{$smarty.const.MAPPING_STATE_TB}" /><label for="state_{$smarty.const.MAPPING_STATE_TB}">TB</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TW}" id="state_{$smarty.const.MAPPING_STATE_TW}" /><label for="state_{$smarty.const.MAPPING_STATE_TW}">待翻</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TD}" id="state_{$smarty.const.MAPPING_STATE_TD}" /><label for="state_{$smarty.const.MAPPING_STATE_TD}">正翻</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_TB}" id="state_{$smarty.const.MAPPING_STATE_TB}" /><label for="state_{$smarty.const.MAPPING_STATE_TB}">退翻</label>
 						</div>
 						<div class="state-block">
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PW}" id="state_{$smarty.const.MAPPING_STATE_PW}" /><label for="state_{$smarty.const.MAPPING_STATE_PW}">PW</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PD}" id="state_{$smarty.const.MAPPING_STATE_PD}" /><label for="state_{$smarty.const.MAPPING_STATE_PD}">PD</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PB}" id="state_{$smarty.const.MAPPING_STATE_PB}" /><label for="state_{$smarty.const.MAPPING_STATE_PB}">PB</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PW}" id="state_{$smarty.const.MAPPING_STATE_PW}" /><label for="state_{$smarty.const.MAPPING_STATE_PW}">待校</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PD}" id="state_{$smarty.const.MAPPING_STATE_PD}" /><label for="state_{$smarty.const.MAPPING_STATE_PD}">正校</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_PB}" id="state_{$smarty.const.MAPPING_STATE_PB}" /><label for="state_{$smarty.const.MAPPING_STATE_PB}">退校</label>
 						</div>
 						<div class="state-block">
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AW}" id="state_{$smarty.const.MAPPING_STATE_AW}" /><label for="state_{$smarty.const.MAPPING_STATE_AW}">AW</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AD}" id="state_{$smarty.const.MAPPING_STATE_AD}" /><label for="state_{$smarty.const.MAPPING_STATE_AD}">AD</label>
-							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AB}" id="state_{$smarty.const.MAPPING_STATE_AB}" /><label for="state_{$smarty.const.MAPPING_STATE_AB}">AB</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AW}" id="state_{$smarty.const.MAPPING_STATE_AW}" /><label for="state_{$smarty.const.MAPPING_STATE_AW}">待审</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AD}" id="state_{$smarty.const.MAPPING_STATE_AD}" /><label for="state_{$smarty.const.MAPPING_STATE_AD}">正审</label>
+							<input type="checkbox" name="state[]" value="{$smarty.const.MAPPING_STATE_AB}" id="state_{$smarty.const.MAPPING_STATE_AB}" /><label for="state_{$smarty.const.MAPPING_STATE_AB}">退审</label>
 						</div>
 					</div>
 					<div class="filter-item hide mfilter mgb15 mgt15" data-hide="true">
-						<label>Key</label><input type="text" name="key" class="txt w100" />
-						<label>En content</label><input type="text" name="content_new_en" class="txt w300" placeholder="It will so slowly..." />
+						<label>键</label><input type="text" name="key" class="txt w100" />
+						<label>英</label><input type="text" name="content_new_en" class="txt w300" placeholder="用这项会很慢..." />
 					</div>
 					<div class="filter-item clearfix hide mfilter" data-hide="true">
 						<div class="file-block filelist">
@@ -50,20 +50,20 @@
 					</div>
 				</form>
 			</td><td class="w50">
-				<input type="button" class="btn btn_morefilter" value="Show more filter" />
+				<input type="button" class="btn btn_morefilter" value="显示更多过滤项" />
 			</td><td class="w50">
-				<input type="button" class="btn btn_turnpage" data-page="1" value="Submit filter" />
+				<input type="button" class="btn btn_turnpage" data-page="1" value="提交过滤" />
 			</td></tr>
 		</tbody></table></div>
 	</div>
 	<div class="datatable opr">
 		<div class="data"><table><tbody>
 			<tr class="nobb">
-				<td class="w50"><input type="button" class="btn btn_selall" value="Select All" /></td>
-				{if $smarty.session.USER.translation}<td class="w50"><input type="button" class="btn btn_occt" value="Occ T" /></td>{/if}
-				{if $smarty.session.USER.proof}<td class="w50"><input type="button" class="btn btn_occp" value="Occ P" /></td>{/if}
-				{if $smarty.session.USER.audit}<td class="w50"><input type="button" class="btn btn_occa" value="Occ A" /></td>{/if}
-				{if $smarty.session.USER.audit >= 2}<td class="w50"><input type="button" class="btn btn_backa" value="Back A" /></td>{/if}
+				<td class="w50"><input type="button" class="btn btn_selall" value="选择全部" /></td>
+				{if $smarty.session.USER.translation}<td class="w50"><input type="button" class="btn btn_occt" value="占领翻译" /></td>{/if}
+				{if $smarty.session.USER.proof}<td class="w50"><input type="button" class="btn btn_occp" value="占领校对" /></td>{/if}
+				{if $smarty.session.USER.audit}<td class="w50"><input type="button" class="btn btn_occa" value="占领审核" /></td>{/if}
+				{if $smarty.session.USER.audit >= 2}<td class="w50"><input type="button" class="btn btn_backa" value="退回审核" /></td>{/if}
 				<td class="msg"></td>
 			</tr>
 		</tbody></table></div>
@@ -84,7 +84,7 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}}});
 		}
 		function F_OccTask(opr){
@@ -106,7 +106,7 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}}});
 		}
 		$(".state-block").buttonset();
@@ -118,10 +118,10 @@
 		});
 		$(".btn_morefilter").click(function(){
 			if($(".mfilter").data("hide")){
-				$(this).val("Hide more filter");
+				$(this).val("隐藏更多过滤项");
 				$(".mfilter").data("hide", false).slideDown(300);
 			}else{
-				$(this).val("Show more filter");
+				$(this).val("显示更多过滤项");
 				$(".mfilter").data("hide", true).slideUp(300);
 			}
 		});

@@ -60,7 +60,7 @@ class ModelDict extends ModelCommon
 			$result['data'][] = array('en' => 'More then ' . DICT_SHOW_COUNT . ', can not show all.', 'cn' => '');
 		}
 		$result['state'] = !!$result['data'];
-		$result['message'] = $result['state'] ? '' : 'Did not match any dictionaries.';
+		$result['message'] = $result['state'] ? '' : '没有匹配到字典。';
 
 		// 保存缓存
 		$filecache->set($key, $result, 3600);
@@ -77,7 +77,7 @@ class ModelDict extends ModelCommon
 			$condition[] = array('id' => array('eq', $object['id']));
 			$data = array('cn' => $object['cn']);
 			$result['state'] = $this->update($condition, $data);
-			$result['message'] = $result['state'] ? '' : 'save error.';
+			$result['message'] = $result['state'] ? '' : '保存错误。';
 		}
 		else
 		{
@@ -86,13 +86,13 @@ class ModelDict extends ModelCommon
 			$exists = $this->getOne($condition, 'COUNT(*)');
 			if($exists)
 			{
-				$result = array('state' => false, 'message' => 'dict en is exists.');
+				$result = array('state' => false, 'message' => '字典已经存在。');
 			}
 			else
 			{
 				$data = array('cn' => $object['cn'], 'en' => $object['en']);
 				$result['state'] = $this->insert($data);
-				$result['message'] = $result['state'] ? '' : 'save error.';
+				$result['message'] = $result['state'] ? '' : '保存错误。';
 			}
 		}
 		return $result;
@@ -132,7 +132,7 @@ class ModelDict extends ModelCommon
 
 		$result = array();
 		$result['state'] = $this->transCommit();
-		$result['message'] = $result['state'] ? 'Import success.' : 'Import error.';
+		$result['message'] = $result['state'] ? '导入成功。' : '导入失败。';
 		return $result;
 	}
 

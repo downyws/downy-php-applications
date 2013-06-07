@@ -8,20 +8,20 @@
 </head>
 <body class="mainbody">
 	<div class="datatable">
-		<h3>Individuation setting</h3>
+		<h3>个性设置</h3>
 		<form action="/index.php?a=user&m=individuation&t=ajax" method="post">
 			<div class="data"><table><tbody>
-				<tr><th style="width:150px;">Number of dictionary</th><td><input type="text" class="txt w50" name="line_dict" value="{$smarty.session.USER.individuation_detail.line_dict}" /></td></tr>
-				<tr><th>Number of localization</th><td><input type="text" class="txt w50" name="line_ln" value="{$smarty.session.USER.individuation_detail.line_ln}" /></td></tr>
-				<tr><th>Number of task</th><td><input type="text" class="txt w50" name="line_task" value="{$smarty.session.USER.individuation_detail.line_task}" /></td></tr>
-				<tr><th>Task default state</th><td>
+				<tr><th style="width:150px;">字典每页数量</th><td><input type="text" class="txt w50" name="line_dict" value="{$smarty.session.USER.individuation_detail.line_dict}" /></td></tr>
+				<tr><th>汉化每页数量</th><td><input type="text" class="txt w50" name="line_ln" value="{$smarty.session.USER.individuation_detail.line_ln}" /></td></tr>
+				<tr><th>任务每页数量</th><td><input type="text" class="txt w50" name="line_task" value="{$smarty.session.USER.individuation_detail.line_task}" /></td></tr>
+				<tr><th>任务默认状态</th><td>
 					<div id="task_exco">
-						<input type="radio" id="task_exco_co" name="task_exco" value="0" {if $smarty.session.USER.individuation_detail.task_exco == 0}checked="checked"{/if} /><label for="task_exco_co">Collapse</label>
-						<input type="radio" id="task_exco_ex" name="task_exco" value="1" {if $smarty.session.USER.individuation_detail.task_exco == 1}checked="checked"{/if} /><label for="task_exco_ex">Expansion</label>
+						<input type="radio" id="task_exco_co" name="task_exco" value="0" {if $smarty.session.USER.individuation_detail.task_exco == 0}checked="checked"{/if} /><label for="task_exco_co">收起</label>
+						<input type="radio" id="task_exco_ex" name="task_exco" value="1" {if $smarty.session.USER.individuation_detail.task_exco == 1}checked="checked"{/if} /><label for="task_exco_ex">展开</label>
 					</div>
 				</td></tr>
 				<tr class="pagination"><td colspan="2">
-					<div class="button"><input type="submit" class="btn" value="Save" /></div>
+					<div class="button"><input type="submit" class="btn" value="保存" /></div>
 				</td></tr>
 			</tbody></table></div>
 		</form>
@@ -42,7 +42,7 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}}});
 			return false;
 		});

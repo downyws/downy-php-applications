@@ -37,7 +37,7 @@ class ModelUser extends ModelCommon
 		$count = intval($filecache->get($cache['key']));
 		if($count > 3)
 		{
-			return array('state' => false, 'message' => 'Failed more then 3, wait login.');
+			return array('state' => false, 'message' => '连续登录失败3次，请稍后再尝试。');
 		}
 
 		// 获取账号信息
@@ -50,13 +50,13 @@ class ModelUser extends ModelCommon
 		if(!$user)
 		{
 			$filecache->set($cache['key'], $count + 1, $cache['time']);
-			return array('state' => false, 'message' => 'Email or password error.');
+			return array('state' => false, 'message' => '邮箱或密码错误。');
 		}
 
 		// 是否锁定
 		if($user['state'] == USER_STATE_LOCK)
 		{
-			return array('state' => false, 'message' => 'Email is lock.');
+			return array('state' => false, 'message' => '账号被锁定。');
 		}
 
 		// 保存登录信息
@@ -68,18 +68,18 @@ class ModelUser extends ModelCommon
 		$user['individuation_detail'] = $individuation_detail;
 		$this->setSessionUser($user);
 
-		return array('state' => true, 'message' => 'Login success.');
+		return array('state' => true, 'message' => '登录成功。');
 	}
 
 	public function editPassword($op, $np, $cp)
 	{
 		if(md5($op) != $this->getSessionUser('password'))
 		{
-			$result = array('state' => false, 'message' => 'Old password error.');
+			$result = array('state' => false, 'message' => '旧密码错误。');
 		}
 		else if($np != $cp)
 		{
-			$result = array('state' => false, 'message' => 'New password neq confirm password.');
+			$result = array('state' => false, 'message' => '新密码和确认密码不一致。');
 		}
 		else
 		{
@@ -90,11 +90,11 @@ class ModelUser extends ModelCommon
 			if($result['state'])
 			{
 				$this->setSessionUser(array('password' => md5($np)));
-				$result['message'] = 'Password update success.';
+				$result['message'] = '密码修改成功。';
 			}
 			else
 			{
-				$result['message'] = 'Password update error.';
+				$result['message'] = '密码修改失败。';
 			}
 		}
 		return $result;
@@ -116,11 +116,11 @@ class ModelUser extends ModelCommon
 		if($result['state'])
 		{
 			$this->setSessionUser(array('individuation_detail' => $data));
-			$result['message'] = 'Individuation update success.';
+			$result['message'] = '修改成功。';
 		}
 		else
 		{
-			$result['message'] = 'Individuation update error.';
+			$result['message'] = '修改失败。';
 		}
 		return $result;
 	}
@@ -135,7 +135,7 @@ class ModelUser extends ModelCommon
 		$condition[] = array('nick' => array('eq', $object['nick']));
 		if($this->getOne($condition, 'id'))
 		{
-			$result['message'] = 'nick exists.';
+			$result['message'] = '昵称存在。';
 			return $result;
 		}
 
@@ -145,7 +145,7 @@ class ModelUser extends ModelCommon
 		$condition[] = array('email' => array('eq', $object['email']));
 		if($this->getOne($condition, 'id'))
 		{
-			$result['message'] = 'email exists.';
+			$result['message'] = '邮箱存在。';
 			return $result;
 		}
 
@@ -179,7 +179,7 @@ class ModelUser extends ModelCommon
 			$result['state'] = $this->insert($object);
 		}
 
-		$result['message'] = $result['state'] ? 'save success.' : 'save error.';
+		$result['message'] = $result['state'] ? '保存成功。' : '保存失败。';
 
 		return $result;
 	}

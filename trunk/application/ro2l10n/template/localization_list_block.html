@@ -4,8 +4,8 @@
 		{if $objects.data}
 		<tr class="pagination bb"><td colspan="5">
 			<div class="navigation">
-				<a data-page="1" class="btn_turnpage" href="javascript:;">« First</a>
-				<a data-page="{$objects.pager.prev}" class="btn_turnpage" href="javascript:;">« Previous</a>
+				<a data-page="1" class="btn_turnpage" href="javascript:;">« 第一页</a>
+				<a data-page="{$objects.pager.prev}" class="btn_turnpage" href="javascript:;">« 上一页</a>
 				{for $i = $objects.pager.start; $i <= $objects.pager.end; $i++}
 					{if $i == $objects.pager.current}
 						<a data-page="{$i}" class="number current btn_turnpage" href="javascript:;">{$i}</a>
@@ -13,12 +13,12 @@
 						<a data-page="{$i}" class="number btn_turnpage" href="javascript:;">{$i}</a>
 					{/if}
 				{/for}
-				<a data-page="{$objects.pager.next}" class="btn_turnpage" href="javascript:;">Next »</a>
-				<a data-page="{$objects.pager.last}" class="btn_turnpage" href="javascript:;">Last »</a>
+				<a data-page="{$objects.pager.next}" class="btn_turnpage" href="javascript:;">下一页 »</a>
+				<a data-page="{$objects.pager.last}" class="btn_turnpage" href="javascript:;">最后页 »</a>
 			</div>
 		</td></tr>
 		{else}
-		<tr class="nobb"><td>No data.</td></tr>
+		<tr class="nobb"><td>没有数据。</td></tr>
 		{/if}
 		{foreach from=$objects.data item=object}
 			<tr>
@@ -32,8 +32,8 @@
 		{if $objects.data}
 		<tr class="pagination"><td colspan="5">
 			<div class="navigation">
-				<a data-page="1" class="btn_turnpage" href="javascript:;">« First</a>
-				<a data-page="{$objects.pager.prev}" class="btn_turnpage" href="javascript:;">« Previous</a>
+				<a data-page="1" class="btn_turnpage" href="javascript:;">« 第一页</a>
+				<a data-page="{$objects.pager.prev}" class="btn_turnpage" href="javascript:;">« 上一页</a>
 				{for $i = $objects.pager.start; $i <= $objects.pager.end; $i++}
 					{if $i == $objects.pager.current}
 						<a data-page="{$i}" class="number current btn_turnpage" href="javascript:;">{$i}</a>
@@ -41,8 +41,8 @@
 						<a data-page="{$i}" class="number btn_turnpage" href="javascript:;">{$i}</a>
 					{/if}
 				{/for}
-				<a data-page="{$objects.pager.next}" class="btn_turnpage" href="javascript:;">Next »</a>
-				<a data-page="{$objects.pager.last}" class="btn_turnpage" href="javascript:;">Last »</a>
+				<a data-page="{$objects.pager.next}" class="btn_turnpage" href="javascript:;">下一页 »</a>
+				<a data-page="{$objects.pager.last}" class="btn_turnpage" href="javascript:;">最后页 »</a>
 			</div>
 		</td></tr>
 		{/if}

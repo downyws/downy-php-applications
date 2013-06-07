@@ -4,51 +4,51 @@
 <body class="navgbody">
 	<div class="logo">{$smarty.const.APP_NAME}</div>
 	<div class="info">
-		<div>Hello, {$smarty.session.USER.nick}</div>
+		<div>你好, {$smarty.session.USER.nick}</div>
 		<div>
-			<a href="javascript:;" class="btn_dict">Open Dictionary</a>
+			<a href="javascript:;" class="btn_dict">打开字典</a>
 			<span>|</span>
-			<a href="javascript:;" class="btn_panel">Close Panel</a>
+			<a href="javascript:;" class="btn_panel">关闭面板</a>
 			<br />
-			<a href="/index.php?a=index&m=logout" target="_top">Sign Out</a>
+			<a href="/index.php?a=index&m=logout" target="_top">退出</a>
 		</div>
 	</div>
 	<ul class="menu">
-		<li><a target="bodyFrame" class="topitem nosub current" href="/index.php?a=index&m=home">Home</a></li>
-		<li><a href="javascript:;" class="topitem">My Settings</a>
+		<li><a target="bodyFrame" class="topitem nosub current" href="/index.php?a=index&m=home">首页</a></li>
+		<li><a href="javascript:;" class="topitem">个人设置</a>
 			<ul>
-				<li><a target="bodyFrame" class="issub" href="/index.php?a=user&m=individuation">Individuation</a></li>
-				<li><a target="bodyFrame" class="issub" href="/index.php?a=user&m=editpwd">Edit Password</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=user&m=individuation">个性化</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=user&m=editpwd">密码修改</a></li>
 			</ul>
 		</li>
-		<li><a href="javascript:;" class="topitem">Localization</a>
+		<li><a href="javascript:;" class="topitem">汉化</a>
 			<ul>
-				<li><a target="bodyFrame" class="issub" href="/index.php?a=localization&m=list">Localization List</a></li>
-				<li><a target="bodyFrame" class="issub" href="/index.php?a=localization&m=mytask">My Localization Task</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=localization&m=list">汉化列表</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=localization&m=mytask">我的任务</a></li>
 			</ul>
 		</li>
 		{if $smarty.session.USER.super || $smarty.session.USER.dict}
-		<li><a target="bodyFrame" href="/index.php?a=dict&m=list" class="topitem nosub">Dictionary Manage</a></li>
+		<li><a target="bodyFrame" href="/index.php?a=dict&m=list" class="topitem nosub">字典管理</a></li>
 		{/if}
 		{if $smarty.session.USER.super}
-		<li><a href="javascript:;" class="topitem">File Manage</a>
+		<li><a href="javascript:;" class="topitem">文件管理</a>
 			<ul>
-				<li><a target="bodyFrame" class="issub" href="/index.php?a=file&m=list">Localization file List</a></li>
-				<li><a target="bodyFrame" class="issub" href="/index.php?a=file&m=edit&id=0">Add a localization file</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=file&m=list">汉化文件列表</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=file&m=edit&id=0">添加汉化文件</a></li>
 			</ul>
 		</li>
-		<li><a href="javascript:;" class="topitem">Auto Update</a>
+		<li><a href="javascript:;" class="topitem">自动更新</a>
 			<ul>
-				<li><a target="bodyFrame" class="issub" href="/index.php?a=autoupdate&m=setting">Config Info</a></li>
-				<li><a target="bodyFrame" class="issub" href="/index.php?a=autoupdate&m=list">File List</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=autoupdate&m=setting">配置信息</a></li>
+				<li><a target="bodyFrame" class="issub" href="/index.php?a=autoupdate&m=list">更新文件</a></li>
 			</ul>
 		</li>
-		<li><a target="bodyFrame" href="/index.php?a=user&m=list" class="topitem nosub">User Manage</a></li>
-		<li><a target="bodyFrame" href="/index.php?a=notice&m=list" class="topitem nosub">Notice Manage</a></li>
-		<li><a target="bodyFrame" href="/index.php?a=system&m=info" class="topitem nosub">System Info</a></li>
+		<li><a target="bodyFrame" href="/index.php?a=user&m=list" class="topitem nosub">用户管理</a></li>
+		<li><a target="bodyFrame" href="/index.php?a=notice&m=list" class="topitem nosub">公告管理</a></li>
+		<li><a target="bodyFrame" href="/index.php?a=system&m=info" class="topitem nosub">系统信息</a></li>
 		{/if}
 	</ul>
-	<div class="sizebtn btn_panel" title="Close panel"></div>
+	<div class="sizebtn btn_panel" title="关闭面板"></div>
 	<script type="text/javascript">
 	{literal}
 		// Navg
@@ -74,11 +74,11 @@
 		$(".btn_dict").click(function(){
 			if($(this).data("dict")){
 				$(this).data("dict", false);
-				$(this).html("Open Dictionary");
+				$(this).html("打开面板");
 				parent.mainFrame.cols = "230,*,0";
 			}else{
 				$(this).data("dict", true);
-				$(this).html("Close Dictionary");
+				$(this).html("关闭面板");
 				parent.mainFrame.cols = "230,*,230";
 			}
 		});
@@ -88,11 +88,11 @@
 			if($("a.btn_panel").data("panel")){
 				$("a.btn_panel").data("panel", false);
 				parent.mainFrame.cols = "9,*," + r_p;
-				$(".btn_panel").attr("title", "Open panel");
+				$(".btn_panel").attr("title", "打开面板");
 			}else{
 				$("a.btn_panel").data("panel", true);
 				parent.mainFrame.cols = "230,*," + r_p;
-				$(".btn_panel").attr("title", "Close panel");
+				$(".btn_panel").attr("title", "关闭面板");
 			}
 		});
 		$("a.btn_panel").data("panel", true);

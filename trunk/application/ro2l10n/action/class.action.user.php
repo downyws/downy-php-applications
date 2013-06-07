@@ -49,8 +49,8 @@ class ActionUser extends ActionCommon
 	{
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int')),
-			'nick' => array(array('format', 'trim'), array('valid', 'empty', 'Please input nick.', null, null)),
-			'email' => array(array('format', 'trim'), array('valid', 'empty', 'Please input email.', null, null)),
+			'nick' => array(array('format', 'trim'), array('valid', 'empty', '请输入昵称。', null, null)),
+			'email' => array(array('format', 'trim'), array('valid', 'empty', '请输入邮箱。', null, null)),
 			'password' => array(array('format', 'trim')),
 			'state' => array(array('format', 'int')),
 			'task_max_count' => array(array('format', 'int'), array('valid', 'gte', '', 0, 0)),
@@ -61,7 +61,7 @@ class ActionUser extends ActionCommon
 			'audit' => array(array('format', 'int'), array('valid', 'in', null, 0, array(0, 1, 2)))
 		));
 
-		// ������ʾ
+		// 错误提示
 		if(count($this->_submit->errors) > 0)
 		{
 			$this->jsonout(array('state' => false, 'message' => implode('<br />', $this->_submit->errors)));

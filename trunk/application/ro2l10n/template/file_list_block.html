@@ -3,18 +3,17 @@
 		<tr class="nobb">
 			<td><b>{$object.file_name}</b></td>
 			<td><b>{$object.file_name_short}</b></td>
-			<td><b>NT</b>{$object.wait_t_count}</td>
-			<td><b>NP</b>{$object.wait_p_count}</td>
-			<td><b>NA</b>{$object.wait_a_count}</td>
-			<td><b>Data</b>{$object.data_count}</td>
-			<td><b>Update</b>{$object.update_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
-			<td class="uploadscope fileid-{$object.id}" data-file_name="{$object.file_name}">Upload file scope</td>
+			<td><b>待翻</b>{$object.wait_t_count}</td>
+			<td><b>待校</b>{$object.wait_p_count}</td>
+			<td><b>待审</b>{$object.wait_a_count}</td>
+			<td><b>数量</b>{$object.data_count}</td>
+			<td><b>更新时间</b>{$object.update_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+			<td class="uploadscope fileid-{$object.id}" data-file_name="{$object.file_name}">上传文件区域</td>
 			<td class="operating">
-				<a target="_blank" href="/index.php?a=file&m=export&id={$object.id}"></a>
-				<a data-id="{$object.id}" class="btn_refresh" href="javascript:;">Refresh</a>
-				<a target="_blank" href="/index.php?a=file&m=export&id={$object.id}">Export</a>
-				<a href="/index.php?a=file&m=edit&id={$object.id}">Edit</a>
-				<a data-id="{$object.id}" data-confirm="Confirm delete '{$object.file_name}'?" class="btn_del" href="javascript:;">Delete</a>
+				<a data-id="{$object.id}" class="btn_refresh" href="javascript:;">刷新</a>
+				<a target="_blank" href="/index.php?a=file&m=export&id={$object.id}">导出</a>
+				<a href="/index.php?a=file&m=edit&id={$object.id}">编辑</a>
+				<a data-id="{$object.id}" data-confirm="确认删除 '{$object.file_name}'？" class="btn_del" href="javascript:;">删除</a>
 			</td>
 		</tr>
 	</tbody></table></div>

@@ -39,8 +39,8 @@ class ActionDict extends ActionCommon
 	{
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int')),
-			'cn' => array(array('format', 'trim'), array('valid', 'regex', 'cn content can not empty and use [tab].', null, '/^[^\t]+$/')),
-			'en' => array(array('format', 'trim'), array('valid', 'regex', 'en content can not empty and use [tab].', null, '/^[^\t]+$/'))
+			'cn' => array(array('format', 'trim'), array('valid', 'regex', '中文内容中不能为空或使用[tab]。', null, '/^[^\t]+$/')),
+			'en' => array(array('format', 'trim'), array('valid', 'regex', '英文内容中不能为空或使用[tab]。', null, '/^[^\t]+$/'))
 		));
 
 		if(count($this->_submit->errors) > 0)

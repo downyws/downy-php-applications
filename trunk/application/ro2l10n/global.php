@@ -1,6 +1,6 @@
 <?php
 
-define('APP_NAME', 'RO2 Localization');
+define('APP_NAME', '仙境传说2 本地化');
 
 define('APP_TIMEZONE', 'Asia/Shanghai');
 

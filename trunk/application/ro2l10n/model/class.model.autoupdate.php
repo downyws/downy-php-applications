@@ -55,29 +55,29 @@ class ModelAutoUpdate extends ModelCommon
 
 		if(empty($object['url']))
 		{
-			$result['message'] = 'Url can not empty.';
+			$result['message'] = '地址不能为空。';
 			return $result;
 		}
 		else if($object['id'] == 0)
 		{
 			if(empty($object['keyword']))
 			{
-				$result['message'] = 'Keyword can not empty.';
+				$result['message'] = '关键字不能为空。';
 				return $result;
 			}
 
-			// Ψһ���
+			// 唯一检查
 			$condition = array();
 			$condition[] = array('path' => array('eq', $object['path']));
 			if($this->getOne($condition, 'id'))
 			{
-				$result['message'] = 'Path exists.';
+				$result['message'] = '路径已经存在。';
 				return $result;
 			}
 		}
 		else if($object['id'] < 0)
 		{
-			$result['message'] = 'Object id error.';
+			$result['message'] = '对象编号错误。';
 			return $result;
 		}
 
@@ -95,7 +95,7 @@ class ModelAutoUpdate extends ModelCommon
 			$result['state'] = $this->insert($object);
 		}
 
-		$result['message'] = $result['state'] ? 'Save success.' : 'Save error.';
+		$result['message'] = $result['state'] ? '保存成功。' : '保存出错。';
 
 		return $result;
 	}
@@ -106,12 +106,12 @@ class ModelAutoUpdate extends ModelCommon
 
 		if($object['id'] == 0)
 		{
-			// Ψһ���
+			// 唯一检查
 			$condition = array();
 			$condition[] = array('path' => array('eq', $object['path']));
 			if($this->getOne($condition, 'id'))
 			{
-				$result['message'] = 'Key exists.';
+				$result['message'] = '键存在。';
 				return $result;
 			}
 		}
@@ -140,7 +140,7 @@ class ModelAutoUpdate extends ModelCommon
 			$result['state'] = $result['state'] ? $id : $result['state'];
 		}
 
-		$result['message'] = $result['state'] ? 'Save success.' : 'Save error.';
+		$result['message'] = $result['state'] ? '保存成功。' : '保存失败。';
 
 		return $result;
 	}

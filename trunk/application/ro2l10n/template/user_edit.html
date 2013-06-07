@@ -5,46 +5,46 @@
 	<div class="datatable">
 		<h3>
 			{if $object.id > 0}
-				User Edit No.{$object.id}
+				编辑用户编号.{$object.id}
 			{else}
-				User Add
+				添加用户
 			{/if}
 		</h3>
 		<form action="/index.php?a=user&m=edit&t=ajax" method="post">
 			<input type="hidden" value="{$object.id}" id="object_id" name="id" />
 			<div class="data"><table><tbody>
-				<tr><th style="width:150px;">Nick</th><td><input type="text" class="txt" name="nick" value="{$object.nick}" /></td></tr>
-				<tr><th>Email</th><td><input type="text" class="txt" name="email" value="{$object.email}" /></td></tr>
-				<tr><th>Password</th><td><input type="password" class="txt" name="password" /></td></tr>
-				<tr><th>Lock user</th><td><input type="checkbox" name="state" value="1" {if $object.state}checked="checked"{/if} /></td></tr>
-				<tr><th>Task max count</th><td><input type="text" class="txt w50" name="task_max_count" value="{$object.task_max_count}" /></td></tr>
-				<tr><th>Power</th><td>
-					Dict<span class="mgr25 mgl5"><input type="checkbox" name="dict" value="1" {if $object.dict}checked="checked"{/if} /></span>
-					Super<span class="mgr25 mgl5"><input type="checkbox" name="super" value="1" {if $object.super}checked="checked"{/if} /></span>
+				<tr><th style="width:150px;">昵称</th><td><input type="text" class="txt" name="nick" value="{$object.nick}" /></td></tr>
+				<tr><th>邮箱</th><td><input type="text" class="txt" name="email" value="{$object.email}" /></td></tr>
+				<tr><th>密码</th><td><input type="password" class="txt" name="password" /></td></tr>
+				<tr><th>锁定</th><td><input type="checkbox" name="state" value="1" {if $object.state}checked="checked"{/if} /></td></tr>
+				<tr><th>最大任务数</th><td><input type="text" class="txt w50" name="task_max_count" value="{$object.task_max_count}" /></td></tr>
+				<tr><th>权限</th><td>
+					字典<span class="mgr25 mgl5"><input type="checkbox" name="dict" value="1" {if $object.dict}checked="checked"{/if} /></span>
+					管理员<span class="mgr25 mgl5"><input type="checkbox" name="super" value="1" {if $object.super}checked="checked"{/if} /></span>
 				</td></tr>
-				<tr><th>Translation</th><td>
+				<tr><th>翻译</th><td>
 					Lv 0<span class="mgr25 mgl5"><input type="radio" name="translation" value="0" {if $object.translation == 0}checked="checked"{/if} /></span>
 					Lv 1<span class="mgr25 mgl5"><input type="radio" name="translation" value="1" {if $object.translation == 1}checked="checked"{/if} /></span>
 					Lv 2<span class="mgr25 mgl5"><input type="radio" name="translation" value="2" {if $object.translation == 2}checked="checked"{/if} /></span>
 				</td></tr>
-				<tr><th>Proof</th><td>
+				<tr><th>校对</th><td>
 					Lv 0<span class="mgr25 mgl5"><input type="radio" name="proof" value="0" {if $object.proof == 0}checked="checked"{/if} /></span>
 					Lv 1<span class="mgr25 mgl5"><input type="radio" name="proof" value="1" {if $object.proof == 1}checked="checked"{/if} /></span>
 					Lv 2<span class="mgr25 mgl5"><input type="radio" name="proof" value="2" {if $object.proof == 2}checked="checked"{/if} /></span>
 				</td></tr>
-				<tr><th>Audit</th><td>
+				<tr><th>审核</th><td>
 					Lv 0<span class="mgr25 mgl5"><input type="radio" name="audit" value="0" {if $object.audit == 0}checked="checked"{/if} /></span>
 					Lv 1<span class="mgr25 mgl5"><input type="radio" name="audit" value="1" {if $object.audit == 1}checked="checked"{/if} /></span>
 					Lv 2<span class="mgr25 mgl5"><input type="radio" name="audit" value="2" {if $object.audit == 2}checked="checked"{/if} /></span>
 				</td></tr>
 				<tr class="pagination"><td colspan="2">
-					<div class="button"><input type="submit" class="btn" value="Save" /></div>
+					<div class="button"><input type="submit" class="btn" value="保存" /></div>
 				</td></tr>
 			</tbody></table></div>
 		</form>
 	</div>
 	<div class="msg"></div>
-	<div class="msgdialog" title="Save result"></div>
+	<div class="msgdialog" title="保存反馈"></div>
 	<script type="text/javascript">
 	{literal}
 		$("form").submit(function(){
@@ -67,7 +67,7 @@
 					$.fn.notificationShow($(".msg"), result.message, "error");
 				}
 			}, error: function(jqXHR, textStatus, errorThrown){
-				$.fn.notificationShow($(".msg"), "AJAX request error[" + errorThrown + "].", "error");
+				$.fn.notificationShow($(".msg"), "AJAX请求出错[" + errorThrown + "].", "error");
 			}}});
 			return false;
 		});

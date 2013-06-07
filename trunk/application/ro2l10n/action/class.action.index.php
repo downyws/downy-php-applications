@@ -29,7 +29,7 @@ class ActionIndex extends ActionCommon
 	{
 		$commonObj = Factory::getModel('common');
 
-		// ÒÑµÇÂ¼
+		// å·²ç™»å½•
 		if($commonObj->getSessionUser())
 		{
 			$this->redirect('/index.php?a=index&m=index');
@@ -40,19 +40,19 @@ class ActionIndex extends ActionCommon
 	{
 		$commonObj = Factory::getModel('common');
 
-		// ÒÑµÇÂ¼
+		// å·²ç™»å½•
 		if($commonObj->getSessionUser())
 		{
-			$this->jsonout(array('state' => false, 'message' => 'Is login.', 'url' => '/index.php?a=index&m=index'));
+			$this->jsonout(array('state' => false, 'message' => 'å·²ç»ç™»å½•ã€‚', 'url' => '/index.php?a=index&m=index'));
 		}
 
-		// »ñÈ¡²ÎÊý
+		// èŽ·å–å‚æ•°
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'email' => array(array('format', 'trim')),
 			'password' => array(array('format', 'trim'))
 		));
 
-		// µÇÂ¼
+		// ç™»å½•
 		$userObj = Factory::getModel('user');
 		$result = $userObj->login($params['email'], $params['password']);
 		if($result['state'])

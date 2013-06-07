@@ -53,7 +53,7 @@ class ModelFile extends ModelCommon
 		$condition[] = array('file_name' => array('eq', $object['file_name']));
 		if($this->getOne($condition, 'id'))
 		{
-			$result['message'] = 'file name exists.';
+			$result['message'] = '文件名存在。';
 			return $result;
 		}
 
@@ -78,7 +78,7 @@ class ModelFile extends ModelCommon
 			$result['state'] = $this->insert($object);
 		}
 
-		$result['message'] = $result['state'] ? 'save success.' : 'save error.';
+		$result['message'] = $result['state'] ? '保存成功。' : '保存失败。';
 
 		return $result;
 	}
@@ -109,7 +109,7 @@ class ModelFile extends ModelCommon
 		$object = $this->getByFileName($file['name']);
 		if(!$object)
 		{
-			return array('state' => false, 'message' => 'File not exists.');
+			return array('state' => false, 'message' => '文件不存在。');
 		}
 
 		// 读取更新文件
@@ -133,7 +133,7 @@ class ModelFile extends ModelCommon
 		}
 		if(empty($mapping))
 		{
-			return array('state' => true, 'message' => 'nothing import.');
+			return array('state' => true, 'message' => '没有需要导入的数据。');
 		}
 
 		// 开启事务
@@ -168,7 +168,7 @@ class ModelFile extends ModelCommon
 
 		// 提交事务
 		$result = array('state' => $this->transCommit());
-		$result['message'] = $result['state'] ? 'Import data ' . count($mapping) . ', run success.' : 'Import run error.';
+		$result['message'] = $result['state'] ? '导入数据 ' . count($mapping) . ' 条, 运行成功。' : '导入失败。';
 		return $result;
 	}
 

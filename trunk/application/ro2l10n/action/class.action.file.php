@@ -95,7 +95,7 @@ class ActionFile extends ActionCommon
 		}
 		else
 		{
-			$result = array('state' => false, 'message' => 'Please confirm file name.');
+			$result = array('state' => false, 'message' => '请确认文件名正确。');
 		}
 
 		$this->jsonout($result);

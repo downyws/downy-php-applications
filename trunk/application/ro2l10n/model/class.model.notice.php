@@ -88,7 +88,7 @@ class ModelNotice extends ModelCommon
 			$result['state'] = $this->insert($object);
 		}
 
-		$result['message'] = $result['state'] ? 'save success.' : 'save error.';
+		$result['message'] = $result['state'] ? '保存成功。' : '保存失败。';
 
 		return $result;
 	}

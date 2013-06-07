@@ -56,9 +56,9 @@ class ActionNotice extends ActionCommon
 		$params = $this->_submit->obtain($_REQUEST, array(
 			'id' => array(array('format', 'int')),
 			'sort' => array(array('format', 'int')),
-			'start_time' => array(array('format', 'trim'), array('valid', 'empty', 'Please input start time.', null, null)),
-			'end_time' => array(array('format', 'trim'), array('valid', 'empty', 'Please input end time.', null, null)),
-			'content' => array(array('format', 'trim'), array('valid', 'empty', 'Please input content.', null, null)),
+			'start_time' => array(array('format', 'trim'), array('valid', 'empty', '请输入开始时间。', null, null)),
+			'end_time' => array(array('format', 'trim'), array('valid', 'empty', '请输入结束时间。', null, null)),
+			'content' => array(array('format', 'trim'), array('valid', 'empty', '请输入内容。', null, null)),
 			'style_u' => array(array('format', 'int')),
 			'style_b' => array(array('format', 'int')),
 			'style_s' => array(array('format', 'int')),

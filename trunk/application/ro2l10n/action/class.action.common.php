@@ -26,7 +26,7 @@ class ActionCommon extends Action
 			{
 				if($params['t'] == 'ajax')
 				{
-					$this->jsonout(array('state' => false, 'message' => 'Please login.'));
+					$this->jsonout(array('state' => false, 'message' => '请先登录。'));
 				}
 				else
 				{
@@ -51,7 +51,7 @@ class ActionCommon extends Action
 				{
 					if($params['t'] == 'ajax')
 					{
-						$this->jsonout(array('state' => false, 'message' => 'No power.'));
+						$this->jsonout(array('state' => false, 'message' => '没有权限。'));
 					}
 					else
 					{
