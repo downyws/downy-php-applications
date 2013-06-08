@@ -189,7 +189,7 @@ namespace AutoUpdate
                 Dictionary<string, bool> patchs = new Dictionary<string, bool>();
                 string[] files = Directory.GetFiles(Application.StartupPath + "/hotzeal/patch/");
                 string temp_file_name = "";
-                Regex reg = new Regex(@"^[0-9a-zA-Z]+\.md5$");
+                Regex reg = new Regex(@"^[0-9a-zA-Z_]+\.md5$");
                 foreach (var file in files)
                 {
                     temp_file_name = Path.GetFileName(file);
@@ -203,32 +203,35 @@ namespace AutoUpdate
                 bool isnewitem;
                 foreach (var item in newest)
                 {
-                    if (st_l > 0)
+                    if (patchs.ContainsKey(item.Value.keyword))
                     {
-                        if (st_l < item.Value.update_time)
+                        if (st_l > 0)
                         {
-                            updlist.Add(item.Value);
-                        }
-						this.LogUpdate(item.Value.id, Convert.ToInt32(st_l));
-                    }
-                    else if (patchs.ContainsKey(item.Value.keyword))
-                    {
-                        isnewitem = true;
-                        foreach (var _item in history)
-                        {
-                            if (_item.Key == item.Key)
+                            if (st_l < item.Value.update_time)
                             {
-                                isnewitem = false;
-                                if (_item.Value < item.Value.update_time)
-                                {
-                                    updlist.Add(item.Value);
-                                }
-                                break;
+                                updlist.Add(item.Value);
                             }
+                            this.LogUpdate(item.Value.id, Convert.ToInt32(st_l));
                         }
-                        if (isnewitem)
+                        else
                         {
-                            updlist.Add(item.Value);
+                            isnewitem = true;
+                            foreach (var _item in history)
+                            {
+                                if (_item.Key == item.Key)
+                                {
+                                    isnewitem = false;
+                                    if (_item.Value < item.Value.update_time)
+                                    {
+                                        updlist.Add(item.Value);
+                                    }
+                                    break;
+                                }
+                            }
+                            if (isnewitem)
+                            {
+                                updlist.Add(item.Value);
+                            }
                         }
                     }
                 }
@@ -255,14 +258,13 @@ namespace AutoUpdate
                 else
                 {
                     this.WriteInfo("没有需要更新的文件。");
-                    this.btn_cmd.Enabled = true;
                 }
             }
             else
             {
                 this.WriteInfo("获取更新列表失败...");
-                this.btn_cmd.Enabled = true;
             }
+            this.btn_cmd.Enabled = true;
         }
     }
 
