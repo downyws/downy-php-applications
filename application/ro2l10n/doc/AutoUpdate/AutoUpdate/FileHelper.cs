@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace AutoUpdate
 {
@@ -14,6 +15,7 @@ namespace AutoUpdate
         public string BASE_PATH = Application.StartupPath + "/hotzeal/autoupdate/";
         public string DOWN_PATH = Application.StartupPath + "/hotzeal/autoupdate/temp/";
         public string BACK_PATH = Application.StartupPath + "/hotzeal/autoupdate/back/";
+        public int BACK_LIMIT = 3;
 
         public FileHelper(ProgressBar pb)
         {
@@ -70,6 +72,28 @@ namespace AutoUpdate
 
                 this.DirSafe(this.BACK_PATH + file_path);
                 File.Move(path, back_path);
+
+                // 检查备份数
+                List<string> back_list = new List<string>();
+                string[] files = Directory.GetFiles(this.BACK_PATH + file_path);
+                string temp_file_name = "";
+                string reg = file_name + ".back.";
+                foreach (var file in files)
+                {
+                    temp_file_name = Path.GetFileName(file);
+                    if (temp_file_name.IndexOf(reg) >= 0)
+                    {
+                        back_list.Add(file);
+                    }
+                }
+                back_list.Sort();
+                int i = 0;
+                while (back_list.Count > this.BACK_LIMIT)
+                {
+                    File.Delete(back_list[i++]);
+                    back_list.RemoveAt(i);
+                }
+
                 return back_path;
             }
             return "";
