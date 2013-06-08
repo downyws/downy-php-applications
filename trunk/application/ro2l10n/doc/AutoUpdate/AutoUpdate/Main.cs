@@ -150,6 +150,7 @@ namespace AutoUpdate
 
                 this.WriteInfo("检查需要更新的文件...");
                 // 整理历史更新记录
+                long st_l = -1;
                 Dictionary<int, int> history = new Dictionary<int, int>();
                 if (File.Exists(this.log_path))
                 {
@@ -162,6 +163,11 @@ namespace AutoUpdate
                             Convert.ToInt32(item.GetElementsByTagName("update_time")[0].InnerText)
                         );
                     }
+                }
+                else if (File.Exists(this.fh.PATCH_PATH + "/install.log"))
+                {
+                    string st_s = File.ReadAllText(this.fh.PATCH_PATH + "/install.log");
+                    st_l = this.fh.TH.StringToTime(st_s);
                 }
                 // 整理最新更新记录
                 Dictionary<int, PatchFile> newest = new Dictionary<int, PatchFile>();
@@ -197,26 +203,33 @@ namespace AutoUpdate
                 bool isnewitem;
                 foreach (var item in newest)
                 {
-                    if (!patchs.ContainsKey(item.Value.keyword))
+                    if (st_l > 0)
                     {
-                        continue;
-                    }
-                    isnewitem = true;
-                    foreach (var _item in history)
-                    {
-                        if (_item.Key == item.Key)
+                        if (st_l < item.Value.update_time)
                         {
-                            isnewitem = false;
-                            if (_item.Value < item.Value.update_time)
-                            {
-                                updlist.Add(item.Value);
-                            }
-                            break;
+                            updlist.Add(item.Value);
                         }
+						this.LogUpdate(item.Value.id, Convert.ToInt32(st_l));
                     }
-                    if (isnewitem)
+                    else if (patchs.ContainsKey(item.Value.keyword))
                     {
-                        updlist.Add(item.Value);
+                        isnewitem = true;
+                        foreach (var _item in history)
+                        {
+                            if (_item.Key == item.Key)
+                            {
+                                isnewitem = false;
+                                if (_item.Value < item.Value.update_time)
+                                {
+                                    updlist.Add(item.Value);
+                                }
+                                break;
+                            }
+                        }
+                        if (isnewitem)
+                        {
+                            updlist.Add(item.Value);
+                        }
                     }
                 }
                 // 更新
