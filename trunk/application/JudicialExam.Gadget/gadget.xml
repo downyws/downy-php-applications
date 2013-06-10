@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gadget>
+	<name>2013年司法考试80天通关计划</name>
+	<namespace>http://www.wing075.com</namespace>
+	<version>1.0.0.0</version>
+	<author name="Wing075">
+		<info url="http://www.wing075.com" />
+		<logo src="author.png"/>
+	</author>
+	<copyright>no copyright</copyright>
+	<description>坚持住最后80天，否则，你将不得不再坚持一年！仅供学习用，下载者24小时内删除，本人不承担任何相关责任。</description> 
+	<icons><icon height="48" width="48" src="icon.png"/></icons>
+	<hosts>
+		<host name="sidabar">
+			<autoscaleDPI>true</autoscaleDPI>
+			<base type="HTML" apiVersion="1.0.0" src="index.html"/>
+			<permissions>full</permissions>
+			<platform minPlatformVersion="1.0" />
+			<defaultImage src="drag.png"/>
+		</host>
+	</hosts>
+</gadget>
